@@ -1,13 +1,6 @@
 var webpack = require('webpack');
 var path = require('path');
 const nodeExternals = require('webpack-node-externals');
-// var HtmlWebpackPlugin = require('html-webpack-plugin');
-//
-// var HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
-//     template: __dirname + '/index.html',
-//     filename: 'index.html',
-//     inject: 'body'
-// });
 
 var jobs = [];
 
@@ -18,7 +11,6 @@ jobs.push({
     path: __dirname + '/static/js/',
     filename: "bundle.js"
   },
-  // plugins: [HTMLWebpackPluginConfig],
   module: {
     loaders: [
       {
