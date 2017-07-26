@@ -1,12 +1,12 @@
 var webpack = require('webpack');
+var path = require('path');
 const nodeExternals = require('webpack-node-externals');
 
 var jobs = [];
 
 jobs.push({
-  entry: [
-    "./src/app.js"
-  ],
+  entry: ["./src/app.js"],
+  externals: [nodeExternals()],
   output: {
     path: __dirname + '/static',
     filename: "bundle.js"
@@ -16,19 +16,14 @@ jobs.push({
       {
         test: /\.js?$/,
         loader: 'babel-loader',
+        include: path.resolve(__dirname, 'src'),
+        exclude: /node_modules/,
         query: {
           presets: ['es2015', 'react', 'stage-0']
-        },
-        exclude: /node_modules/
-      },
-      {
-        loader: 'json-loader',
-        test: /\.json$/
+        }
       }
     ]
-  },
-  plugins: [
-  ]
+  }
 });
 
 jobs.push({
