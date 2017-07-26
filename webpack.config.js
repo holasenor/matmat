@@ -1,22 +1,29 @@
 var webpack = require('webpack');
 var path = require('path');
 const nodeExternals = require('webpack-node-externals');
+// var HtmlWebpackPlugin = require('html-webpack-plugin');
+//
+// var HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
+//     template: __dirname + '/index.html',
+//     filename: 'index.html',
+//     inject: 'body'
+// });
 
 var jobs = [];
 
 jobs.push({
-  entry: ["./src/app.js"],
-  externals: [nodeExternals()],
+  target: 'web',
+  entry: ['babel-polyfill', './' + path.join('src','app.js')],
   output: {
-    path: __dirname + '/static',
+    path: __dirname + '/static/js/',
     filename: "bundle.js"
   },
+  // plugins: [HTMLWebpackPluginConfig],
   module: {
     loaders: [
       {
         test: /\.js?$/,
         loader: 'babel-loader',
-        include: path.resolve(__dirname, 'src'),
         exclude: /node_modules/,
         query: {
           presets: ['es2015', 'react', 'stage-0']
@@ -29,7 +36,7 @@ jobs.push({
 jobs.push({
   target: 'node',
   externals: [nodeExternals()],
-  entry: ["./src/server/server.js"],
+  entry: ['babel-polyfill', './' + path.join('src', 'server', 'server.js')],
   output: {
     path: __dirname + '/bld',
     filename: 'serverBundle.js'
@@ -43,10 +50,6 @@ jobs.push({
         query: {
           presets: ['es2015', 'stage-0']
         }
-      },
-      {
-        loader: 'json-loader',
-        test: /\.json$/
       }
     ]
   }

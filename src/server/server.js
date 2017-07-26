@@ -1,40 +1,42 @@
 const express = require('express');
 const http = require('http');
 const bodyParser = require('body-parser');
-// const morgan = require('morgan');
-// const bunyan = require('bunyan');
-// const router = require('./routes/router');
 const path = require('path');
-// const cors = require('cors');
-// const Promise = require('bluebird');
 const fs = require('fs');
+var MongoClient = require('mongodb').MongoClient
+var url = "mongodb://localhost:27017/mydb";
+
+MongoClient.connect(url, function (err, db) {
+  if (err) throw err
+  console.log("Database created!");
+  db.close();
+})
 
 var app = new express();
-
-app.use(express.static('public'));
-
+app.use(express.static('static'));
 app.use(bodyParser.json({type: '*/*'}));
+
+app.get('*', function (req, res) {
+    let indexPage = fs.readFileSync(path.resolve('index.html'));
+    let out = String(indexPage);
+    console.log(out);
+    res.send(out);
+});
 
 // router(app);
 
-app.get('*', function (req, res) {
-  let indexPage = fs.readFileSync('index.html');
-  res.send(String(indexPage));
-});
-
-// App start
 const port = 3000;
 const server = http.createServer(app);
 
 server.listen(port, (err) => {
   if (err) {
-    log.warn(`
+    console.log(`
       Error!
         message: ${err.message}
         type: ${err.type}
         description: ${err.description}
     `);
   } else {
-    log.info('Server listening on port:', port);
+    console.log('Server listening on port:', port);
   }
 });
