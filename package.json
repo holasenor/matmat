@@ -18,7 +18,8 @@
 	"webpack-node-externals":"^1.6.0",
 	"body-parser":"^1.17.2",
 	"express":"^4.15.3",
-	"webpack":"^3.4.1"
+	"webpack":"^3.4.1",
+    "axios":"0.16.2"
 
   },
   "devDependencies": {
