@@ -1,8 +1,6 @@
 
-module.exports = function (MongoClient) {
-    var url = "mongodb://localhost:27017/mydb";
-
-    MongoClient.connect(url)
+module.exports = function (app) {
+    app.connection
     .then((db) => {
         db.createCollection("users").then((cursor) => {
             cursor.insertOne({ name: "olivier", address: "Paris" });

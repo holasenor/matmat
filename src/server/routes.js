@@ -1,15 +1,16 @@
 module.exports = function (app) {
 
-    app.get('/api/users/:name', function(req, res) {
-        res.send('What is up ' + req.name + '!');
+    app.get('/user/:id', function(req, res, next) {
+        app.connection.then((db) => {
+            db.createCollection('asdasdfadsadsadsadsa');
+            console.log('heeeere');
+        })
+        // res.send('asdfff');
+        next();
+    }, function (req, res) {
+        console.log('hola 2');
+        res.send('<div style="font-size:25px">AAKJSHDLKASD</div>');
     });
 
-    app.post('/api/users', function(req, res) {
-        var user_id = req.body.id;
-        var token = req.body.token;
-        var geo = req.body.geo;
-
-        res.send(user_id + ' ' + token + ' ' + geo);
-    });
 
 }
