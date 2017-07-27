@@ -2,3 +2,4 @@ node_modules/
 bld/
 mongo/
 static/js/bundle.js
+npm-debug.log

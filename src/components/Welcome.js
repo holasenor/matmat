@@ -4,7 +4,7 @@ class Welcome extends Component {
 
   render() {
     return (
-        <div>hello world</div>
+        <div id='hello'>hello world</div>
     );
   }
 }
