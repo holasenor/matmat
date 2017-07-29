@@ -1,22 +1,31 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
+import { Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
+
 
 import Header from "./Header";
 import Footer from "./Footer";
+import Video from "./Video";
+import Login_Subscription from "./MainMenu/MainMenu";
+
 
 
 class Welcome extends React.Component {
+  constructor() {
+    super();
+    this.state = {name: "Pedro state"}
+  }
 
   render() {
-
+    const title="Lopette props dans le welcome";
     return (
-        <div id='hello'>
-				<Header />
-			<h1>Matcha Maricón </h1>
-			<Button>Default</Button>
-				<Footer />
+      <div id='mybody'>
+      <Header title={title}/>
+      <div>Matcha Test title Maricón {this.state.name}</div>
+      <Login_Subscription />
+      <Footer />
 
-		</div>
+      </div>
     );
   }
 }
