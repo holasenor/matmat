@@ -2,22 +2,23 @@ import React from "react"
 import { Button, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
 
 
-export default class Login_Subscription extends React.Component {
+export default class LoginSubscription extends React.Component {
   render() {
     return (
 
 
-  <div>
+  <div className="mainMenu">
 
-
-  <Row className="mainMenu">
+  <div >
 
     <Col xs={12} md={8} className="matchaDescription">
+    <Row>
       <h1>Matcha</h1>
       <h2> tu veux pécho pres de chez toi ?</h2>
+    </Row>
     </Col>
 
-    <Col xs={12} md={4}>
+    <Col xs={12} md={3} id="menu-inscription">
       <h3>Menu</h3>
       <form action="#" >
       <Row>
@@ -75,13 +76,29 @@ export default class Login_Subscription extends React.Component {
 
         </Row>
 
-        <Button bsStyle="primary" bsSize="large" active type="submit" value="Submit">Register</Button>
+
+        <Row className="form-group">
+          <Col md={12}>
+          <label> _ </label>
+          <Button className="btn-block" bsStyle="primary" bsSize="large" active type="submit" value="Submit">Register</Button>
+          </Col>
+        </Row>
+
 
       <input type="submit" value="Submit" />
       </form>
 
     </Col>
-  </Row>
+
+    <Col xs={1} md={1}>
+    </Col>
+
+
+  </div>
+
+
+
+
   </div>
 
 

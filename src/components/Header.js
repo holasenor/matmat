@@ -27,7 +27,7 @@ export default class Header extends React.Component {
         <Col xs={6} md={4}>
           <Nav>
             <NavItem eventKey={1} href="#">People</NavItem>
-            <NavItem eventKey={2} href="#">Price</NavItem>
+            <NavItem eventKey={2} href="#">Login</NavItem>
             <NavDropdown eventKey={3} title="Account" id="basic-nav-dropdown">
               <MenuItem eventKey={3.1}>Action</MenuItem>
               <MenuItem eventKey={3.2}>Another action</MenuItem>

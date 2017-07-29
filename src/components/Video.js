@@ -21,7 +21,7 @@ export default class Video extends React.Component {
         <div className="homepage-hero-module">
             <div className="video-container">
                 <div className="filter"></div>
-                <img className="imageWallpaper" src="/videos/Snapshots/Diagonal.jpg" />
+                <img className="imageWallpaper" src="/videos/Snapshots/Diagonal1.jpg" />
 
                 <video loop autoPlay muted className="fillWidth background-video">
                     <source src={this.state.myvideo} type="video/mp4" />Your browser does not support the video tag. I suggest you upgrade your browser.
