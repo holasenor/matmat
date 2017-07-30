@@ -18,11 +18,11 @@ class Welcome extends React.Component {
   }
 
   render() {
-    const title="Lopette props dans le welcome";
+    const title="test props dans le welcome";
     return (
       <div id='mybody'>
       <Header title={title}/>
-      <div>Matcha Test title Maricón {this.state.name}</div>
+      {/*<div>Matcha Test title Maricón {this.state.name}</div>*/}
       <LoginSubscription />
       <GridImagesExample />
       <Footer />

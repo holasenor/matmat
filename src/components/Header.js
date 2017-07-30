@@ -9,7 +9,8 @@ export default class Header extends React.Component {
   render() {
     return (
     <header id="myHeader">
-			<div>Header {this.props.title}
+    <div>
+    {/*<Header. {this.props.title}*/}
         <Title />
 
 
@@ -20,7 +21,7 @@ export default class Header extends React.Component {
         <Col xs={12} md={8}>
         <Navbar.Header>
           <Navbar.Brand>
-            <a href="#">MATCHA</a>
+            <a href="#">MATCHA.</a>
           </Navbar.Brand>
         </Navbar.Header>
         </Col>

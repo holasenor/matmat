@@ -3,7 +3,14 @@
 }
 
 #mybody {
-    background-color: hotpink;
+    /*background-color: hotpink;*/
+    background-image:linear-gradient(120deg, #FEFE00, hotpink);
+    position: relative; // optional depending on what you want
+}
+
+#myvideo {
+  z-index: 9999;
+  background-image: url(http://www.e-liance.fr/wp-content/uploads/2016/05/rencontres-professionnelles-e1411332121382.jpg);
 }
 
 #myHeader {
@@ -14,7 +21,8 @@
 	background-color: blue;
 }
 
-/*======== wallpaper video ==========*/
+
+/*======== mainMenu ==========*/
 
 .matchaDescription {
   justify-content: center;
@@ -28,6 +36,9 @@
 
 .mainMenu {
   width: auto;
+  /*position: fixed; // optional depending on what you want*/
+  position: inherit; // optional depending on what you want
+  z-index: 1000!important;
 }
 
 #menu-inscription {
@@ -36,6 +47,17 @@
   background: #fff;
   padding: 2em;
   margin: 2em 0em;
+}
+.loginButton {
+}
+
+.gtco-container {
+  max-width: 1100px;
+  position: relative;
+  margin: 0 auto;
+  padding-left: 15px;
+  padding-right: 15px;
+  z-index: 10;
 }
 
 /* =============== images grid main ===============*/
@@ -174,26 +196,27 @@
 .fh5co-card-item:hover h2, .fh5co-card-item:hover span, .fh5co-card-item:focus h2, .fh5co-card-item:focus span {
   text-decoration: none !important;
 }
-/*=========================================*/
+/*=============   wallpaper video  ==================*/
 #myvideo {
   height: 100%;
   width: 100%;
   float: left;
   top: 0;
   padding: none;
-  position: fixed; // optional depending on what you want
+  z-index: -100!important;
 }
 
 #background-video{
 
-height: 100%;
-width: 100%;
-float: left;
-top: 0;
-padding: none;
-position: fixed; // optional depending on what you want
+  height: 100%;
+  width: 100%;
+  float: left;
+  top: 0;
+  padding: none;
+  position: relative; // optional depending on what you want
+  /*position: fixed; // optional depending on what you want*/
+  z-index: -100!important;
 }
-
 
 .homepage-hero-module {
     border-right: none;
