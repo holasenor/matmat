@@ -4,7 +4,7 @@ import Inscription from "./Inscription";
 import Login from "./Login";
 
 
-export default class LoginSubscription extends React.Component {
+export default class MainMenu extends React.Component {
   render() {
     return (
 

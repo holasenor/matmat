@@ -6,7 +6,8 @@ import { Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem} from 'react-boots
 import Header from "./Header";
 import Footer from "./Footer";
 import Video from "./Video";
-import LoginSubscription from "./MainMenu/MainMenu";
+import Mapping from "./Mapping";
+import MainMenu from "./MainMenu/MainMenu";
 import GridImagesExample from "./MainMenu/GridImageExample";
 
 
@@ -21,11 +22,12 @@ class Welcome extends React.Component {
     const title="test props dans le welcome";
     return (
       <div id='mybody'>
-      <Header title={title}/>
-      {/*<div>Matcha Test title Maricón {this.state.name}</div>*/}
-      <LoginSubscription />
-      <GridImagesExample />
-      <Footer />
+        <Header title={title}/>
+        {/*<div>Matcha Test title Maricón {this.state.name}</div>*/}
+        <MainMenu />
+        <GridImagesExample />
+        <Mapping />
+        {/*<Footer />*/}
 
       </div>
     );
