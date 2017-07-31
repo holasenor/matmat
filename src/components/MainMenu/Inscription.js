@@ -10,7 +10,7 @@ export default class Inscription extends React.Component {
   <div className="inscription">
 
   <div >
-      <form action="#" >
+      <form action="#">
       <Row>
       <Col md={12}>
       <label>
@@ -80,7 +80,7 @@ export default class Inscription extends React.Component {
 
         <Row className="form-group">
           <Col md={12}>
-          <label> _ </label>
+          <label>   </label>
           <Button className="btn-block" bsStyle="primary" bsSize="large" active type="submit" value="Submit">Register</Button>
           </Col>
         </Row>

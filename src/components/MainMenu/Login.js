@@ -10,35 +10,34 @@ export default class Login extends React.Component {
   <div className="login">
 
   <div >
-      <form action="#" >
-      <Row>
+  <form action="#" >
+  <Row>
+	  <Col md={12}>
+	  	<label>
+			em@il:
+		</label>
+		<input type="text" name="email" id="email" className="form-control"/>
+	  </Col>
+	  <Col md={12}>
+	  	<label>
+		Password:
+		</label>
+		<input type="text" name="password" id="password" className="form-control"/>
+	  </Col>
+	</Row>
+	<Row className="form-group">
+	  <Col md={12}>
+	  <label>   </label>
+	  <Button className="btn-block" bsStyle="primary" bsSize="large" active type="submit" value="Submit">Connexion</Button>
+	  </Col>
+	</Row>
 
-      <Col md={12}>
-      <label>
-        em@il:
-        </label>
-        <input type="text" name="email" id="email" className="form-control"/>
-      </Col>
-      <Col md={12}>
-      <label>
-        Password:
-        </label>
-        <input type="text" name="password" id="passw" className="form-control"/>
-      </Col>
-
-        </Row>
+  <input type="submit" value="Submit" />
+  </form>
 
 
-        <Row className="form-group">
-          <Col md={12}>
-          <label> _ </label>
-          <Button className="btn-block" bsStyle="primary" bsSize="large" active type="submit" value="Submit">Connexion</Button>
-          </Col>
-        </Row>
-
-
-      <input type="submit" value="Submit" />
-      </form>
+	  <div>
+	  <a href="https://www.w3schools.com">forget password</a>	  </div>
 
     </div>
 

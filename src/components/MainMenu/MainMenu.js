@@ -33,14 +33,15 @@ renderForm() {
     <Col xs={12} md={8} className="matchaDescription">
     <Row>
       <h1>Matcha</h1>
+	  <img src="../../images/Logo.png"/>
       <h2> tu veux pécho pres de chez toi ?</h2>
     </Row>
     </Col>
 
     <Col xs={12} md={3} id="menu-inscription">
       <Nav bsStyle="tabs" justified activeKey={this.state.activeKey}>
-            <NavItem onClick={() => this.handleSelect(1)}>Inscrption</NavItem>
-            <NavItem onClick={() => this.handleSelect(2)} title="Item" className="loginButton">Login</NavItem>
+            <NavItem onClick={() => this.handleSelect(1)} activeKey="1" >Inscrption</NavItem>
+            <NavItem onClick={() => this.handleSelect(2)} activeKey="2" title="Item" className="loginButton">Login</NavItem>
       </Nav>
 	  {this.renderForm()}
     </Col>
