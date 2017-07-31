@@ -1,16 +1,18 @@
+
 module.exports = function (app) {
 
-    app.get('/user/:id', function(req, res, next) {
-        app.connection.then((db) => {
-            db.createCollection('asdasdfadsadsadsadsa');
-            console.log('heeeere');
-        })
-        // res.send('asdfff');
+    app.post('/user/',
+    function(req, res, next) {
         next();
-    }, function (req, res) {
-        console.log('hola 2');
-        res.send('<div style="font-size:25px">AAKJSHDLKASD</div>');
-    });
+    },
+    require('./controllers/users/create_user')
+);
 
+app.get('/user/',
+function(req, res, next) {
+    next();
+},
+require('./controllers/users/get_user')
+);
 
 }

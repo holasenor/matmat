@@ -1,24 +1,20 @@
+var database = require('../database');
 
-module.exports = function (app) {
-    app.connection
-    .then((db) => {
-        db.createCollection("users").then((cursor) => {
-            cursor.insertOne({ name: "olivier", address: "Paris" });
-        });
-        return db;
-    })
-    .then((db) => {
-        db.createCollection("photos")
-        .then((cursor) => {
-            cursor.insertOne({some:"some"});
-        })
-        .then(() => {
-            db.close();
-        });
-    })
-    .catch((err) => {
+module.exports = function () {
+// database.get().createCollection('users').then((cursor) => {
+//     cursor.insertOne({ name: "olivier", address: "Paris" });
+// })
+database.get().then((db) => {
+    db.createCollection('users');
+    return db;
+})
+.then((db) => {
+    db.createCollection('photos');
+})
+.catch((err) => {
         if (err) {
             console.log('this is : ' + err);
         }
     });
+// }
 }

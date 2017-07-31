@@ -12,4 +12,10 @@ User.findById = function (id) {
     db.get('users', {id: id})
 }
 
+User.create = function (data) {
+    if (data.name) {
+        this.data.name = data.name;
+    }
+}
+
 module.exports = User;
