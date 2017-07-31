@@ -5,9 +5,28 @@ import Login from "./Login";
 
 
 export default class MainMenu extends React.Component {
+constructor(props) {
+	super(props)
+	this.state = {activeKey: 1}
+	this.handleSelect = this.handleSelect.bind(this);
+}
+
+handleSelect(selectedKey) {
+	console.log(selectedKey);
+	this.setState({activeKey: selectedKey})
+}
+
+renderForm() {
+	if (this.state.activeKey == 1) {
+		return <Inscription />
+	}
+	else {
+		return <Login />
+	}
+}
+
   render() {
     return (
-
 
   <div className="mainMenu">
   <div >
@@ -19,16 +38,12 @@ export default class MainMenu extends React.Component {
     </Col>
 
     <Col xs={12} md={3} id="menu-inscription">
-      <Nav bsStyle="tabs" justified activeKey={1} onSelect={this.handleSelect}>
-            <NavItem eventKey={1} href="/home">Inscrption</NavItem>
-            <NavItem eventKey={2} title="Item" className="loginButton">Login</NavItem>
+      <Nav bsStyle="tabs" justified activeKey={this.state.activeKey}>
+            <NavItem onClick={() => this.handleSelect(1)}>Inscrption</NavItem>
+            <NavItem onClick={() => this.handleSelect(2)} title="Item" className="loginButton">Login</NavItem>
       </Nav>
-
-      <Inscription />
-      {/* <Login /> */}
-
+	  {this.renderForm()}
     </Col>
-
     <Col xs={1} md={1}>
     </Col>
     </div>
