@@ -23,7 +23,6 @@ class Welcome extends React.Component {
     return (
       <div id='mybody'>
         <Header title={title}/>
-        {/*<div>Matcha Test title Maricón {this.state.name}</div>*/}
         <MainMenu />
         <GridImagesExample />
         <Mapping />

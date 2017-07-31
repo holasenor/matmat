@@ -9,19 +9,13 @@ export default class Header extends React.Component {
   render() {
     return (
     <header id="myHeader">
-    <div>
-    {/*<Header. {this.props.title}*/}
         <Title />
-
-
-
-      </div>
 
         <Navbar>
         <Col xs={12} md={8}>
         <Navbar.Header>
           <Navbar.Brand>
-            <a href="#">MATCHA.</a>
+            <a href="#">MATCHA.<img className="mylogo" src="../../images/Logo.png"/></a>
           </Navbar.Brand>
         </Navbar.Header>
         </Col>
@@ -38,10 +32,7 @@ export default class Header extends React.Component {
             </NavDropdown>
           </Nav>
           </Col>
-
         </Navbar>
-
-
 
 		</header>
     );
