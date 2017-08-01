@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import { Button } from 'react-bootstrap';
 import { Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
-
 
 import Header from "./Header";
 import Footer from "./Footer";
@@ -17,6 +17,13 @@ class Welcome extends React.Component {
     super();
     this.state = {name: "Pedro state"}
   }
+
+    asdf() {
+        axios.get("/user")
+        .then((data) => {
+            console.log(data);
+        })
+    }
 
   render() {
     const title="test props dans le welcome";
