@@ -21,6 +21,12 @@
 	background-color: blue;
 }
 
+.center {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 .mapping {
   height: inherit;
   width: 100%;
@@ -83,6 +89,21 @@ top: 0;
 left: 0;
 width: 100%;
 height: 100%;
+}
+
+/*resultat phot de recherche sur la map*/
+.resultPhotos {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	width: inherit;
+	height: auto;
+}
+
+.photoThumbnail {
+	width: inherit;
+	height: auto;
 }
 
 /* =============== images grid main ===============*/

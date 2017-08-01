@@ -5,6 +5,11 @@ import { Col, Button, Nav, Navbar, NavItem, MenuItem, NavDropdown } from 'react-
 
 
 export default class Header extends React.Component {
+	constructor() {
+		super();
+		this.state = {login: "Admin"};
+	}
+
 
   render() {
     return (
@@ -29,6 +34,7 @@ export default class Header extends React.Component {
               <MenuItem eventKey={3.3}>Something else here</MenuItem>
               <MenuItem divider />
               <MenuItem eventKey={3.4}>Separated link</MenuItem>
+              <MenuItem eventKey={3.5}>{this.state.login}</MenuItem>
             </NavDropdown>
           </Nav>
           </Col>
