@@ -3,3 +3,4 @@ bld/
 mongo/
 static/js/bundle.js
 npm-debug.log
+.DS_Store
