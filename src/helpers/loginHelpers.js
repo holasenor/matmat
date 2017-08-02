@@ -47,6 +47,7 @@ export function validatePseudo(infos) {
     if (infos.pseudo != "") {
         return axios.get("/user", {
             params: {
+                action: 'validate_pseudo',
                 pseudo: infos.pseudo
             }
         })
@@ -152,17 +153,26 @@ export function validateTags(infos) {
     });
 }
 
-export function createUser(infos) {
-    return axios.post('user', infos)
+export function signUp(infos) {
+    return axios.post('signup', infos)
     .then((data) => {
         console.log(data);
     })
 }
 
 export function checkUser(infos) {
-    console.log(infos);
-    return axios.get('user', infos)
+    console.log('checkUser');
+    return axios.get('user', {
+        params: {
+            action: 'check_user',
+            infos: infos
+        }
+    })
     .then((data) => {
         console.log(data);
     })
+}
+
+export function signIn(infos) {
+    console.log('signIn');
 }

@@ -5,9 +5,9 @@ import * as tools from '../../helpers/loginHelpers.js';
 export default class Login extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
-        console.log(e.target.email.value, e.target.password.value);
         tools.validateTarget(e.target)
-        .then(checkUser)
+        .then(tools.checkUser)
+        .then(tools.signIn)
         .catch((err) => {
             alert(err);
         })

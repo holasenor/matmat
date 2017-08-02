@@ -17,7 +17,7 @@ export default class Inscription extends React.Component {
         .then(tools.validateTown)
         .then(tools.validateAge)
         .then(tools.validateTags)
-        .then(tools.createUser)
+        .then(tools.signUp)
         .then(() => {
             this.props.handleSelect(2);
         })
