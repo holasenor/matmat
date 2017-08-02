@@ -18,12 +18,12 @@ class Welcome extends React.Component {
     this.state = {name: "Pedro state"}
   }
 
-    asdf() {
-        axios.get("/user")
-        .then((data) => {
-            console.log(data);
-        })
-    }
+  asdf() {
+      axios.get("/user")
+      .then((data) => {
+          console.log(data);
+      })
+  }
 
   render() {
     const title="test props dans le welcome";

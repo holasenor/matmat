@@ -1,9 +1,21 @@
 import User from '../../models/user.js';
 import database from '../../database';
-module.exports = (req, res, next) => {
+var bcrypt = require('bcrypt');
 
+const saltRounds = 6;
+module.exports = (req, res, next) => {
     database.get().then((db) => {
-        db.collection('users').insertOne({one: 'one'});
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+            bcrypt.hash(req.body.password, salt, function(err, hash) {
+                req.body.password = hash;
+                db.collection('users')
+                .insertOne(req.body)
+                .catch((err) => {
+                    console.log(err);
+                });
+                res.send('created');
+            });
+        });
+
     })
-    res.send('ok');
 };

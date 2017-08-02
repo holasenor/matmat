@@ -12,13 +12,13 @@ constructor(props) {
 }
 
 handleSelect(selectedKey) {
-	console.log(selectedKey);
 	this.setState({activeKey: selectedKey})
 }
 
 renderForm() {
 	if (this.state.activeKey == 1) {
-		return <Inscription />
+		//so i can use handleSelect after creating a user
+		return <Inscription handleSelect={this.handleSelect}/>
 	}
 	else {
 		return <Login />
