@@ -2,6 +2,7 @@ import React from "react"
 import { Button, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
 import Inscription from "./Inscription";
 import Login from "./Login";
+import {checkTokenIsSet} from "../../helpers/loginHelpers.js";
 
 
 export default class MainMenu extends React.Component {
@@ -26,6 +27,7 @@ renderForm() {
 }
 
   render() {
+	checkTokenIsSet('main');
     return (
 
   <div className="mainMenu">

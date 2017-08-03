@@ -1,4 +1,6 @@
-import * as tools from './routesHelpers.js';
+import {tokenForUser} from './routesHelpers.js';
+var auth = require('./controllers/authentication');
+
 module.exports = function (app) {
 
     // app.post('/user',
@@ -8,17 +10,19 @@ module.exports = function (app) {
     // require('./controllers/users/create_user'));
 
     app.get('/user',
-    function(req, res, next) {
-        next();
-    },
+    auth.checktoken,
     require('./controllers/users/get_user'));
 
     app.post('/signup',
-      require('./controllers/authentication').signup);
+    auth.signup);
 
     app.post('/signin',
-      require('./controllers/authentication').signin,
-      (req, res) => {
+    auth.signin,
+    (req, res) => {
         res.send({success: true});
-      });
+    });
+
+    app.post('/checktoken',
+    auth.checktoken);
+
 }

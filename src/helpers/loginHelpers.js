@@ -1,19 +1,20 @@
 import axios from 'axios';
 var _ = require('lodash');
+import {browserHistory} from "react-router";
 
 const fields = ['pseudo','email', 'password', 'gender', 'like', 'bio', 'town', 'age', 'tag'];
 const genders = ['male', 'female', '...'];
 const likes = ['male', 'female', '...'];
 
 export function sanitizeMongo(v) {
-  if (v instanceof Object) {
-    for (var key in v) {
-      if (/^\$/.test(key)) {
-        delete v[key];
-      }
+    if (v instanceof Object) {
+        for (var key in v) {
+            if (/^\$/.test(key)) {
+                delete v[key];
+            }
+        }
     }
-  }
-  return v;
+    return v;
 };
 
 export function validateTarget(target) {
@@ -34,12 +35,39 @@ export function validateTarget(target) {
 }
 
 export function validateEmail(infos) {
+
+    function throwError () {
+        throw 'Email already used';
+    }
     return new Promise(function(resolve,reject){
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (re.test(infos.email)) {
-            resolve(infos);
+            axios.get("/user", {
+                params: {
+                    action: 'validate_email',
+                    email: infos.email
+                }
+            })
+            .then((data) => {
+                if (data.data.exists) {
+                    resolve();
+                }
+                resolve(infos);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
         }
-        throw 'This is not a valide mail';
+        else {
+            throw 'This is not a valide mail';
+        }
+    }).then((infos) => {
+        if (!infos) {
+            throw 'Email already used';
+        }
+        else {
+            return infos;
+        }
     });
 }
 
@@ -68,7 +96,6 @@ export function validatePassword(infos) {
     return new Promise(function(resolve,reject){
         var re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
         if (re.test(infos.password)) {
-            console.log('valid password');
             resolve(infos);
         }
         throw 'This is not a valide password';
@@ -77,7 +104,6 @@ export function validatePassword(infos) {
 
 export function validateGender(infos) {
     return new Promise(function(resolve,reject){
-        console.log(infos.gender);
         if (_.includes(genders, infos.gender)) {
             resolve(infos);
         }
@@ -143,7 +169,6 @@ export function validateAge(infos) {
 export function validateTags(infos) {
     return new Promise(function(resolve,reject){
         var tags =infos.tag.trim().replace(/\s\s+/g, ' ').split(' ');
-        console.log(tags);
         for (var i = 0; i < tags.length; i++) {
             if (tags[i].length > 10) {
                 throw 'One of you tags is longer than 10 characters';
@@ -155,24 +180,60 @@ export function validateTags(infos) {
 
 export function signUp(infos) {
     return axios.post('signup', infos)
-    .then((data) => {
-        console.log(data);
+    .then((res) => {
+        if (res.data.success) {
+            localStorage.setItem('token', res.data.token);
+            localStorage.setItem('username', infos.email);
+            console.log('token was generated and saved');
+        }
+        else {
+            console.log('Something went wrong, you did not sign up');
+        }
     })
 }
 
 export function checkUser(infos) {
-    console.log('checkUser');
+    infos.action = 'check_user';
     return axios.get('user', {
-        params: {
-            action: 'check_user',
-            infos: infos
-        }
-    })
-    .then((data) => {
-        console.log(data);
+        params: infos
     })
 }
 
 export function signIn(infos) {
-    console.log('signIn');
+    return axios.post('signin', infos)
+    .then((res) => {
+        if (res.data.success) {
+            localStorage.setItem('token', res.data.token);
+            localStorage.setItem('username', infos.email);
+            console.log('token was generated and saved');
+        }
+        else {
+            console.log('Something went wrong, you did not sign in');
+        }
+    })
+}
+
+export function checkTokenIsSet(location) {
+	var token = localStorage.getItem('token');
+    var username = localStorage.getItem('username');
+    axios.post('/checktoken', {
+        token:token,
+        username:username
+    })
+    .then((res) => {
+        if (!res.data.success) {
+            if (location != 'main') {
+                browserHistory.push("/");
+            }
+        }
+        else {
+            if (location == 'main') {
+                browserHistory.push("/map");
+            }
+        }
+    })
+    .catch((err) => {
+        console.log('errorr = ');
+        console.log(err);
+    });
 }

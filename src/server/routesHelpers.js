@@ -1,4 +1,5 @@
 import axios from 'axios';
+var jwt = require('jsonwebtoken');
 var _ = require('lodash');
 
 export function sanitizeMongo(v) {
@@ -11,3 +12,10 @@ export function sanitizeMongo(v) {
   }
   return v;
 };
+
+export function tokenForUser(user) {
+    var token = jwt.sign(user, process.env.SECRET_KEY, {
+        expiresIn: 4000
+    });
+    return token;
+}

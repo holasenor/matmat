@@ -32,7 +32,7 @@ class Welcome extends React.Component {
         <Header title={title}/>
         <MainMenu />
         <GridImagesExample />
-        <Mapping />
+        {/* <Mapping /> */}
         {/*<Footer />*/}
 
       </div>

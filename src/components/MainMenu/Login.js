@@ -1,6 +1,7 @@
 import React from "react"
 import { Button, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
 import * as tools from '../../helpers/loginHelpers.js';
+import {browserHistory} from "react-router";
 
 export default class Login extends React.Component {
     handleSubmit(e) {
@@ -8,6 +9,9 @@ export default class Login extends React.Component {
         tools.validateTarget(e.target)
         .then(tools.checkUser)
         .then(tools.signIn)
+        .then(() => {
+            browserHistory.push("/map");
+        })
         .catch((err) => {
             alert(err);
         })
