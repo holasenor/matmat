@@ -20,13 +20,13 @@ export default class Header extends React.Component {
         <Col xs={12} md={8}>
         <Navbar.Header>
           <Navbar.Brand>
-            <a href="#">MATCHA.<img className="mylogo" src="../../images/Logo.png"/></a>
+            <a href="/">MATCHA.<img className="mylogo" src="../../images/Logo.png"/></a>
           </Navbar.Brand>
         </Navbar.Header>
         </Col>
         <Col xs={6} md={4}>
           <Nav>
-            <NavItem eventKey={1} href="#">People</NavItem>
+            <NavItem eventKey={1} href="/map">People</NavItem>
             <NavItem eventKey={2} href="#">Login</NavItem>
             <NavDropdown eventKey={3} title="Account" id="basic-nav-dropdown">
               <MenuItem eventKey={3.1}>Action</MenuItem>

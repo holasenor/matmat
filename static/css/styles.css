@@ -23,10 +23,11 @@
 
 .center {
 	display: block;
-	margin-left: auto;
-	margin-right: auto;
+	justify-content: center;
+	margin: auto;
 }
 
+/*la fentre ou il y a la carte  https://www.fullstackreact.com/articles/how-to-write-a-google-maps-react-component/ */
 .mapping {
   height: inherit;
   width: 100%;
