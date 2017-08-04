@@ -3,13 +3,19 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types'; // ES6
 
 export default class GMap extends React.Component {
-	state = { zoom: 10 };
+
+	state = { zoom: 15 };
 
 	static propTypes() {
-		initialCenter: React.PropTypes.objectOf(React.PropTypes.number).isRequired
+		// initialCenter: React.PropTypes.objectOf(React.PropTypes.number).isRequired
+		initialCenter: 2.3163477, 48.8965533
 	}
 
+
+
 	render() {
+
+
 		return <div className="GMap">
 			<div className='UpdatedText'>
 				{/* <p>Current Zoom: { this.state.zoom }</p> */}
@@ -59,7 +65,7 @@ export default class GMap extends React.Component {
 	}
 
 	createInfoWindow() {
-		let contentString = "<div class='InfoWindow'>Hello, I'm here ;-)</div>"
+		let contentString = "<div class='InfoWindow'><img class='photoOnMap' src='https://cdn.intra.42.fr/users/medium_oseng.jpg'/><div>Hello, I'm here ;-)</div></div>"
 		return new google.maps.InfoWindow({
 			map: this.map,
 			anchor: this.marker,

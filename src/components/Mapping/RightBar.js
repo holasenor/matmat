@@ -63,8 +63,8 @@ export default class RightBar extends React.Component {
   render() {
 
 	  const myJson = {
-		  "data":[
-			  {"pseudo":"John", "email":"Doe@test.com", "age":"30","sexe":"male", "like":"female", "Lat":"48.856614", "Lng":"21.352222", "photo":"https://cdn.intra.42.fr/users/medium_oseng.jpg", "bio":"En recherche active"},
+		  "myData":[
+			  {"pseudo":"John", "email":"Doe@test.com", "age":"30","sexe":"male", "like":"female", "Lat":"48.8965533", "Lng":"2.3185364", "photo":"https://cdn.intra.42.fr/users/medium_oseng.jpg", "bio":"En recherche active"},
 			  {"pseudo":"Anna", "email":"Smith@test.com", "age":"18","sexe":"male", "like":"male", "Lat":"45.856614" , "Lng":"12.352222", "photo":"https://cdn.intra.42.fr/users/medium_pguzman.jpg", "bio":"En recherche active"},
 			  {"pseudo":"John", "email":"Doe@test.com", "age":"20","sexe":"female", "like":"male", "Lat":"38.856614", "Lng":"7.352222", "photo":"https://cdn.intra.42.fr/users/medium_eozdek.jpg", "bio":"En recherche active"},
 			  {"pseudo":"Anna", "email":"Smith@test.com", "age":"48","sexe":"male", "like":"female", "Lat":"48.956614" , "Lng":"2.352222", "photo":"https://cdn.intra.42.fr/users/medium_jaubard.jpg", "bio":"En recherche active"},
@@ -89,7 +89,7 @@ export default class RightBar extends React.Component {
 			  <Research />
 			  <Row>
 			  	<Col md={12} className="resultPhotos">
-				 	{this.renderPhotos(myJson.data)}
+				 	{this.renderPhotos(myJson.myData)}
 		      	</Col>
 			  </Row>
 	    </div>

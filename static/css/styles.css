@@ -55,6 +55,12 @@ body,
 	width: auto;
 	float: left;
 }
+
+.photoOnMap {
+	width: 2em!important;
+	height: auto;
+}
+
 /*======== mainMenu ==========*/
 
 .matchaDescription {
