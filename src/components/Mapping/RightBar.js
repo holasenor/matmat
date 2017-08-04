@@ -28,13 +28,14 @@ export default class RightBar extends React.Component {
 							</Modal.Header>
 							<Modal.Body>
 								<img className="photoThumbnail center" src={data[this.state.idModal].photo}/>
+							<div>Popularity : {data[this.state.idModal].age}</div>
 							<div>{data[this.state.idModal].bio}</div>
-						<div>{data[this.state.idModal].bio}</div>
-					<div>{data[this.state.idModal].bio}</div>
+						<div>#tags : {data[this.state.idModal].email}</div>
 							</Modal.Body>
-							<Modal.Footer>
-								<Button onClick={this.close}>Close</Button>
-								<Button bsStyle="primary">Save changes</Button>
+							<Modal.Footer className="center">
+								{/* <Button onClick={this.close} className="center">Close</Button> */}
+								<Button bsStyle="warning">Like</Button>
+								<Button bsStyle="success">Chat</Button>
 							</Modal.Footer>
 						</Modal>
 					</div>
@@ -57,6 +58,7 @@ export default class RightBar extends React.Component {
     this.setState({ showModal: true });
 	this.setState({ idModal: e.target.id });
   }
+
 
   render() {
 

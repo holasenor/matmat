@@ -9,8 +9,10 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap-theme.min.css">
-    <script type="text/javascript" src='https://maps.googleapis.com/maps/api/js?libraries=visualization&key=AIzaSyAyesbQMyKVVbBgKVi2g6VX7mop2z96jBo'></script>
+    <!-- <script type="text/javascript" src='https://maps.googleapis.com/maps/api/js?libraries=visualization&key=AIzaSyAyesbQMyKVVbBgKVi2g6VX7mop2z96jBo'></script> -->
 
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAfaj7CW3OP8HFWLMMg8VX3OEaKIcxD98M"></script>
+	<!-- <script src="https://maps.googleapis.com/maps/api/js"></script> -->
 	</head>
 
   <body id='body'>
@@ -18,6 +20,16 @@
 		<!-- c'est ici qu'il y aura tous le react -->
 	 </div>
     <script type="text/javascript" src='js/bundle.js'></script>
+
+<script>
+	var map;
+	function initMap() {
+		map = new google.maps.Map(document.getELementById('map'), {
+			center: {lat:-34.342, lng: 150.423},
+			zoom:8
+		});
+	}
+</script>
   </body>
 
 </html>
