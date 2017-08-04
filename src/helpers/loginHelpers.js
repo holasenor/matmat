@@ -200,6 +200,7 @@ export function checkUser(infos) {
 }
 
 export function signIn(infos) {
+    console.log('infos',infos);
     return axios.post('signin', infos)
     .then((res) => {
         if (res.data.success) {

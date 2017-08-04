@@ -2,7 +2,7 @@ import React from "react";
 import axios from 'axios';
 import { Button, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
 import * as tools from '../../helpers/loginHelpers.js';
-import {browserHistory} from "react-router";
+// import {browserHistory} from "react-router";
 
 export default class Inscription extends React.Component {
 

@@ -3,9 +3,6 @@ import database from '../../database';
 var bcrypt = require('bcrypt');
 
 module.exports = (req, res, next) => {
-    console.log('-------');
-    console.log(req.query);
-    console.log('-------');
 
     if (req.query.action && req.query.action == 'validate_pseudo') {
         database.get()
