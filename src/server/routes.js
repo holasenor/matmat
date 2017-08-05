@@ -1,4 +1,4 @@
-import {tokenForUser} from './routesHelpers.js';
+import {sendMail, createResetPasswordToken} from './routesHelpers.js';
 var auth = require('./controllers/authentication');
 
 module.exports = function (app) {
@@ -17,6 +17,7 @@ module.exports = function (app) {
     auth.signup);
 
     app.post('/signin',
+    auth.checklogin,
     auth.signin,
     (req, res) => {
         res.send({success: true});
@@ -25,4 +26,23 @@ module.exports = function (app) {
     app.post('/checktoken',
     auth.checktoken);
 
+    app.get('/reset/:token',
+    function (req, res, next) {
+        const resetPasswordToken = req.params.token;
+        jwt.verify(token, process.env.SECRET_KEY, function(err, decode){
+            console.log(resetPasswordToken);
+            res.send('asdf');
+        });
+        //////////// IM HEREEE change le MDP ET MAIL
+        // auth.checkMail,
+        // require('./controllers/users/update_user'));
+
+        app.post('/sendmail',
+        createResetPasswordToken,
+        sendMail,
+        (req, res) => {
+            res.send({success: true});
+        });
+
+    });
 }

@@ -1,6 +1,8 @@
 import axios from 'axios';
 var _ = require('lodash');
 import {browserHistory} from "react-router";
+import Database from '../../database';
+
 
 const fields = ['pseudo','email', 'password', 'gender', 'like', 'bio', 'town', 'age', 'tag'];
 const genders = ['male', 'female', '...'];
@@ -21,10 +23,9 @@ export function validateTarget(target) {
     return new Promise(function (res, rej) {
         var infos = {};
         _.forOwn(target, function (value, key) {
-            console.log(value.name);
-            if (_.includes(fields, value.name)) {
-                if (value.name != "" && value.value != "") {
-                    infos[value.name] = value.value;
+            if (_.includes(fields, key)) {
+                if (value != "" && key != "") {
+                    infos[key] = value;
                 }
                 else {
                     throw 'Something is missing';
@@ -36,17 +37,13 @@ export function validateTarget(target) {
 }
 
 export function validateEmail(infos) {
+
     return new Promise(function(resolve,reject){
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (re.test(infos.email)) {
-            axios.get("/user", {
-                params: {
-                    action: 'validate_email',
-                    email: infos.email
-                }
-            })
-            .then((data) => {
-                if (data.data.exists) {
+            Database.mailExists(infos.email)
+            .then((exists) => {
+                if (exists) {
                     resolve();
                 }
                 resolve(infos);
@@ -70,14 +67,9 @@ export function validateEmail(infos) {
 
 export function validatePseudo(infos) {
     if (infos.pseudo != "") {
-        return axios.get("/user", {
-            params: {
-                action: 'validate_pseudo',
-                pseudo: infos.pseudo
-            }
-        })
-        .then((data) => {
-            if (data.data.exists) {
+        return Database.pseudoExists(infos.pseudo)
+        .then((exists) => {
+            if (exists) {
                 throw 'Pseudo already exists'
             }
             return infos;
@@ -181,6 +173,7 @@ export function signUp(infos) {
         if (res.data.success) {
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('username', infos.email);
+            console.log('token was generated and saved');
         }
         else {
             console.log('Something went wrong, you did not sign up');
@@ -196,24 +189,22 @@ export function checkUser(infos) {
 }
 
 export function signIn(infos) {
+    console.log('infos',infos);
     return axios.post('signin', infos)
     .then((res) => {
         if (res.data.success) {
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('username', infos.email);
             console.log('token was generated and saved');
-            return true;
         }
         else {
-            alert(res.data.message);
-            return false;
+            console.log('Something went wrong, you did not sign in');
         }
     })
 }
 
 export function checkTokenIsSet(location) {
-    console.log('checkTokenIsSet');
-    var token = localStorage.getItem('token');
+	var token = localStorage.getItem('token');
     var username = localStorage.getItem('username');
     axios.post('/checktoken', {
         token:token,
@@ -235,32 +226,4 @@ export function checkTokenIsSet(location) {
         console.log('errorr = ');
         console.log(err);
     });
-}
-export function validateModalTarget (target) {
-    var newPassword = 'aasdsadfD1';
-    // var UserMail = 'pguzmanosorio@gmail.com';
-    var UserMail = 'pguzmanosorio.fr@gmail.com';
-    return new Promise(function (res, rej) {
-        res({
-            email: UserMail,
-            password: newPassword
-        });
-    });
-}
-
-export function sendMail (infos) {
-    return axios.post('/sendmail', infos)
-    .then((res) => {
-        console.log('then');
-        console.log(res.data);
-    })
-}
-
-export function resetPassword (infos) {
-    return axios.post('/resetpassword', infos)
-    .then((res) => {
-        if (res.data.success) {
-            console.log(res.data.message);
-        }
-    })
 }

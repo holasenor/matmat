@@ -3,14 +3,31 @@ import { Button, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem} from 'rea
 import * as tools from '../../helpers/loginHelpers.js';
 import {browserHistory} from "react-router";
 
+// .then(tools.checkUser)
 export default class Login extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
         tools.validateTarget(e.target)
-        .then(tools.checkUser)
+        .then(tools.validateEmail)
         .then(tools.signIn)
-        .then(() => {
-            browserHistory.push("/map");
+        .then((isLogged) => {
+            if (isLogged) {
+                browserHistory.push("/map");
+            }
+        })
+        .catch((err) => {
+            alert(err);
+        })
+    }
+
+    handleResetPassword(e) {
+        e.preventDefault();
+        tools.validateModalTarget(e.target)
+        .then(tools.validateEmail)
+        .then(tools.validatePassword)
+        .then(tools.sendMail)
+        .then((asdf) => {
+            console.log(asdf);
         })
         .catch((err) => {
             alert(err);
@@ -50,11 +67,11 @@ export default class Login extends React.Component {
                         </Row>
                     </form>
                     <div>
-                        <a href="https://www.w3schools.com">
-                        forget password
-                    </a>
+                        <Button className="btn-block" bsStyle="info" bsSize="small" active onClick={(e) => this.handleResetPassword(e)}>
+                            forget password
+                        </Button>
+                    </div>
                 </div>
-            </div>
-        </div>)
+            </div>)
+        }
     }
-}

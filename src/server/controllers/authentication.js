@@ -4,69 +4,52 @@ var bcrypt = require('bcrypt');
 const saltRounds = 6;
 import {tokenForUser} from '../routesHelpers.js';
 var jwt = require('jsonwebtoken');
-import * as tools from '../../helpers/loginHelpers.js';
+import * as Validator from './aux/auth_helper.js';
 
 exports.signup = function (req, res, next) {
-    // tools.validateEmail(req.body)
-    // .then(tools.validateEmail)
-    // .then(tools.validatePseudo)
-    // .then(tools.validatePassword)
-    // .then(tools.validateGender)
-    // .then(tools.validateLike)
-    // .then(tools.validateBio)
-    // .then(tools.validateTown)
-    // .then(tools.validateAge)
-    // .then(tools.validateTags)
-    // .then(() => {
-        database.get().then((db) => {
-            bcrypt.genSalt(saltRounds, function(err, salt) {
-                bcrypt.hash(req.body.password, salt, function(err, hash) {
-                    req.body.password = hash;
-                    db.collection('users')
-                    .insertOne(req.body)
-                    .then((a) => {
-                        var user = {
-                            pseudo: req.body.pseudo,
-                            email: req.body.email
-                        }
-                        console.log('user = ');
-                        console.log(user);
-                        res.send({
-                            success: true,
-                            token: tokenForUser(user)
-                        });
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    });
-                });
-            });
-
+    Validator.validateTarget(req.body)
+    .then(Validator.validateEmail)
+    .then(Validator.validatePseudo)
+    .then(Validator.validatePassword)
+    .then(Validator.validateGender)
+    .then(Validator.validateLike)
+    .then(Validator.validateBio)
+    .then(Validator.validateTown)
+    .then(Validator.validateAge)
+    .then(Validator.validateTags)
+    .then((data) => {
+        console.log('creating');
+        User.create(data)
+        .then((user) => {
+            return tokenForUser(user);
         })
-    // })
-    // .catch((err) => {
-    //     console.log(err);
-    // })
-};
+        .then((token) => {
+            res.send({
+                success: true,
+                token: token
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+}
 
 exports.signin = function (req, res, next) {
-    var user = {
-        pseudo: req.body.pseudo,
-        email: req.body.email
-    }
-    console.log('user = ');
-    console.log(user);
     res.send({
         success: true,
-        token: tokenForUser(user)
+        token: tokenForUser(req.user)
     });
-};
+}
 
 exports.checktoken = function (req, res, next) {
     var token = req.body.token;
     var mail = req.body.mail;
-    if (token) {
-        jwt.verify(token, process.env.SECRET_KEY, function(err, decode){
+    jwt.verify(token, process.env.SECRET_KEY, function(err, decode){
+        if (token) {
             if (err) {
                 console.log(err);
                 res.send({
@@ -81,9 +64,56 @@ exports.checktoken = function (req, res, next) {
                 });
 
             }
-        });
-    }
-    else {
-        res.send('You don\'t have a token');
-    }
+        }
+        else {
+            res.send({
+                success: false,
+                message: 'You don\'t have a token'
+            });
+        }
+    });
+}
+
+exports.checklogin = function (req, res, next) {
+    User.findByMail(req.body.email)
+    .then((user) => {
+        User.comparePassword(req.body.password,user.password)
+        .then((passwordMatch) => {
+            if (passwordMatch) {
+                req.user = {
+                    pseudo: user.pseudo,
+                    email: req.body.email
+                }
+                next();
+            }
+            else {
+                res.send({
+                    success: false,
+                    message: 'Your password does not match, try again'
+                })
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+}
+
+exports.checkMail = function (req, res, next) {
+    return User.findByMail(req.body.email)
+    .then((user) => {
+        if (user) {
+            req.user = user;
+            next();
+        }
+        else {
+            res.send({
+                success: false,
+                message: 'You don\'t have an account with this mail'
+            });
+        }
+    })
 }

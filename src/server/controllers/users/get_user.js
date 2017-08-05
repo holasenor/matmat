@@ -1,22 +1,15 @@
 import User from '../../models/user.js';
-import database from '../../database';
+import Database from '../../database';
 var bcrypt = require('bcrypt');
 
 module.exports = (req, res, next) => {
 
     if (req.query.action && req.query.action == 'validate_pseudo') {
-        database.get()
-        .then((db) => {
-            db.collection('users')
-            .findOne({pseudo: req.query.pseudo})
-            .then((o) => {
-                var exists = (o != null) ? 1 : 0;
-                res.send({exists: exists});
-            });
-        })
+        return Database.pseudoExists(req.query.pseudo);
     }
     else if (req.query.action && req.query.action == 'check_user') {
-        database.get()
+        // return Database.mailExists(req.query.)
+        Database.get()
         .then((db) => {
             db.collection('users')
             .findOne({
@@ -43,14 +36,6 @@ module.exports = (req, res, next) => {
         })
     }
     else if (req.query.action && req.query.action == 'validate_email') {
-        database.get()
-        .then((db) => {
-            db.collection('users')
-            .findOne({email: req.query.email})
-            .then((o) => {
-                var exists = (o != null) ? 1 : 0;
-                res.send({exists: exists});
-            });
-        })
+        return Database.mailExists(req.query.email);
     }
 };
