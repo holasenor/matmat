@@ -5,19 +5,21 @@ import Login from "./MainMenu/Login";
 import Footer from "./Footer";
 import RightBar from "./Mapping/RightBar";
 import Container from "./Mapping/Container";
-import GMap from './Mapping/Maptest';
+import GMap from './Mapping/MyMap';
+import MyMap from './Mapping/ReactGmaps';
 
 export default class Mapping extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			login: "Admin"
+			login: "Admin",
 		}
 	}
 	logMyJson() {
-		console.log(this.props.myJson);
-		console.log(this.props.myJson.myData[0].Lat);
-		console.log(this.props.myJson.myData[0].Lng);
+		// console.log(this.props.myJson);
+		// console.log(this.props.myJson.myData[0].Lat);
+		// console.log(this.props.myJson.myData[0].Lng);
+		// console.log(this.props.myJson.myData[0].pseudo);
 	}
 
 	render() {
@@ -34,8 +36,13 @@ export default class Mapping extends React.Component {
 						<Row className="row-mt-15em">
 							<Col md={8} className="iframe-rwd">
 								{/* ===============GOOGLEMAP============== */}
+								<MyMap myJson={this.props.myJson.myData}/>
+
+
 								<div id="container">
-									<GMap initialCenter={initialCenter} />
+									// <GMap initialCenter={this.props.myJson.myData}/>
+									// <GMap initialCenter={this.props.myJson.myData} />
+									// <GMap initialCenter={initialCenter} />
 								</div>
 								{/* ===============/GOOGLEMAP============== */}
 							</Col>

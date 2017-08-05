@@ -8,14 +8,14 @@ export default class GMap extends React.Component {
 
 	static propTypes() {
 		// initialCenter: React.PropTypes.objectOf(React.PropTypes.number).isRequired
-		initialCenter: 2.3163477, 48.8965533
+		// initialCenter: 2.3163477, 48.8965533
+		initialCenter: this.props.MyJson.data[0]
 	}
-
-
+	// logMyJson() {
+	// 	console.log(this.props.myJson);
+	// }
 
 	render() {
-
-
 		return <div className="GMap">
 			<div className='UpdatedText'>
 				{/* <p>Current Zoom: { this.state.zoom }</p> */}
@@ -25,7 +25,24 @@ export default class GMap extends React.Component {
 		</div>
 	}
 
-	componentDidMount() {
+	// console.log(this.props.initialCenter);
+	// console.log(this.props.initialCenter[0]);
+// 	for (var i = 0; i < this.props.initialCenter; i++) {
+// 		return new google.maps.LatLng(
+// 		this.props.initialCenter.lat,
+// 		this.props.initialCenter.lng
+// 	)
+// }
+
+	componentDidMount(myJson) {
+		// console.log(myJson);
+		for (var i = 0; i < myJson; i++) {
+			console.log(myJson[i]);
+	// 		return new google.maps.LatLng(
+	// 		this.props.initialCenter.lat,
+	// 		this.props.initialCenter.lng
+	// 	)
+	}
 		// create the map, marker and infoWindow after the component has
 		// been rendered because we need to manipulate the DOM for Google =(
 		this.map = this.createMap()
