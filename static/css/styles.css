@@ -1,32 +1,16 @@
-html,
-body,
-.GMap {
-  height: 100%;
-  position: absolute;
-  width: 100%;
-}
-.GMap-canvas {
-  top: 20px;
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-.UpdatedText {
-  color: red;
-}
-
-.InfoWindow {
-  color: red;
+.mapPhotoLover {
   display: block;
   background-image:linear-gradient(120deg, #FEFE00, hotpink);
-  height: auto;
+  padding: 0.1em 2.1em 0 0.1em;
+  border: 1px solid hotpink;
+  word-break: keep-all;
 }
 
 #body  {
     background-color: grey;
 }
 
-#mybody {
+.mybody {
     /*background-color: hotpink;*/
     background-image:linear-gradient(120deg, #FEFE00, hotpink);
     position: relative; // optional depending on what you want
@@ -122,7 +106,8 @@ width: 100%;
 height: 100%;
 }
 
-/*resultat phot de recherche sur la map*/
+/* ============= RightBar ============== */
+/* resultat phot de recherche sur la map */
 .resultPhotos {
 	display: flex;
 	flex-direction: row;
@@ -130,6 +115,7 @@ height: 100%;
 	justify-content: flex-start;
 	width: inherit;
 	height: auto;
+  word-break: keep-all;
 }
 
 .photoThumbnail {

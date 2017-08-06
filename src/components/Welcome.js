@@ -49,7 +49,7 @@ class Welcome extends React.Component {
 	  console.log(myJson);
 
     return (
-      <div id='mybody'>
+      <div className='mybody'>
         <Header title={title}/>
         <MainMenu />
         <GridImagesExample />

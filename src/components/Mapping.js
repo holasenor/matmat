@@ -5,7 +5,7 @@ import Login from "./MainMenu/Login";
 import Footer from "./Footer";
 import RightBar from "./Mapping/RightBar";
 import Container from "./Mapping/Container";
-import GMap from './Mapping/MyMap';
+import GMap from './Mapping/GMap';
 import MyMap from './Mapping/ReactGmaps';
 
 export default class Mapping extends React.Component {
@@ -13,20 +13,21 @@ export default class Mapping extends React.Component {
 		super();
 		this.state = {
 			login: "Admin",
+			// Lng: this.props.myJson[0].lng
 		}
 	}
-	logMyJson() {
-		// console.log(this.props.myJson);
-		// console.log(this.props.myJson.myData[0].Lat);
-		// console.log(this.props.myJson.myData[0].Lng);
-		// console.log(this.props.myJson.myData[0].pseudo);
-	}
+	// logMyJson() {
+	// 	// console.log(this.props.myJson);
+	// 	// console.log(this.props.myJson.myData[0].Lat);
+	// 	// console.log(this.props.myJson.myData[0].Lng);
+	// 	// console.log(this.props.myJson.myData[0].pseudo);
+	// }
 
 	render() {
 		const markers = 135;
-		// var initialCenter = { lng: 2.3163477, lat: 48.8965533 }
-		var initialCenter = { lng: this.props.myJson.myData[0].Lng, lat: this.props.myJson.myData[0].Lat }
-		this.logMyJson();
+		var initialCenter = { lng: 2.3163477, lat: 48.8965533 }
+		// var initialCenter = { lng: this.props.myJson.myData[0].lng, lat: this.props.myJson.myData[0].lat }
+		// this.logMyJson();
 		return (
 			<div className="mapping">
 				<Container />
@@ -36,8 +37,7 @@ export default class Mapping extends React.Component {
 						<Row className="row-mt-15em">
 							<Col md={8} className="iframe-rwd">
 								{/* ===============GOOGLEMAP============== */}
-								<MyMap myJson={this.props.myJson.myData}/>
-
+								<MyMap myJson={this.props.myJson.myData} />
 
 								<div id="container">
 									// <GMap initialCenter={this.props.myJson.myData}/>
@@ -47,7 +47,7 @@ export default class Mapping extends React.Component {
 								{/* ===============/GOOGLEMAP============== */}
 							</Col>
 							<Col md={4}>
-								<RightBar />
+								<RightBar myJson={this.props.myJson.myData}/>
 							</Col>
 						</Row>
 					</Col>
