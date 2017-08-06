@@ -5,7 +5,10 @@ var bcrypt = require('bcrypt');
 module.exports = (req, res, next) => {
 
     if (req.query.action && req.query.action == 'validate_pseudo') {
-        return Database.pseudoExists(req.query.pseudo);
+        Database.pseudoExists(req.query.pseudo).then((o) => {
+            req.exists = o;
+            next();
+        });
     }
     else if (req.query.action && req.query.action == 'check_user') {
         // return Database.mailExists(req.query.)
@@ -36,6 +39,9 @@ module.exports = (req, res, next) => {
         })
     }
     else if (req.query.action && req.query.action == 'validate_email') {
-        return Database.mailExists(req.query.email);
+        Database.mailExists(req.query.email).then((o) => {
+            req.exists = o;
+            next();
+        });
     }
 };

@@ -26,7 +26,8 @@ User.create = function (data) {
                     data.password = hash;
                     db.collection('users')
                     .insertOne(data)
-                    .then((a) => {
+                    .then((res) => {
+                        console.log(res.insertedId);
                         var user = {
                             pseudo: data.pseudo,
                             email: data.email
@@ -55,12 +56,35 @@ User.findByMail = function (email) {
     })
 }
 
-User.changePassword = function (pseudo, password) {
-    return Database
-    .getUser({pseudo: pseudo})
-    .then((user) => {
-        console.log(user);
+User.changePassword = function (token, hash) {
+    return Database.get()
+    .then((db) => {
+        return db.collection('users')
+        .updateOne({resetPasswordToken: token}, {$set:{password: hash}})
+        .then((a) => {
+            return db.collection('users')
+            .update({resetPasswordToken: token}, { $unset : {resetPasswordToken: 1} })
+            .catch((err) => {
+                console.log(err);
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
     })
+    .catch((err) => {
+        console.log(err);
+    });
+}
+
+User.addResetPasswordToken = function (mail,token) {
+    return Database.get()
+    .then((db) => {
+        return db.collection('users').updateOne({email: mail}, {$set:{resetPasswordToken: token}});
+    })
+    .catch((err) => {
+        console.log(err);
+    });
 }
 
 module.exports = User;

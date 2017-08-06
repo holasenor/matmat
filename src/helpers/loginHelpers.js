@@ -21,7 +21,6 @@ export function validateTarget(target) {
     return new Promise(function (res, rej) {
         var infos = {};
         _.forOwn(target, function (value, key) {
-            console.log(value.name);
             if (_.includes(fields, value.name)) {
                 if (value.name != "" && value.value != "") {
                     infos[value.name] = value.value;
@@ -35,7 +34,7 @@ export function validateTarget(target) {
     });
 }
 
-export function validateEmail(infos) {
+export function mailExists(infos) {
     return new Promise(function(resolve,reject){
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (re.test(infos.email)) {
@@ -46,24 +45,28 @@ export function validateEmail(infos) {
                 }
             })
             .then((data) => {
-                if (data.data.exists) {
-                    resolve();
+                if (data.data.success) {
+                    resolve({infos: infos, success: true});
                 }
-                resolve(infos);
+                resolve({infos: infos, success: false});
             })
             .catch((err) => {
                 console.log(err);
             })
         }
         else {
-            throw 'This is not a valide mail';
+            throw 'This is not a valid mail';
         }
-    }).then((infos) => {
-        if (!infos) {
+    })
+}
+
+export function validateEmail(infos) {
+    return mailExists(infos).then((data) => {
+        if (data.success) {
             throw 'Email already used';
         }
         else {
-            return infos;
+            return data.infos;
         }
     });
 }
@@ -77,7 +80,7 @@ export function validatePseudo(infos) {
             }
         })
         .then((data) => {
-            if (data.data.exists) {
+            if (data.data.success) {
                 throw 'Pseudo already exists'
             }
             return infos;
@@ -95,7 +98,7 @@ export function validatePassword(infos) {
         if (re.test(infos.password)) {
             resolve(infos);
         }
-        throw 'This is not a valide password';
+        throw 'This is not a valid password';
     });
 }
 
@@ -105,7 +108,7 @@ export function validateGender(infos) {
             resolve(infos);
         }
         else {
-            throw 'This is not a valide gender';
+            throw 'This is not a valid gender';
         }
     });
 }
@@ -116,7 +119,7 @@ export function validateLike(infos) {
             resolve(infos);
         }
         else {
-            throw 'This is not a valide \'like\' parameter';
+            throw 'This is not a valid \'like\' parameter';
         }
     });
 }
@@ -195,24 +198,28 @@ export function checkUser(infos) {
     })
 }
 
-export function signIn(infos) {
-    return axios.post('signin', infos)
-    .then((res) => {
-        if (res.data.success) {
-            localStorage.setItem('token', res.data.token);
-            localStorage.setItem('username', infos.email);
-            console.log('token was generated and saved');
-            return true;
-        }
-        else {
-            alert(res.data.message);
-            return false;
-        }
-    })
+export function signIn(data) {
+    var infos = data.infos;
+    if (data.success) {
+        return axios.post('signin', infos)
+        .then((res) => {
+            if (res.data.success) {
+                localStorage.setItem('token', res.data.token);
+                localStorage.setItem('username', infos.email);
+                return true;
+            }
+            else {
+                alert(res.data.message);
+                return false;
+            }
+        })
+    }
+    else {
+        throw 'We don\'t know who you are, sorry';
+    }
 }
 
 export function checkTokenIsSet(location) {
-    console.log('checkTokenIsSet');
     var token = localStorage.getItem('token');
     var username = localStorage.getItem('username');
     axios.post('/checktoken', {
@@ -232,7 +239,6 @@ export function checkTokenIsSet(location) {
         }
     })
     .catch((err) => {
-        console.log('errorr = ');
         console.log(err);
     });
 }
@@ -248,19 +254,20 @@ export function validateModalTarget (target) {
     });
 }
 
-export function sendMail (infos) {
-    return axios.post('/sendmail', infos)
-    .then((res) => {
-        console.log('then');
-        console.log(res.data);
-    })
-}
-
-export function resetPassword (infos) {
-    return axios.post('/resetpassword', infos)
-    .then((res) => {
-        if (res.data.success) {
-            console.log(res.data.message);
-        }
-    })
+export function sendMail (data) {
+    if (data.success) {
+        return axios.post('/sendmail', data.infos)
+        .then((res) => {
+            if (res.data.success) {
+                res.data.message = 'We sent you a mail, check it out please';
+            }
+            else {
+                res.data.message = 'Something went wrong sending you a mail, sorry';
+            }
+            return res.data;
+        })
+    }
+    else {
+        throw 'We don\'t know this mail';
+    }
 }

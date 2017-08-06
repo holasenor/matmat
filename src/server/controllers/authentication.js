@@ -80,6 +80,7 @@ exports.checklogin = function (req, res, next) {
         User.comparePassword(req.body.password,user.password)
         .then((passwordMatch) => {
             if (passwordMatch) {
+                console.log(user);
                 req.user = {
                     pseudo: user.pseudo,
                     email: req.body.email
@@ -116,4 +117,17 @@ exports.checkMail = function (req, res, next) {
             });
         }
     })
+}
+
+exports.changePassword = function (req, res, next) {
+    const resetPasswordToken = req.params.token;
+    jwt.verify(resetPasswordToken, process.env.SECRET_KEY, function(err, decode){
+        if (err) {
+            res.send('This is not for you son, get the hell of here');
+        }
+        else {
+            User.changePassword(resetPasswordToken, decode.hash)
+            res.send('<h1>Your password has been changed, click <a href="http://localhost:3000">here</a></h1>')
+        }
+    });
 }

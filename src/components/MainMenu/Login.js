@@ -8,7 +8,7 @@ export default class Login extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
         tools.validateTarget(e.target)
-        .then(tools.validateEmail)
+        .then(tools.mailExists)
         .then(tools.signIn)
         .then((isLogged) => {
             if (isLogged) {
@@ -23,11 +23,11 @@ export default class Login extends React.Component {
     handleResetPassword(e) {
         e.preventDefault();
         tools.validateModalTarget(e.target)
-        .then(tools.validateEmail)
         .then(tools.validatePassword)
+        .then(tools.mailExists)
         .then(tools.sendMail)
-        .then((asdf) => {
-            console.log(asdf);
+        .then((res) => {
+            alert(res.message);
         })
         .catch((err) => {
             alert(err);

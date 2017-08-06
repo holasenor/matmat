@@ -1,5 +1,6 @@
-import {sendMail, createResetPasswordToken} from './routesHelpers.js';
+import {sendMail, createResetPasswordToken, isPasswordValid, mailExists} from './routesHelpers.js';
 var auth = require('./controllers/authentication');
+var jwt = require('jsonwebtoken');
 
 module.exports = function (app) {
 
@@ -10,8 +11,20 @@ module.exports = function (app) {
     // require('./controllers/users/create_user'));
 
     app.get('/user',
-    auth.checktoken,
-    require('./controllers/users/get_user'));
+    // auth.checktoken,
+    require('./controllers/users/get_user'),
+    (req, res) => {
+        if (req.exists) {
+            res.send({
+                success: true
+            });
+        }
+        else {
+            res.send({
+                success: false,
+            });
+        }
+    });
 
     app.post('/signup',
     auth.signup);
@@ -27,22 +40,14 @@ module.exports = function (app) {
     auth.checktoken);
 
     app.get('/reset/:token',
-    function (req, res, next) {
-        const resetPasswordToken = req.params.token;
-        jwt.verify(token, process.env.SECRET_KEY, function(err, decode){
-            console.log(resetPasswordToken);
-            res.send('asdf');
-        });
-        //////////// IM HEREEE change le MDP ET MAIL
-        // auth.checkMail,
-        // require('./controllers/users/update_user'));
+    auth.changePassword);
 
-        app.post('/sendmail',
-        createResetPasswordToken,
-        sendMail,
-        (req, res) => {
-            res.send({success: true});
-        });
-
+    app.post('/sendmail',
+    mailExists,
+    isPasswordValid,
+    createResetPasswordToken,
+    sendMail,
+    (req, res) => {
+        res.send({success: true});
     });
 }

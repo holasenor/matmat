@@ -45,7 +45,7 @@ exports.mailExists = function (mail) {
 exports.pseudoExists = function (pseudo) {
     return this.get()
     .then((db) => {
-        db.collection('users')
+        return db.collection('users')
         .findOne({pseudo: pseudo})
         .then((o) => {
             var exists = (o != null) ? 1 : 0;

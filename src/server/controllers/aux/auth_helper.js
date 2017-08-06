@@ -53,7 +53,7 @@ export function validateEmail(infos) {
             })
         }
         else {
-            throw 'This is not a valide mail';
+            throw 'This is not a valid mail';
         }
     }).then((infos) => {
         if (!infos) {
@@ -87,7 +87,7 @@ export function validatePassword(infos) {
         if (re.test(infos.password)) {
             resolve(infos);
         }
-        throw 'This is not a valide password';
+        throw 'This is not a valid password';
     });
 }
 
@@ -97,7 +97,7 @@ export function validateGender(infos) {
             resolve(infos);
         }
         else {
-            throw 'This is not a valide gender';
+            throw 'This is not a valid gender';
         }
     });
 }
@@ -108,7 +108,7 @@ export function validateLike(infos) {
             resolve(infos);
         }
         else {
-            throw 'This is not a valide \'like\' parameter';
+            throw 'This is not a valid \'like\' parameter';
         }
     });
 }

@@ -1,7 +1,13 @@
 import axios from 'axios';
+import {validatePassword} from './controllers/aux/auth_helper';
 var jwt = require('jsonwebtoken');
 var _ = require('lodash');
 var nodemailer = require('nodemailer');
+import Database from './database';
+import User from './models/user';
+var bcrypt = require('bcrypt');
+const saltRounds = 6;
+
 
 const mailOptions = {
     from: 'youremail@gmail.com',
@@ -26,17 +32,58 @@ export function tokenForUser(user) {
     return token;
 }
 
+export function isPasswordValid(req, res, next) {
+    const password = req.body.password;
+    validatePassword(req.body)
+    .then(() => {
+        next();
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+}
+
+export function mailExists(req, res, next) {
+    const mail = req.body.email;
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (re.test(mail)) {
+        Database.mailExists(mail)
+        .then((exists) => {
+            req.exists = exists;
+            next();
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+    }
+    else {
+        console.log('This is not a valid mail ' + mail);
+    }
+}
+
 export function createResetPasswordToken (req, res, next) {
     const {email, password} = req.body;
-
-    var pass = {
-        email: email
-    };
-    jwt.sign(pass, process.env.SECRET_KEY, {
-        expiresIn: 6000
-    }, function (err, token) {
-        req.token = token;
-        next();
+    bcrypt.genSalt(saltRounds, function(err, salt) {
+        bcrypt.hash(password, salt, function(err, hash) {
+            var pass = {
+                email: email,
+                hash: hash
+            };
+            jwt.sign(pass, process.env.SECRET_KEY, {
+                expiresIn: 6000
+            }, function (err, token) {
+                if (err) {
+                    res.send({
+                        success: false,
+                        message: 'Something went wrong when creating you token'
+                    });
+                }
+                else {
+                    req.token = token;
+                    next();
+                }
+            });
+        });
     });
 }
 
@@ -63,7 +110,10 @@ export function sendMail (req, res, next) {
             });
         } else {
             console.log('Email sent: ' + info.response);
-            next();
+            User.addResetPasswordToken(email, req.token)
+            .catch((err)=> {
+                console.log(err);
+            });
         }
     });
 }
