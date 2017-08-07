@@ -2,6 +2,7 @@ import React from "react"
 import { Button, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
 import Inscription from "./Inscription";
 import Login from "./Login";
+import {checkTokenIsSet} from "../../helpers/loginHelpers.js";
 
 
 export default class MainMenu extends React.Component {
@@ -12,13 +13,13 @@ constructor(props) {
 }
 
 handleSelect(selectedKey) {
-	console.log(selectedKey);
 	this.setState({activeKey: selectedKey})
 }
 
 renderForm() {
 	if (this.state.activeKey == 1) {
-		return <Inscription />
+		//so i can use handleSelect after creating a user
+		return <Inscription handleSelect={this.handleSelect}/>
 	}
 	else {
 		return <Login />
@@ -26,6 +27,7 @@ renderForm() {
 }
 
   render() {
+	checkTokenIsSet('main');
     return (
 
   <div className="mainMenu">

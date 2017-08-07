@@ -5,7 +5,6 @@ import FindPeople from './components/FindPeople.js';
 import Profil from './components/Profil.js';
 import { Router, Route, browserHistory} from 'react-router';
 
-
 ReactDOM.render(
     <Router history={browserHistory}>
         <Route path="/" component={Welcome}/>

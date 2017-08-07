@@ -7,6 +7,7 @@ import RightBar from "./Mapping/RightBar";
 import Container from "./Mapping/Container";
 import GMap from './Mapping/GMap';
 import MyMap from './Mapping/ReactGmaps';
+import {checkTokenIsSet} from "../helpers/loginHelpers.js";
 
 export default class Mapping extends React.Component {
 	constructor() {
@@ -61,6 +62,3 @@ export default class Mapping extends React.Component {
 		);
 	}
 }
-
-// AIzaSyAfaj7CW3OP8HFWLMMg8VX3OEaKIcxD98M
-// AIzaSyBQjEp_eMuZrw1NHshKPn9Fu84P47NUMq8
