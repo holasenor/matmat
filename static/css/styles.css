@@ -1,8 +1,16 @@
+.mapPhotoLover {
+  display: block;
+  background-image:linear-gradient(120deg, #FEFE00, hotpink);
+  padding: 0.1em 2.1em 0 0.1em;
+  border: 1px solid hotpink;
+  word-break: keep-all;
+}
+
 #body  {
     background-color: grey;
 }
 
-#mybody {
+.mybody {
     /*background-color: hotpink;*/
     background-image:linear-gradient(120deg, #FEFE00, hotpink);
     position: relative; // optional depending on what you want
@@ -21,6 +29,13 @@
 	background-color: blue;
 }
 
+.center {
+	display: block;
+	justify-content: center;
+	margin: auto;
+}
+
+/*la fentre ou il y a la carte  https://www.fullstackreact.com/articles/how-to-write-a-google-maps-react-component/ */
 .mapping {
   height: inherit;
   width: 100%;
@@ -31,6 +46,12 @@
 	width: auto;
 	float: left;
 }
+
+.photoOnMap {
+	width: 2em!important;
+	height: auto;
+}
+
 /*======== mainMenu ==========*/
 
 .matchaDescription {
@@ -83,6 +104,23 @@ top: 0;
 left: 0;
 width: 100%;
 height: 100%;
+}
+
+/* ============= RightBar ============== */
+/* resultat phot de recherche sur la map */
+.resultPhotos {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	width: inherit;
+	height: auto;
+  word-break: keep-all;
+}
+
+.photoThumbnail {
+	width: inherit;
+	height: auto;
 }
 
 /* =============== images grid main ===============*/

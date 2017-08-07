@@ -31,7 +31,7 @@ export default class GridImagesExample extends React.Component {
                 							<p><span className="btn btn-primary">Schedule a Trip</span></p>
                 						</div>
                 					</a>
-                        </Col>
+                        		</Col>
                 				<Col lg={4} md={4} sm={6}>
                 					<a href="images/img_2.jpg" className="fh5co-card-item image-popup">
                 						<figure>
@@ -44,7 +44,7 @@ export default class GridImagesExample extends React.Component {
                 							<p><span className="btn btn-primary">Schedule a Trip</span></p>
                 						</div>
                 					</a>
-                        </Col>
+                        		</Col>
                 				<Col lg={4} md={4} sm={6}>
                 					<a href="images/img_3.jpg" className="fh5co-card-item image-popup">
                 						<figure>
