@@ -111,6 +111,11 @@ export function sendMail (req, res, next) {
         } else {
             console.log('Email sent: ' + info.response);
             User.addResetPasswordToken(email, req.token)
+            .then(() => {
+                res.send({
+                    success:true
+                })
+            })
             .catch((err)=> {
                 console.log(err);
             });
