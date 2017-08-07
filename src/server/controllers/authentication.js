@@ -18,7 +18,6 @@ exports.signup = function (req, res, next) {
     .then(Validator.validateAge)
     .then(Validator.validateTags)
     .then((data) => {
-        console.log('creating');
         User.create(data)
         .then((user) => {
             return tokenForUser(user);

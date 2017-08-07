@@ -50,4 +50,6 @@ module.exports = function (app) {
     (req, res) => {
         res.send({success: true});
     });
+
+    app.post('/togglelike')
 }

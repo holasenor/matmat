@@ -62,6 +62,6 @@ exports.getUser = function (obj) {
     })
 }
 
-exports.updateOne = function (user) {
-    return user.update({})
+exports.addLike = function (user, mail) {
+    
 }

@@ -8,16 +8,6 @@ var User = function (data) {
     this.data = data;
 }
 
-User.prototype.data = {}
-
-User.prototype.changeName = function (name) {
-    this.data.name = name;
-}
-
-User.findById = function (id) {
-    db.get('users', {id: id})
-}
-
 User.create = function (data) {
     return Database.get().then((db) => {
         return new Promise(function(resolve,reject){
@@ -87,4 +77,14 @@ User.addResetPasswordToken = function (mail,token) {
     });
 }
 
+User.getEmail = function () {
+    return new Promise(function (res, rej) {
+        User.asdf = localStorage.getItem('username')
+        res(localStorage.getItem('username'));
+    });
+}
+
+User.toggleLike = function () {
+    console.log('this user has mail ' + User.asdf);
+}
 module.exports = User;
