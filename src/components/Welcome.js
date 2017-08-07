@@ -18,13 +18,6 @@ class Welcome extends React.Component {
     this.state = {name: "Pedro state"}
   }
 
-    asdf() {
-        axios.get("/user")
-        .then((data) => {
-            console.log(data);
-        })
-    }
-
   render() {
     const title="test props dans le welcome";
 	const myJson = {
@@ -46,7 +39,7 @@ class Welcome extends React.Component {
 		  {"pseudo":"Peter", "email":"Jones@test.com", "age":"58","sexe":"male", "like":"male", "Lat":"48.756614" , "Lng":"2.952222", "photo":"https://cdn.intra.42.fr/users/medium_stoussay.jpg", "bio":"En recherche active"}
 	  ]
 	};
-	  console.log(myJson);
+	//   console.log(myJson);
 
     return (
       <div className='mybody'>

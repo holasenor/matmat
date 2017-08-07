@@ -37,7 +37,7 @@ export default class GMap extends React.Component {
 	componentDidMount(myJson) {
 		// console.log(myJson);
 		for (var i = 0; i < myJson; i++) {
-			console.log(myJson[i]);
+			// console.log(myJson[i]);
 	// 		return new google.maps.LatLng(
 	// 		this.props.initialCenter.lat,
 	// 		this.props.initialCenter.lng
