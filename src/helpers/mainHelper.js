@@ -22,3 +22,7 @@ export function toggleLike(mail) {
         console.log('this is res = ', res);
     })
 }
+
+export function logmeOut() {
+    
+}

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Button } from 'react-bootstrap';
 import { Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
-
+import {checkTokenIsSet} from '../helpers/loginHelpers';
 import Header from "./Header";
 import Footer from "./Footer";
 import Video from "./Video";
@@ -42,6 +42,7 @@ class FindPeople extends React.Component {
   }
 
   render() {
+     checkTokenIsSet('map');
     const title="test props mapping";
     return (
       <div className='mybody'>

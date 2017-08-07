@@ -66,6 +66,7 @@
 
 .mainMenu {
   width: auto;
+  height: 60vh;
   /*position: fixed; // optional depending on what you want*/
   position: inherit; // optional depending on what you want
   z-index: 1000!important;

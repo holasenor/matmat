@@ -51,5 +51,6 @@ module.exports = function (app) {
         res.send({success: true});
     });
 
-    app.post('/togglelike')
+    app.post('/togglelike',
+    )
 }
