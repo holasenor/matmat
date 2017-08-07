@@ -222,6 +222,7 @@ export function signIn(data) {
 export function checkTokenIsSet(location) {
     var token = localStorage.getItem('token');
     var username = localStorage.getItem('username');
+    // console.log(token, username);
     axios.post('/checktoken', {
         token:token,
         username:username
@@ -242,10 +243,9 @@ export function checkTokenIsSet(location) {
         console.log(err);
     });
 }
+
 export function validateModalTarget (target) {
-    var newPassword = 'aasdsadfD1';
-    // var UserMail = 'pguzmanosorio@gmail.com';
-    var UserMail = 'pguzmanosorio.fr@gmail.com';
+
     return new Promise(function (res, rej) {
         res({
             email: UserMail,

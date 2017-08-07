@@ -1,8 +1,7 @@
 import React from "react"
 import Title from "./Header/Title";
 import { Col, Button, Nav, Navbar, NavItem, MenuItem, NavDropdown } from 'react-bootstrap';
-
-
+import {browserHistory} from "react-router";
 
 export default class Header extends React.Component {
 	constructor() {
@@ -10,34 +9,70 @@ export default class Header extends React.Component {
 		this.state = {login: "Admin"};
 	}
 
+	renderLogo() {
+		var src = "../../images/Logo.png";
+		var classname = "mylogo";
+		return (
+			<div onClick={this.toHome}>
+				MATCHA.
+				<img src={src} className={classname}>
+				</img>
+			</div>
+		);
+	}
 
-  render() {
-    return (
-    <header id="myHeader">
-        <Title />
+	toHome() {
+		browserHistory.push("/map");
+	}
 
-        <Navbar>
-        <Col xs={12} md={8}>
-        <Navbar.Header>
-          <Navbar.Brand>
-            <a href="/">MATCHA.<img className="mylogo" src="../../images/Logo.png"/></a>
-          </Navbar.Brand>
-        </Navbar.Header>
-        </Col>
-        <Col xs={6} md={4}>
-          <Nav>
-            <NavItem eventKey={1} href="/map">People</NavItem>
-            <NavItem eventKey={2} href="/chat">Chat</NavItem>
-            <NavDropdown eventKey={3} title="Account" id="basic-nav-dropdown">
-              <MenuItem eventKey={3.1} href="profil">Edit</MenuItem>
-              <MenuItem divider />
-              <MenuItem eventKey={3.2}>Logout</MenuItem>
-            </NavDropdown>
-          </Nav>
-          </Col>
-        </Navbar>
+	toChat() {
+		browserHistory.push("/chat");
+	}
 
+	handleLogout() {
+		localStorage.removeItem('token');
+		localStorage.removeItem('username');
+		browserHistory.push("/");
+	}
+
+	toEdit() {
+		browserHistory.push("/profil");
+	}
+
+	render() {
+		return (
+			<header id="myHeader">
+				<Title>
+				</Title>
+				<Navbar>
+					<Col xs={12} md={8}>
+						<Navbar.Header>
+							<Navbar.Brand>
+								{this.renderLogo()}
+							</Navbar.Brand>
+						</Navbar.Header>
+					</Col>
+					<Col xs={6} md={4}>
+						<Nav>
+							<NavItem onClick={this.toHome}>
+								People
+							</NavItem>
+							<NavItem onClick={this.toChat}>
+								Chat
+							</NavItem>
+							<NavDropdown title="Account" id="basic-nav-dropdown">
+								<MenuItem onClick={this.toEdit}>
+									Edit
+								</MenuItem>
+								<MenuItem divider />
+							<MenuItem onClick={this.handleLogout}>
+								Logout
+							</MenuItem>
+						</NavDropdown>
+					</Nav>
+				</Col>
+			</Navbar>
 		</header>
-    );
-  }
+	);
+}
 }

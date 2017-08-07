@@ -39,16 +39,16 @@ export default class Login extends React.Component {
 
 	handleResetPassword(e) {
 		e.preventDefault();
-		tools.validateModalTarget(e.target)
-		.then(tools.validatePassword)
-		.then(tools.mailExists)
-		.then(tools.sendMail)
-		.then((res) => {
-			alert(res.message);
-		})
-		.catch((err) => {
-			alert(err);
-		})
+		// tools.validateModalTarget(e.target)
+		// .then(tools.validatePassword)
+		// .then(tools.mailExists)
+		// .then(tools.sendMail)
+		// .then((res) => {
+		// 	alert(res.message);
+		// })
+		// .catch((err) => {
+		// 	alert(err);
+		// })
 	}
 
 
@@ -56,7 +56,7 @@ export default class Login extends React.Component {
 		return (
 			<div className="login">
 				<div>
-					<form action="#" >
+					<form onSubmit={(e) => {this.handleSubmit(e)}}>
 						<Row>
 							<Col md={12}>
 								<label>
@@ -84,10 +84,6 @@ export default class Login extends React.Component {
 								</Button>
 							</Col>
 						</Row>
-
-						<input type="submit" value="Submit" >
-						</input>
-
 					</form>
 					<div>
 						<a onClick={this.open} >
@@ -95,7 +91,7 @@ export default class Login extends React.Component {
 						</a>
 					</div>
 					<Modal show={this.state.showModal} onHide={this.close}>
-						<form onSubmit={(e) => this.handleSubmit(e)}>
+						<form onSubmit={(e) => this.handleResetPassword(e)}>
 							<Modal.Header closeButton>
 								<Modal.Title className="center">
 									enter your email adress
@@ -115,7 +111,7 @@ export default class Login extends React.Component {
 
 							</Modal.Body>
 							<Modal.Footer className="center">
-								<Button onClick={this.close} >
+								<Button onClick={this.close}>
 									Close
 								</Button>
 								<Button bsStyle="success" type="submit" value="Submit">
