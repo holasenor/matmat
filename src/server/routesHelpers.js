@@ -117,3 +117,8 @@ export function sendMail (req, res, next) {
         }
     });
 }
+
+export function toggleLike (req, res, next) {
+    // var token = localStorage.
+    // Database.
+}
