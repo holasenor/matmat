@@ -245,8 +245,12 @@ export function checkTokenIsSet(location) {
 }
 
 export function validateModalTarget (target) {
-
     return new Promise(function (res, rej) {
+        var UserMail = target.children[1].children[1].value;
+        var newPassword = target.children[1].children[3].value;
+        if (UserMail == "" || newPassword == "") {
+            throw 'Something is missing';
+        }
         res({
             email: UserMail,
             password: newPassword
@@ -266,6 +270,9 @@ export function sendMail (data) {
             }
             return res.data;
         })
+        .catch((err) => {
+            console.log(err);
+        });
     }
     else {
         throw 'We don\'t know this mail';

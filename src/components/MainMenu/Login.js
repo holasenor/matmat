@@ -39,16 +39,20 @@ export default class Login extends React.Component {
 
 	handleResetPassword(e) {
 		e.preventDefault();
-		// tools.validateModalTarget(e.target)
-		// .then(tools.validatePassword)
-		// .then(tools.mailExists)
-		// .then(tools.sendMail)
-		// .then((res) => {
-		// 	alert(res.message);
-		// })
-		// .catch((err) => {
-		// 	alert(err);
-		// })
+		tools.validateModalTarget(e.target)
+		.then(tools.validatePassword)
+		.then(tools.mailExists)
+		.then(tools.sendMail)
+		.then((res) => {
+			this.setState({ showModal: false });
+			return res
+		})
+		.then((res) => {
+			alert(res.message);
+		})
+		.catch((err) => {
+			alert(err);
+		})
 	}
 
 
@@ -70,7 +74,7 @@ export default class Login extends React.Component {
 								<label>
 									Password:
 								</label>
-								<input type="text" name="password" id="password" className="form-control">
+								<input type="password" name="password" id="password" className="form-control">
 								</input>
 
 							</Col>
@@ -101,12 +105,12 @@ export default class Login extends React.Component {
 								<label>
 									em@il:
 								</label>
-								<input type="text" name="email" id="email" className="form-control">
+								<input type="text" name="email" id="emailForgot" className="form-control">
 								</input>
 								<label>
 									new password:
 								</label>
-								<input type="password" name="password" id="password" className="form-control">
+								<input type="password" name="password" id="passwordForgot" className="form-control">
 								</input>
 
 							</Modal.Body>
