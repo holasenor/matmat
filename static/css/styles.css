@@ -1,11 +1,3 @@
-.mapPhotoLover {
-  display: block;
-  background-image:linear-gradient(120deg, #FEFE00, hotpink);
-  padding: 0.1em 2.1em 0 0.1em;
-  border: 1px solid hotpink;
-  word-break: keep-all;
-}
-
 #body  {
     background-color: grey;
 }
@@ -90,7 +82,31 @@
   padding-right: 15px;
   z-index: 10;
 }
+/* =============== chat ============================*/
+#myChat {
+	padding-top: 3px;
+	position: fixed;
+	z-index: 1000;
+	bottom: 0;
+	left: 0;
+	/*max-width: 25%;*/
+	max-height: 25%;
+	background: hotpink;
+	border-radius: 3px;
+	overflow: scroll;
+}
+#downChat {
+	display: block;
+	right: 0;
+}
 /* =============== map ============================*/
+.mapPhotoLover {
+  display: block;
+  background-image:linear-gradient(120deg, #FEFE00, hotpink);
+  padding: 0.1em 2.1em 0 0.1em;
+  border: 1px solid hotpink;
+  word-break: keep-all;
+}
 
 .iframe-rwd  {
 position: relative;
