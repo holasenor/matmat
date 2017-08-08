@@ -20,7 +20,8 @@ User.create = function (data) {
                         console.log(res.insertedId);
                         var user = {
                             pseudo: data.pseudo,
-                            email: data.email
+                            email: data.email,
+                            id: res.insertedId
                         }
                         resolve(user);
                     })
@@ -43,6 +44,12 @@ User.comparePassword = function (passwordToCompare, hash) {
 User.findByMail = function (email) {
     return Database.get().then((db) => {
         return db.collection('users').findOne({email: email});
+    })
+}
+
+User.findById = function (id) {
+    return Database.get().then((db) => {
+        return db.collection('users').findOne({_id: id});
     })
 }
 
@@ -87,4 +94,6 @@ User.getEmail = function () {
 User.toggleLike = function () {
     console.log('this user has mail ' + User.asdf);
 }
+
+
 module.exports = User;

@@ -38,15 +38,16 @@ exports.signup = function (req, res, next) {
 }
 
 exports.signin = function (req, res, next) {
+    delete req.infos['password']
     res.send({
         success: true,
-        token: tokenForUser(req.user)
+        token: tokenForUser(req.user),
+        user: req.infos
     });
 }
 
 exports.checktoken = function (req, res, next) {
     var token = req.body.token;
-    var mail = req.body.mail;
     jwt.verify(token, process.env.SECRET_KEY, function(err, decode){
         if (token) {
             if (err) {
@@ -57,11 +58,8 @@ exports.checktoken = function (req, res, next) {
                 });
             }
             else {
-                console.log(decode);
-                res.send({
-                    success: true
-                });
-
+                req.check = true;
+                req.decode = decode;
             }
         }
         else {
@@ -79,10 +77,13 @@ exports.checklogin = function (req, res, next) {
         User.comparePassword(req.body.password,user.password)
         .then((passwordMatch) => {
             if (passwordMatch) {
+                console.log('debug user in checklogin');
                 console.log(user);
+                req.infos = user;
                 req.user = {
                     pseudo: user.pseudo,
-                    email: req.body.email
+                    email: req.body.email,
+                    id: user._id
                 }
                 next();
             }

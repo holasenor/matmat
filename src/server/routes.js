@@ -1,6 +1,7 @@
-import {sendMail, createResetPasswordToken, isPasswordValid, mailExists} from './routesHelpers.js';
+import {sendMail, createResetPasswordToken, isPasswordValid, mailExists, updateUser} from './routesHelpers.js';
 var auth = require('./controllers/authentication');
 var jwt = require('jsonwebtoken');
+import Database from './database';
 
 module.exports = function (app) {
 
@@ -31,13 +32,17 @@ module.exports = function (app) {
 
     app.post('/signin',
     auth.checklogin,
-    auth.signin,
-    (req, res) => {
-        res.send({success: true});
-    });
+    auth.signin);
 
     app.post('/checktoken',
-    auth.checktoken);
+    auth.checktoken,
+    (req, res) => {
+        if (req.check) {
+            res.send({
+                success: true
+            });
+        }
+    });
 
     app.get('/reset/:token',
     auth.changePassword);
@@ -53,4 +58,17 @@ module.exports = function (app) {
 
     app.post('/togglelike',
     )
+
+    app.post('/updateuser',
+    auth.checktoken,
+    (req, res, next) => {
+        if (req.check) {
+            next();
+        }
+        res.send({
+            success:false,
+            message: 'Something wrong, sorry'
+        });
+    },
+    updateUser);
 }

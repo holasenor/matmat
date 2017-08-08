@@ -62,6 +62,14 @@ exports.getUser = function (obj) {
     })
 }
 
+exports.updateUser = function (obj) {
+    return this.get()
+    .then((db) => {
+        return db.collection('users')
+        .updateOne(obj);
+    })
+}
+
 exports.addLike = function (user, mail) {
-    
+
 }

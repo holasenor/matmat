@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem, InputGroup, FormGroup, Addon, FormControl, ProgressBar, bsStyle} from 'react-bootstrap';
 import { Button } from 'react-bootstrap';
+import {getData, updateUser, deleteUser} from '../../helpers/editHelper.js';
 
 
 import Header from "../Header";
@@ -9,15 +10,12 @@ import Footer from "../Footer";
 
 
 class EditProfil extends React.Component {
-    constructor() {
-        super();
-        this.state = {
-            name: "Pedro state"
+    constructor(props) {
+        super(props);
+        this.state = {};
+        if (this.props) {
+            this.state.myInfo = this.props.location.state;
         }
-    }
-
-    fillForm() {
-
     }
 
     renderPhotoBlock() {
@@ -25,11 +23,6 @@ class EditProfil extends React.Component {
         return (
             <Col md={5}>
                 <div className="gtco-contact-info">
-                    <h3>
-                        Your photo
-                    </h3>
-                    <img src={picture}>
-                    </img>
                     <ul>
                         <li className="tags">
                             <a>
@@ -47,6 +40,11 @@ class EditProfil extends React.Component {
                         <ProgressBar bsStyle='success' now={78} active>
                         </ProgressBar>
                     </div>
+                    <h3>
+                        Your photo
+                    </h3>
+                    <img src={picture}>
+                    </img>
                 </div>
             </Col>
         )
@@ -59,7 +57,7 @@ class EditProfil extends React.Component {
                     <label>
                         Login
                     </label>
-                    <input type="text" id="name" className="form-control" placeholder="Your Login" defaultValue={this.state.name}>
+                    <input type="text" id="pseudo" className="form-control" placeholder="Your Login" defaultValue={this.state.myInfo.pseudo}>
                     </input>
                 </Col>
             </Row>
@@ -78,7 +76,7 @@ class EditProfil extends React.Component {
                             <InputGroup.Addon>
                                 @
                             </InputGroup.Addon>
-                            <FormControl type="text" defaultValue={this.state.email}>
+                            <FormControl id="email" type="text" defaultValue={this.state.myInfo.email}>
                             </FormControl>
                         </InputGroup>
                     </FormGroup>
@@ -93,139 +91,142 @@ class EditProfil extends React.Component {
         }
         var print = [];
         for (var i = 0; i < options.length; i++) {
-            // if (options[i] != this.state.gender) {
-            //     print.push()
-            // }
-            print.push(<option value={options[i]}>{capitalizeFirstLetter(options[i])}</option>);
+            print.push(<option key={i} value={options[i]}>{capitalizeFirstLetter(options[i])}</option>);
         }
         return print;
     }
-    renderGenderAndLike() {
 
+    renderGenderAndLike() {
         return (
             <Row className="form-group">
                 <Col md={6} xs={6}>
                     <label>
                         Gender
                     </label>
-                    <select name="#" id="sexe" className="form-control">
-                            {this.renderOptions(['male', 'female','...'])}
-                        </select>
-                    </Col>
-                    <Col md={6} xs={6}>
-                        <label>
-                            Like
-                        </label>
-                        <select name="#" id="like" className="form-control">
-                            <option value="male">
-                                Male
-                            </option>
-                            <option value="female">
-                                Female
-                            </option>
-                            <option value="none">
-                                ...
-                            </option>
-                            <option value="both">
-                                Both
-                            </option>
-                        </select>
-                    </Col>
-                </Row>
-            )
-        }
-
-        renderLocation() {
-            return (
-                <Row className="form-group">
-                    <Col md={12} >
-                        <label>
-                            Location
-                        </label>
-                        <FormGroup>
-                            <InputGroup>
-                                <InputGroup.Addon>
-                                    <input id="location" type="checkbox" aria-label="...">
-                                    </input>
-                                </InputGroup.Addon>
-                                <FormControl type="text">
-                                </FormControl>
-                            </InputGroup>
-                        </FormGroup>
-                    </Col>
-                </Row>
-            )
-        }
-
-        renderTags() {
-            return (
-                <Row className="form-group">
-                    <Col md={12} >
-                        <label>
-                            #Tags
-                        </label>
-                        <input type="text" id="subject" className="form-control" placeholder="Yours tags">
-                        </input>
-                    </Col>
-                </Row>
-            )
-        }
-
-        renderBio() {
-            return (
-                <Row className="form-group">
-                    <Col md={12} >
-                        <label>
-                            Bio
-                        </label>
-                        <textarea name="message" id="message" cols="30" rows="5" className="form-control" placeholder="Write something fun">
-                        </textarea>
-                    </Col>
-                </Row>
-            )
-        }
-
-        renderButtons() {
-            return (
-                <Col md={12} className="center">
-                    <div className="form-group">
-                        <input type="submit" value="Modify" className="btn btn-primary">
-                        </input>
-                    </div>
-                    <div className="form-group">
-                        <input type="submit" value="Delete" className="btn btn-danger">
-                        </input>
-                    </div>
+                    <select id="sexe" className="form-control" defaultValue={this.state.myInfo.gender}>
+                        {this.renderOptions(['male', 'female','...'])}
+                    </select>
                 </Col>
-            )
-        }
+                <Col md={6} xs={6}>
+                    <label>
+                        Like
+                    </label>
+                    <select id="like" className="form-control" defaultValue={this.state.myInfo.like}>
+                        {this.renderOptions(['male', 'female','...','both'])}
+                    </select>
+                </Col>
+            </Row>
+        )
+    }
 
-        renderPassAndUpload() {
-            return (
-                <Row className="form-group">
-                    <Col md={6} xs={6}>
-                        <label>
-                            New password
-                        </label>
-                        <input type="password" id="subject" className="form-control" placeholder="Yours tags">
-                        </input>
-                    </Col>
-                    <Col md={6} xs={6}>
-                        <label>
-                            Photo
-                        </label>
-                        <input type="file" id="photo" className="">
-                        </input>
-                    </Col>
-                </Row>
-            )
-        }
+    renderLocation() {
+        return (
+            <Row className="form-group">
+                <Col md={12} >
+                    <label>
+                        Location
+                    </label>
+                    <FormGroup>
+                        <InputGroup>
+                            <InputGroup.Addon>
+                                <input id="location" type="checkbox" aria-label="..." >
+                                </input>
+                            </InputGroup.Addon>
+                            <FormControl type="text" defaultValue={this.state.myInfo.town}>
+                            </FormControl>
+                        </InputGroup>
+                    </FormGroup>
+                </Col>
+            </Row>
+        )
+    }
 
-        render() {
-            this.fillForm();
-            return (
+    renderTags() {
+        return (
+            <Row className="form-group">
+                <Col md={12} >
+                    <label>
+                        #Tags
+                    </label>
+                    <input type="text" id="tags" className="form-control" placeholder="Yours tags" defaultValue={this.state.myInfo.tag}>
+                    </input>
+                </Col>
+            </Row>
+        )
+    }
+
+    renderBio() {
+        return (
+            <Row className="form-group">
+                <Col md={12} >
+                    <label>
+                        Bio
+                    </label>
+                    <textarea name="message" id="message" cols="30" rows="3" maxLength="150" className="form-control" placeholder="Write something fun" defaultValue={this.state.myInfo.bio}>
+                    </textarea>
+                </Col>
+            </Row>
+        )
+    }
+
+    renderButtons() {
+        return (
+            <Col md={12} className="center">
+                <div className="form-group">
+                    <input type="submit" value="Modify" className="btn btn-primary">
+                    </input>
+                </div>
+                <div className="form-group">
+                    <input type="button" value="Delete Account" className="btn btn-danger" onClick={() => this.handleDeleteAccount(this.state.myInfo.email)}>
+                    </input>
+                </div>
+            </Col>
+        )
+    }
+
+    renderPassAndUpload() {
+        return (
+            <Row className="form-group">
+                <Col md={6} xs={6}>
+                    <label>
+                        New password
+                    </label>
+                    <input type="password" id="subject" className="form-control" placeholder="new password">
+                    </input>
+                </Col>
+                <Col md={6} xs={6}>
+                    <label>
+                        Photo
+                    </label>
+                    <input type="file" id="photo" className="">
+                    </input>
+                </Col>
+            </Row>
+        )
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        getData(e.target)
+        .then(updateUser)
+        .then((res) => {
+            console.log('after updateUser response');
+
+        });
+    }
+
+    handleDeleteAccount(mail) {
+        // deleteUser()
+        // .then((res) => {
+        //     console.log('after delete account response');
+        // });
+    }
+
+    render() {
+        return (
+            <div className='mybody'>
                 <div className='mybody'>
-                    <Header>
+                    <Header myInfo={this.state.myInfo}>
                     </Header>
                     <div id="page">
                         <div className="page-inner">
@@ -233,16 +234,15 @@ class EditProfil extends React.Component {
                                 <div className="gtco-container">
                                     <Row>
                                         <Col md={12} >
-                                            <Col md={7 }>
+                                            <Col md={7}>
                                                 <h3>
                                                     Profil
                                                 </h3>
-                                                <form action="#">
+                                                <form id='formUpdate' onSubmit={(e) => this.handleSubmit(e)}>
                                                     {this.renderLogin()}
                                                     {this.renderMail()}
                                                     {this.renderPassAndUpload()}
                                                     {this.renderGenderAndLike()}
-                                                    {this.renderLocation()}
                                                     {this.renderTags()}
                                                     {this.renderBio()}
                                                     {this.renderButtons()}
@@ -256,8 +256,9 @@ class EditProfil extends React.Component {
                         </div>
                     </div>
                 </div>
-            );
-        }
+            </div>
+        );
     }
+}
 
-    export default EditProfil;
+export default EditProfil;

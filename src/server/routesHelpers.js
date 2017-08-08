@@ -127,3 +127,11 @@ export function toggleLike (req, res, next) {
     // var token = localStorage.
     // Database.
 }
+
+export function updateUser (req, res, next) {
+    var data = req.body;
+    data.id =req.decode.id;
+    Database.updateUser(req.body).then(() => {
+
+    })
+}

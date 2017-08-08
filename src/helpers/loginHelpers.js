@@ -206,11 +206,11 @@ export function signIn(data) {
             if (res.data.success) {
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('username', infos.email);
-                return true;
+                return res.data.user;
             }
             else {
                 alert(res.data.message);
-                return false;
+                return null;
             }
         })
     }
@@ -222,7 +222,7 @@ export function signIn(data) {
 export function checkTokenIsSet(location) {
     var token = localStorage.getItem('token');
     var username = localStorage.getItem('username');
-    // console.log(token, username);
+    console.log('debug checkTokenIsSet');
     axios.post('/checktoken', {
         token:token,
         username:username

@@ -29,7 +29,8 @@ export default class Login extends React.Component {
 		.then(tools.signIn)
 		.then((isLogged) => {
 			if (isLogged) {
-				browserHistory.push("/map");
+				console.log('isLogged', isLogged);
+				browserHistory.push({pathname: "/map", state: isLogged});
 			}
 		})
 		.catch((err) => {
