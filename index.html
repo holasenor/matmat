@@ -13,6 +13,10 @@
 
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAfaj7CW3OP8HFWLMMg8VX3OEaKIcxD98M"></script>
 	<!-- <script src="https://maps.googleapis.com/maps/api/js"></script> -->
+
+	<!-- ============================ jQuery ========================== -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
 	</head>
 
   <body id='body'>
@@ -21,15 +25,13 @@
 	 </div>
     <script type="text/javascript" src='js/bundle.js'></script>
 
-<script>
-	var map;
-	function initMap() {
-		map = new google.maps.Map(document.getELementById('map'), {
-			center: {lat:-34.342, lng: 150.423},
-			zoom:8
-		});
-	}
+
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="/js/client.js"></script>
+
 </script>
+
   </body>
 
 </html>

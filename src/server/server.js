@@ -46,4 +46,25 @@ database.connect(url, function () {
                 console.log('Server listening on port:', port);
             }
         });
+
+	var io = require('socket.io').listen(server);
+	var me;//variable pour stocker l'user du chat
+
+	io.sockets.on('connection', function(socket){
+		console.log('new user');
+//on ecoute l'evenement envoy2 du Chat
+	socket.on('login', function(user){
+		console.log(user);
+		me = user;
+		me.id = user.mail;
+
+//on emit un evenement cote seveur pour que le client recoive
+		// socket.emit('newuser');//socket actuel
+		// socket.broadcast.emit('newuser');//alert tous les autre user sauf soi
+		io.sockets.emit('newuser', me);//alert tous lesuser
+	})
+
+	})
+
+
     });

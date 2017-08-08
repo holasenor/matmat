@@ -1,5 +1,6 @@
 import React from "react"
 import Title from "./Header/Title";
+import Chat from "./Chat";
 import { Col, Button, Nav, Navbar, NavItem, MenuItem, NavDropdown } from 'react-bootstrap';
 import {browserHistory} from "react-router";
 
@@ -70,8 +71,13 @@ export default class Header extends React.Component {
 							</MenuItem>
 						</NavDropdown>
 					</Nav>
+					{/* <ul id="messages"></ul>
+					    <form action="">
+					      <input id="m" autocomplete="off" /><button>Send</button>
+					    </form> */}
 				</Col>
 			</Navbar>
+			<Chat />
 		</header>
 	);
 }
