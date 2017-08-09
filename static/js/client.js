@@ -8,13 +8,18 @@
 		//on emet un evenemtn cote cient pour le servuer
 		socket.emit('login', {
 			pseudo	  : $('#login').val(),
-			mail	  : $('#mail').val(),
+			room	  : $('#room').val(),
 			// txt	  	  : $('#txt').val()
 			})
+
 	});
 
-		socket.on('logged', function() {
+		socket.on('logged', function(room) {
 			$('#loginform').fadeOut();
+			$('#form').fadeIn();
+			$('#messages').fadeIn();
+			myroom : $('#myroom').val(room);
+			$('#message').focus();//on refocus sur ce chammp
 		})
 
 //================ envoie de messages =============
@@ -24,6 +29,7 @@
 	socket.emit('newmsg', {
 			pseudo	  : $('#login').val(),
 			message	  : $('#message').val(),
+			room	  : $('#myroom').val(),
 		})
 		$('#message').val('');//on supprime le message precedent
 		$('#message').focus();//on refocus sur ce chammp
@@ -31,11 +37,13 @@
 
 //on affiche les messages
 	socket.on('newmsg', function(msg) {
-		// $('#users').append('<img style="height:2em;" src="' + 'https://cdn.intra.42.fr/users/medium_default.png' + '"/>');// recuperer la photo
-		$('#messages').append('<h3> Pseudo </h3>')//recuperer le pseudo de l'user
-		$('#messages').append('<div  style="word-wrap: break-word;">' + msg.message + '</div>')
-		$('#messages').animate({scrollTop : $('#messages').prop('scrollHeight' + '3em') }, 50);//scroll auo en bas des messages
-	})
+		// console.log(msg.room);// $('#users').append('<img style="height:2em;" src="' + 'https://cdn.intra.42.fr/users/medium_default.png' + '"/>');// recuperer la photo
+		if (msg.room == $('#myroom').val()) {
+			$('#messages').append('<h3> Pseudo </h3>')//recuperer le pseudo de l'user
+			$('#messages').append('<div  style="word-wrap: break-word;">' + msg.message + '</div>')
+			$('#messages').animate({scrollTop : $('#messages').prop('scrollHeight' + '3em') }, 50);//scroll auo en bas des messages
+		}
+	});
 
 
 //================ gestion des connectee =============

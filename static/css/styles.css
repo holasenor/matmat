@@ -82,7 +82,7 @@
   padding-right: 15px;
   z-index: 10;
 }
-/* =============== chat ============================*/
+/* ============================ chat ============================*/
 #myChat {
 	padding-top: 3px;
 	position: fixed;
@@ -92,8 +92,26 @@
 	/*max-width: 25%;*/
 	max-height: 25%;
 	background: hotpink;
+	opacity: 0.9;
+	/*filter: blur(3px);*/
 	border-radius: 3px;
 	overflow: scroll;
+}
+h3 #myChat {
+	color: grey;
+}
+
+#formulaireChat {
+	display: block;
+}
+#form {
+	display: none;
+}
+#messages {
+	display: none;
+}
+#upmessages {
+	display: none;
 }
 #downChat {
 	display: block;
