@@ -2,20 +2,23 @@ import React, { Component } from 'react';
 import { Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem, InputGroup, FormGroup, Addon, FormControl, ProgressBar, bsStyle} from 'react-bootstrap';
 import { Button } from 'react-bootstrap';
 import {getData, updateUser, deleteUser} from '../../helpers/editHelper.js';
+import $ from "jquery";
+import {browserHistory} from "react-router";
+import * as tools from '../../helpers/loginHelpers.js';
 
 
 import Header from "../Header";
 import Footer from "../Footer";
 
-
-
 class EditProfil extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
-        if (this.props) {
+        if (!this.state.pseudo) {
+            console.log('setting this.props.location.state = ', this.props.location.state);
             this.state.myInfo = this.props.location.state;
         }
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     renderPhotoBlock() {
@@ -208,10 +211,22 @@ class EditProfil extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
         getData(e.target)
+        .then(tools.isMailValid)
+        .then(tools.validatePseudo)
+        .then(tools.validatePassword)
+        .then(tools.validateGender)
+        .then(tools.validateLike)
+        .then(tools.validateBio)
+        .then(tools.validateTown)
+        .then(tools.validateAge)
+        .then(tools.validateTags)
         .then(updateUser)
         .then((res) => {
-            console.log('after updateUser response');
-
+            console.log(res);
+            browserHistory.push({pathname: "/map", state: res.data});
+        })
+        .catch((err) => {
+            console.log(err);
         });
     }
 

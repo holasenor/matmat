@@ -48,6 +48,7 @@ exports.signin = function (req, res, next) {
 
 exports.checktoken = function (req, res, next) {
     var token = req.body.token;
+    console.log('checking token');
     jwt.verify(token, process.env.SECRET_KEY, function(err, decode){
         if (token) {
             if (err) {
@@ -60,9 +61,12 @@ exports.checktoken = function (req, res, next) {
             else {
                 req.check = true;
                 req.decode = decode;
+                console.log('next at checktoken');
+                next();
             }
         }
         else {
+            console.log('sorry----------------------------------------');
             res.send({
                 success: false,
                 message: 'You don\'t have a token'

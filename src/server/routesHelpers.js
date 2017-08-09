@@ -70,9 +70,10 @@ export function createResetPasswordToken (req, res, next) {
                 hash: hash
             };
             jwt.sign(pass, process.env.SECRET_KEY, {
-                expiresIn: 6000
+                expiresIn: '12h'
             }, function (err, token) {
                 if (err) {
+                    console.log(err);
                     res.send({
                         success: false,
                         message: 'Something went wrong when creating you token'
@@ -131,7 +132,24 @@ export function toggleLike (req, res, next) {
 export function updateUser (req, res, next) {
     var data = req.body;
     data.id =req.decode.id;
-    Database.updateUser(req.body).then(() => {
-
+    console.log('decode',data.id);
+    console.log('going to update with database');
+    Database.updateUserData(data.id, req.body).then((response) => {
+        console.log(response.result);
+        console.log('im in routesHelpers');
+        res.send({
+            success: true,
+            data: req.body
+        });
     })
+}
+
+export function hashIfPasswordChange (req, res, next) {
+    var password = req.body.password;
+    bcrypt.genSalt(saltRounds, function(err, salt) {
+        bcrypt.hash(password, salt, function(err, hash) {
+            req.body.password = hash;
+            next();
+        });
+    });
 }

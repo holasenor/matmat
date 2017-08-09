@@ -9,6 +9,7 @@ export default class Header extends React.Component {
 		this.state = {login: "Admin"};
 		this.state.myInfo = this.props.myInfo;
 		this.toEdit = this.toEdit.bind(this);
+		this.toHome = this.toHome.bind(this);
 		console.log('This is header-----------------');
 		console.log('state = ',this.state);
 		console.log('-------------------------------');
@@ -27,7 +28,7 @@ export default class Header extends React.Component {
 	}
 
 	toHome() {
-		browserHistory.push("/map");
+		browserHistory.push({pathname: "/map", state: this.state.myInfo});
 	}
 
 	toChat() {

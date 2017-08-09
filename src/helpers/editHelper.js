@@ -3,6 +3,7 @@ var _ = require('lodash');
 import {browserHistory} from "react-router";
 import $ from "jquery";
 
+
 const fields = ['pseudo','email', 'password', 'gender', 'like', 'bio', 'town', 'age', 'tag'];
 const genders = ['male', 'female', '...'];
 const likes = ['male', 'female', '...'];
@@ -21,15 +22,17 @@ export function getData(target) {
         if (form.find('#subject').val() != "") {
             data.password = form.find('#subject').val();
         }
+        console.log('leaving getData');
         resolve(data);
     });
 }
 
 export function updateUser(data) {
-    console.log(data);
+    console.log('entering updateUser');
     data.token = localStorage.getItem('token');
     return axios.post('./updateuser', data)
-    .then((res) => {
-        console.log(res);
+    .then((response) => {
+        console.log(response.data);
+        return response.data;
     })
 }

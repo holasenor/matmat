@@ -34,6 +34,18 @@ export function validateTarget(target) {
     });
 }
 
+export function isMailValid(infos) {
+    return new Promise(function(resolve,reject){
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if (re.test(infos.email)) {
+            resolve(infos);
+        }
+        else {
+            throw 'This is not a valid mail';
+        }
+    })
+}
+
 export function mailExists(infos) {
     return new Promise(function(resolve,reject){
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -71,6 +83,17 @@ export function validateEmail(infos) {
     });
 }
 
+export function isPseudoLongEnough(infos) {
+    return new Promise(function(resolve,reject){
+        if (infos.pseudo.length > 10) {
+            throw 'Pseudo is too long';
+        }
+        else {
+            resolve(infos);
+        }
+    }
+}
+
 export function validatePseudo(infos) {
     if (infos.pseudo != "") {
         return axios.get("/user", {
@@ -82,6 +105,9 @@ export function validatePseudo(infos) {
         .then((data) => {
             if (data.data.success) {
                 throw 'Pseudo already exists'
+            }
+            if (infos.pseudo.length > 10) {
+                throw 'Pseudo is too long';
             }
             return infos;
         })
