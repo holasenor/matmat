@@ -5,7 +5,6 @@ import Login from "./MainMenu/Login";
 import Footer from "./Footer";
 import RightBar from "./Mapping/RightBar";
 import Container from "./Mapping/Container";
-import GMap from './Mapping/GMap';
 import MyMap from './Mapping/ReactGmaps';
 import {checkTokenIsSet} from "../helpers/loginHelpers.js";
 
@@ -39,12 +38,6 @@ export default class Mapping extends React.Component {
 							<Col md={8} className="iframe-rwd">
 								{/* ===============GOOGLEMAP============== */}
 								<MyMap myJson={this.props.myJson.myData} />
-
-								<div id="container">
-									// <GMap initialCenter={this.props.myJson.myData}/>
-									// <GMap initialCenter={this.props.myJson.myData} />
-									// <GMap initialCenter={initialCenter} />
-								</div>
 								{/* ===============/GOOGLEMAP============== */}
 							</Col>
 							<Col md={4}>

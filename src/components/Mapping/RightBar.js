@@ -20,7 +20,7 @@ export default class RightBar extends React.Component {
 		return (
 				<Col md={4} xs={6} key={key} className="center">
 					<div className="center">{object.pseudo}, {object.age}</div>
-				<img onClick={(e) => {this.open(e)}} id={key} className="photoThumbnail" src={object.img_src} key={Object.keys(object)} value={key}/>
+				<img onClick={(e) => {this.open(e)}} id={key} className="photoThumbnail" src={object.img_src} key={key} value={key}/>
 					<div>
 						<Modal show={this.state.showModal} onHide={this.close}>
 							<Modal.Header closeButton>

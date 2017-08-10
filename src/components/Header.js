@@ -1,13 +1,18 @@
 import React from "react"
+import ReactDOM from 'react-dom';
+import Badge from 'material-ui/Badge';
+import IconButton from 'material-ui/IconButton';
+import NotificationsIcon from 'material-ui/svg-icons/social/notifications';
+import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 import Title from "./Header/Title";
 import Chat from "./Chat";
 import { Col, Button, Nav, Navbar, NavItem, MenuItem, NavDropdown } from 'react-bootstrap';
 import {browserHistory} from "react-router";
 
 const myJson = {
-  "myData":[
-    {"key":"1",  "id":"1",  "chat":"[11, 5, 3]", "pseudo":"FindPeople.js", "email":"Doe@test.com", "age":"30","sexe":"male", "like":"female", "lat":"49.8965533", "lng":"2.3185364", "img_src":"https://cdn.intra.42.fr/users/medium_oseng.jpg", "bio":"En recherche active", "popularity":"35"},
-  ]
+	"myData":[
+		{"key":"1",  "id":"1",  "chat":"[11, 5, 3]", "pseudo":"FindPeople.js", "email":"Doe@test.com", "age":"30","sexe":"male", "like":"female", "lat":"49.8965533", "lng":"2.3185364", "img_src":"https://cdn.intra.42.fr/users/medium_oseng.jpg", "bio":"En recherche active", "popularity":"35"},
+	]
 };
 
 export default class Header extends React.Component {
@@ -38,6 +43,10 @@ export default class Header extends React.Component {
 		browserHistory.push("/chat");
 	}
 
+	toLikes() {
+		browserHistory.push("/likes");
+	}
+
 	handleLogout() {
 		localStorage.removeItem('token');
 		localStorage.removeItem('username');
@@ -54,14 +63,14 @@ export default class Header extends React.Component {
 				<Title>
 				</Title>
 				<Navbar>
-					<Col xs={12} md={8}>
+					<Col xs={12} md={7}>
 						<Navbar.Header>
 							<Navbar.Brand>
 								{this.renderLogo()}
 							</Navbar.Brand>
 						</Navbar.Header>
 					</Col>
-					<Col xs={6} md={4}>
+					<Col xs={12} md={4}>
 						<Nav>
 							<NavItem onClick={this.toHome}>
 								People
@@ -69,24 +78,51 @@ export default class Header extends React.Component {
 							<NavItem onClick={this.toChat}>
 								Chat
 							</NavItem>
-							<NavDropdown title="Account" id="basic-nav-dropdown">
-								<MenuItem onClick={this.toEdit}>
-									Edit
-								</MenuItem>
-								<MenuItem divider />
+							{/* <NavItem onClick={this.toLikes}>
+							Likes
+						</NavItem> */}
+						<NavDropdown title="Account" id="basic-nav-dropdown">
+							<MenuItem onClick={this.toEdit}>
+								Edit
+							</MenuItem>
+							<MenuItem divider />
 							<MenuItem onClick={this.handleLogout}>
 								Logout
 							</MenuItem>
 						</NavDropdown>
 					</Nav>
 					{/* <ul id="messages"></ul>
-					    <form action="">
-					      <input id="m" autocomplete="off" /><button>Send</button>
-					    </form> */}
-				</Col>
-			</Navbar>
-			<Chat />
-		</header>
-	);
-}
+					<form action="">
+					<input id="m" autocomplete="off" /><button>Send</button>
+				</form> */}
+			</Col>
+			<Col xs={12} md={1}>
+				<Nav>
+					<NavItem id="iconsNotifHeader" className="iconNotif" onClick={this.toLikes}>
+						<Badge className="iconNotif"
+							badgeContent={0}
+							secondary={true}
+							badgeStyle={{top: 0, right: 0}}
+							>
+								<IconButton tooltip="Notifications">
+									<NotificationsIcon />
+								</IconButton>
+							</Badge>
+							<Badge className="iconNotif"
+								badgeContent={90}
+								secondary={true}
+								badgeStyle={{top: 0, right: 0}}
+								>
+									<CommunicationChatBubble />
+									<NotificationsIcon />
+								</Badge>
+							</NavItem>
+						</Nav>
+					</Col>
+				</Navbar>
+
+				<Chat />
+			</header>
+		);
+	}
 }

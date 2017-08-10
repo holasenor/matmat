@@ -5,7 +5,6 @@ import { Button } from 'react-bootstrap';
 
 import Header from "../Header";
 import Footer from "../Footer";
-import YourMatches from "./YourMatches";
 
 
 
@@ -14,7 +13,8 @@ class EditProfil extends React.Component {
     super();
     this.state = {
 		name: "Pedro state",
-		// myprofil : this.state.myjson
+		myProfil : "coucou",
+		// myProfil : {"key":"1",  "id":"1",  "chat":"[11, 2, 3]", "pseudo":"Profil.js", "email":"Doe@test.com", "age":"30","sexe":"male", "like":"female", "lat":"49.8965533", "lng":"2.3185364", "img_src":"https://cdn.intra.42.fr/users/medium_oseng.jpg", "bio":"En recherche active", "popularity":"35"},
 	}
   }
 
@@ -136,7 +136,6 @@ class EditProfil extends React.Component {
       </div>
 
 
-	  <YourMatches />
 	  <Footer />
       </div>
 

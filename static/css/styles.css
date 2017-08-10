@@ -16,6 +16,24 @@
 #myHeader {
 	background-color: olive;
 }
+.iconNotif {
+	max-height: 3em;
+	top: 0;
+	padding: 0!important;
+	margin: 0!important;
+	left: auto;
+}
+.iconNotif > a {
+	max-height: 3em;
+	top: 0;
+	padding: 0!important;
+	margin: 0!important;
+}
+
+#iconsNotifHeader {
+	display: 'flex';
+	flex-wrap: wrap!important;
+}
 
 #myFooter {
 	background-color: blue;
@@ -99,6 +117,12 @@
 }
 h3 #myChat {
 	color: grey;
+	top: 0;
+}
+
+.downChat {
+	position: absolute!important;
+	bottom: 0!important;
 }
 
 #formulaireChat {
@@ -106,12 +130,15 @@ h3 #myChat {
 }
 #form {
 	display: none;
+	top: 0;
 }
 #messages {
 	display: none;
+	top: 0;
 }
 #upmessages {
 	display: none;
+	top: 0;
 }
 #downChat {
 	display: block;
