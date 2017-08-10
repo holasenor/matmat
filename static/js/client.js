@@ -1,6 +1,7 @@
 (function($){
 	var socket = io.connect('http://localhost:3000');
 	var lastmsg = false;
+	// var ent = require("ent");
 
 
 	$('#loginform').submit(function(event){
@@ -39,9 +40,10 @@
 	socket.on('newmsg', function(msg) {
 		// console.log(msg.room);// $('#users').append('<img style="height:2em;" src="' + 'https://cdn.intra.42.fr/users/medium_default.png' + '"/>');// recuperer la photo
 		if (msg.room == $('#myroom').val()) {
-			$('#messages').append('<h3> Pseudo </h3>')//recuperer le pseudo de l'user
+			$('#messages').append('<h3>' + msg.pseudo + ' </h3>')//recuperer le pseudo de l'user
 			$('#messages').append('<div  style="word-wrap: break-word;">' + msg.message + '</div>')
-			$('#messages').animate({scrollTop : $('#messages').prop('scrollHeight' + '3em') }, 50);//scroll auo en bas des messages
+			$('#allMessages').animate({scrollTop: $('#allMessages').prop("scrollHeight")}, 500);
+			$('#myChat').animate({scrollTop : $('#myChat').prop('scrollHeight') }, 1000);//scroll auo en bas des messages
 		}
 	});
 

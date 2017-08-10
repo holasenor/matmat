@@ -10,8 +10,8 @@ import EditProfil from "./Profil/EditProfil";
 
 const myJson = {
   "myData":[
-    {"key":"1", "pseudo":"Profil.js", "email":"Doe@test.com", "age":"30","sexe":"male", "like":"female", "lat":"49.8965533", "lng":"2.3185364", "img_src":"https://cdn.intra.42.fr/users/medium_oseng.jpg", "bio":"En recherche active", "popularity":"35"},
-	  {"key":"18", "pseudo":"Peter", "email":"Jones@test.com", "age":"58","sexe":"male", "like":"male", "lat":"48.756614" , "lng":"2.952222", "img_src":"https://cdn.intra.42.fr/users/medium_stoussay.jpg", "bio":"En recherche active", "popularity":"35"}
+	  {"key":"1",  "id":"1",  "chat":"[11, 2, 3]", "pseudo":"Profil.js", "email":"Doe@test.com", "age":"30","sexe":"male", "like":"female", "lat":"49.8965533", "lng":"2.3185364", "img_src":"https://cdn.intra.42.fr/users/medium_oseng.jpg", "bio":"En recherche active", "popularity":"35"},
+	  {"key":"2",  "id":"2",  "chat":"[12, 5, 3]", "pseudo":"lopettes", "email":"Doe@test.com", "age":"30","sexe":"male", "like":"female", "lat":"49.896533", "lng":"2.318536", "img_src":"https://cdn.intra.42.fr/users/medium_vroux-ba.jpg", "bio":"En recherche active", "popularity":"35"},
   ]
 };
 

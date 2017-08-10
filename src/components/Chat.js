@@ -31,11 +31,12 @@ export default class Chat extends React.Component {
 				{/* <i className="fa fa-angle-down" aria-hidden="true">x</i> */}
 					<div id="upmessages" onClick={(e) => {this.up(e)}}>^</div>
 					<div id="downChat" onClick={(e) => {this.down(e)}}>x</div>
-					<div id="messages">
-						<div>
-							<div id="users">
+					<div id="allMessages">
+						<div id="messages">
+							<div>
+								<div id="users">
+								</div>
 							</div>
-
 						</div>
 					</div>
 						<Col id="loginform">

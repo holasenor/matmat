@@ -5,13 +5,17 @@ import { Button } from 'react-bootstrap';
 
 import Header from "../Header";
 import Footer from "../Footer";
+import YourMatches from "./YourMatches";
 
 
 
 class EditProfil extends React.Component {
   constructor() {
     super();
-    this.state = {name: "Pedro state"}
+    this.state = {
+		name: "Pedro state",
+		// myprofil : this.state.myjson
+	}
   }
 
   render() {
@@ -131,6 +135,9 @@ class EditProfil extends React.Component {
 
       </div>
 
+
+	  <YourMatches />
+	  <Footer />
       </div>
 
 

@@ -7,6 +7,8 @@ module.exports = function (io) {
 	var history = 99;//on limite a 9 messages pour ne pas tout peter
 	var msg;
 	var d;
+	var ent = require("ent"); //sontre les failles xss : https://edutechwiki.unige.ch/fr/Socket.io
+
 
 	io.sockets.on('connection', function(socket){
 		// console.log('new user');//test
@@ -15,7 +17,7 @@ module.exports = function (io) {
 			socket.emit('newusr', users[k]);
 		}
 		for(var k in allmessages) {
-			socket.emit('newmsg', allmessages[k]);
+			socket.to(allmessages[k].room).emit('newmsg', allmessages[k]);
 			console.log(allmessages[k]);
 		}
 
@@ -39,14 +41,15 @@ module.exports = function (io) {
 
 		// ============= reception de messages =============
 		socket.on('newmsg', function(message) {
-			// console.log(message);
+			console.log(message);
 			msg = message;
 			msg.room = message.room;
 			allmessages.push(message);//on stcoke dans un tableau les messages
 			if (allmessages.length > history) {
 				allmessages.shift();//supprime le message le plus anciens du tableau
 			}
-			msg.message = message.message;
+			msg.message = ent.encode(message.message);//pour enpecher les failles XSS
+			// msg.message = message.message;// dans portection de la faille xss
 			msg.login = message.login;
 			io.sockets.to(msg.room).emit('newmsg', msg);
 			// io.sockets.to('toto').emit('newmsg', msg);
