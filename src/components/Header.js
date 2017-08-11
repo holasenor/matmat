@@ -104,25 +104,18 @@ export default class Header extends React.Component {
 							secondary={true}
 							badgeStyle={{top: 0, right: 0}}
 							>
+							{/* <CommunicationChatBubble /> */}
 								<IconButton tooltip="Notifications">
 									<NotificationsIcon />
 								</IconButton>
-							</Badge>
-							<Badge className="iconNotif"
-								badgeContent={90}
-								secondary={true}
-								badgeStyle={{top: 0, right: 0}}
-								>
-									<CommunicationChatBubble />
-									<NotificationsIcon />
-								</Badge>
-							</NavItem>
-						</Nav>
-					</Col>
-				</Navbar>
+						</Badge>
+					</NavItem>
+				</Nav>
+			</Col>
+		</Navbar>
 
-				<Chat />
-			</header>
+		<Chat />
+		</header>
 		);
 	}
 }

@@ -30,8 +30,8 @@ app.get('*', function (req, res) {
 	res.send(out);
 });
 
-database.connect(url, function () {
-	initApp();
+// database.connect(url, function () {
+	// initApp();
 
 	const port = 3000;
 	const server = http.createServer(app);
@@ -51,4 +51,4 @@ database.connect(url, function () {
 			}
 		});
 
-	});
+	// });

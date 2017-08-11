@@ -39,9 +39,18 @@
 //on affiche les messages
 	socket.on('newmsg', function(msg) {
 		// console.log(msg.room);// $('#users').append('<img style="height:2em;" src="' + 'https://cdn.intra.42.fr/users/medium_default.png' + '"/>');// recuperer la photo
+		if (lastmsg == false)
+			lastmsg = msg.pseudo;
 		if (msg.room == $('#myroom').val()) {
-			$('#messages').append('<h3>' + msg.pseudo + ' </h3>')//recuperer le pseudo de l'user
-			$('#messages').append('<div  style="word-wrap: break-word;">' + msg.message + '</div>')
+			if(lastmsg != msg.pseudo) {
+				// $('.messages').append('<div class="sep">___________ </div>')//recuperer le pseudo de l'user
+				$('.messages').append('<div class="right">' + msg.pseudo + ' </div>')//recuperer le pseudo de l'user
+				$('.messages').append('<div><h4  class="aMessageBlue" style="word-wrap: break-word;">' + msg.message + '</h4></div>')
+			}
+			else {
+				$('.messages').append('<div class="left">' + msg.pseudo + ' </div>')//recuperer le pseudo de l'user
+				$('.messages').append('<div><h4  class="aMessagePink" style="word-wrap: break-word;">' + msg.message + '</h4></div>')
+							}
 			$('#allMessages').animate({scrollTop: $('#allMessages').prop("scrollHeight")}, 500);
 			$('#myChat').animate({scrollTop : $('#myChat').prop('scrollHeight') }, 1000);//scroll auo en bas des messages
 		}

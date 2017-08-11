@@ -69,6 +69,7 @@
   text-align: center;
   vertical-align: middle;
   margin: auto;
+  height: 90vh;
   /*margin-top: 7em;
   margin-bottom: 3em;*/
   padding-top: 10%;
@@ -112,7 +113,7 @@
 	background: hotpink;
 	opacity: 0.9;
 	/*filter: blur(3px);*/
-	border-radius: 3px;
+	border-radius: 10px;
 	overflow: scroll;
 }
 h3 #myChat {
@@ -132,10 +133,42 @@ h3 #myChat {
 	display: none;
 	top: 0;
 }
-#messages {
+
+.messages {
 	display: none;
 	top: 0;
+  display: inline-block;
+  /*padding: 12px 20px;
+  border-radius: 10px;*/
 }
+
+.messages > .right {
+  position: absolute;
+  right: 0;
+}
+
+.messages > .left {
+  position: absolute;
+  left: 0;
+}
+
+.aMessagePink {
+	display: none;
+	top: 0;
+  display: inline-block;
+  padding: 5px 5px;
+  border-radius: 10px;
+  background-color: yellow;
+}
+.aMessageBlue {
+	display: none;
+	top: 0;
+  display: inline-block;
+  padding: 5px 5px;
+  border-radius: 10px;
+  background-color: #80DEEA;
+}
+
 #upmessages {
 	display: none;
 	top: 0;
