@@ -91,7 +91,7 @@ export function isPseudoLongEnough(infos) {
         else {
             resolve(infos);
         }
-    }
+    });
 }
 
 export function validatePseudo(infos) {
@@ -194,6 +194,9 @@ export function validateAge(infos) {
 
 export function validateTags(infos) {
     return new Promise(function(resolve,reject){
+        if (infos.tag.length > 200) {
+            throw 'You have too many tags';
+        }
         var tags =infos.tag.trim().replace(/\s\s+/g, ' ').split(' ');
         for (var i = 0; i < tags.length; i++) {
             if (tags[i].length > 10) {

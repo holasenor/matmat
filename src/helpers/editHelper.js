@@ -19,10 +19,14 @@ export function getData(target) {
             tag: form.find('#tags').val(),
             bio: form.find('#message').val()
         }
+        Object.keys(data).forEach(key => {
+            if (data[key] == "") {
+                throw 'Something is empty, please fill it';
+            }
+        });
         if (form.find('#subject').val() != "") {
             data.password = form.find('#subject').val();
         }
-        console.log('leaving getData');
         resolve(data);
     });
 }

@@ -212,13 +212,25 @@ class EditProfil extends React.Component {
         e.preventDefault();
         getData(e.target)
         .then(tools.isMailValid)
-        .then(tools.validatePseudo)
-        .then(tools.validatePassword)
+        .then((infos) => {
+            if (infos.password) {
+                return tools.validatePseudo(infos);
+            }
+            else {
+                return infos;
+            }
+        })
         .then(tools.validateGender)
         .then(tools.validateLike)
         .then(tools.validateBio)
-        .then(tools.validateTown)
-        .then(tools.validateAge)
+        .then((infos) => {
+            if (infos.town) {
+                return tools.validateTown(infos);
+            }
+            else {
+                return infos;
+            }
+        })
         .then(tools.validateTags)
         .then(updateUser)
         .then((res) => {
@@ -226,7 +238,7 @@ class EditProfil extends React.Component {
             browserHistory.push({pathname: "/map", state: res.data});
         })
         .catch((err) => {
-            console.log(err);
+            alert(err);
         });
     }
 
