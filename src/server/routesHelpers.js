@@ -153,3 +153,18 @@ export function hashIfPasswordChange (req, res, next) {
         });
     });
 }
+
+export function getInfo (req, res, next) {
+    var id = req.decode.id;
+    User.findById(id)
+    .then((user) => {
+        delete user['password'];
+        res.send({
+            success: true,
+            user: user
+        });
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+}

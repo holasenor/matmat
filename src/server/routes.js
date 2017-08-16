@@ -1,4 +1,4 @@
-import {sendMail, createResetPasswordToken, isPasswordValid, mailExists, updateUser, hashIfPasswordChange} from './routesHelpers.js';
+import {sendMail, createResetPasswordToken, isPasswordValid, mailExists, updateUser, hashIfPasswordChange, getInfo} from './routesHelpers.js';
 var auth = require('./controllers/authentication');
 var jwt = require('jsonwebtoken');
 import Database from './database';
@@ -36,15 +36,18 @@ module.exports = function (app) {
 
     app.post('/checktoken',
     auth.checktoken,
-    (req, res) => {
-        console.log('checktoken');
+    (req, res, next) => {
         if (req.check) {
-            console.log('success');
+            next();
+        }
+        else {
             res.send({
-                success: true
+                success: false,
+                message: 'something wrong with it\'s token'
             });
         }
-    });
+    },
+    getInfo);
 
     app.get('/reset/:token',
     auth.changePassword);
@@ -60,21 +63,25 @@ module.exports = function (app) {
 
     app.post('/togglelike')
 
-app.post('/updateuser',
-auth.checktoken,
-(req, res, next) => {
-    if (req.check) {
-        next();
-    }
-    else {
-        res.send({
-            success:false,
-            message: 'Something wrong, sorry'
-        });
-    }
-},
-mailExists,
-isPasswordValid,
-hashIfPasswordChange,
-updateUser);
+    app.post('/updateuser',
+    auth.checktoken,
+    (req, res, next) => {
+        if (req.check) {
+            next();
+        }
+        else {
+            res.send({
+                success:false,
+                message: 'Something wrong, sorry'
+            });
+        }
+    },
+    mailExists,
+    isPasswordValid,
+    hashIfPasswordChange,
+    updateUser);
+
+    app.get('/myinfo/:token',
+    auth.checktoken,
+    getInfo);
 }

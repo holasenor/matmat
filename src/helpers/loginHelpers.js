@@ -1,8 +1,9 @@
 import axios from 'axios';
 var _ = require('lodash');
 import {browserHistory} from "react-router";
+var $ = require("jquery");
 
-const fields = ['pseudo','email', 'password', 'gender', 'like', 'bio', 'town', 'age', 'tag'];
+const fields = ['pseudo','email', 'password', 'gender', 'like', 'bio', 'age', 'tag', 'geo'];
 const genders = ['male', 'female', '...'];
 const likes = ['male', 'female', '...'];
 
@@ -251,25 +252,12 @@ export function signIn(data) {
 export function checkTokenIsSet(location) {
     var token = localStorage.getItem('token');
     var username = localStorage.getItem('username');
-    console.log('debug checkTokenIsSet');
-    axios.post('/checktoken', {
+    return axios.post('/checktoken', {
         token:token,
         username:username
     })
-    .then((res) => {
-        if (!res.data.success) {
-            if (location != 'main') {
-                browserHistory.push("/");
-            }
-        }
-        else {
-            if (location == 'main') {
-                browserHistory.push("/map");
-            }
-        }
-    })
     .catch((err) => {
-        console.log(err);
+        console.log('this user has no token or it\'s expired');
     });
 }
 
@@ -306,4 +294,37 @@ export function sendMail (data) {
     else {
         throw 'We don\'t know this mail';
     }
+}
+
+export function getLocation (infos) {
+    var options = {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+    };
+    return new Promise(function(resolve,reject){
+
+        function success(pos) {
+            var crd = pos.coords;
+            infos.lat = crd.latitude;
+            infos.lng = crd.longitude;
+            resolve(infos);
+        };
+
+        function getItAnyway(err) {
+            $.getJSON('//freegeoip.net/json/?callback=?', function(data) {
+                infos.lat = data.latitude;
+                infos.lng = data.longitude;
+                resolve(infos);
+            });
+        };
+
+        if (infos.geo) {
+            navigator.geolocation.getCurrentPosition(success, getItAnyway, options);
+        }
+        else {
+            getItAnyway();
+        }
+
+    });
 }

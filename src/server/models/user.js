@@ -3,6 +3,8 @@ var bcrypt = require('bcrypt');
 Promise.promisifyAll(bcrypt);
 var Database = require('../database');
 const saltRounds = 6;
+var ObjectId = require('mongodb').ObjectID;
+
 
 var User = function (data) {
     this.data = data;
@@ -49,7 +51,7 @@ User.findByMail = function (email) {
 
 User.findById = function (id) {
     return Database.get().then((db) => {
-        return db.collection('users').findOne({_id: id});
+        return db.collection('users').findOne({_id: ObjectId(id)});
     })
 }
 
