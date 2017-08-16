@@ -32,11 +32,34 @@ export function getData(target) {
 }
 
 export function updateUser(data) {
-    console.log('entering updateUser');
     data.token = localStorage.getItem('token');
     return axios.post('./updateuser', data)
     .then((response) => {
-        console.log(response.data);
+        localStorage.setItem('token', response.data.token);
         return response.data;
     })
+}
+
+export function deleteUser() {
+    var data = {};
+    data.token = localStorage.getItem('token');
+    return axios.post('./deleteaccount', data)
+    .then((response) => {
+        if (response.data.success) {
+            localStorage.removeItem('token');
+    		localStorage.removeItem('username');
+    		browserHistory.push("/");
+        }
+        else {
+            if (response.data.message) {
+                console.log(response.data.message);
+            }
+            else {
+                alert('Your account was NOT deleted');
+            }
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+    });
 }

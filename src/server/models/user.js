@@ -97,5 +97,10 @@ User.toggleLike = function () {
     console.log('this user has mail ' + User.asdf);
 }
 
+User.delete = function (id) {
+    return Database.get().then((db) => {
+        return db.collection('users').deleteOne({_id: ObjectId(id)});
+    })
+}
 
 module.exports = User;

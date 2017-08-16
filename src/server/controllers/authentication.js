@@ -49,7 +49,7 @@ exports.signin = function (req, res, next) {
 
 exports.checktoken = function (req, res, next) {
     var token = req.body.token || req.params.token;
-    console.log('checking token');
+    console.log(req.body);
     jwt.verify(token, process.env.SECRET_KEY, function(err, decode){
         if (token) {
             if (err) {

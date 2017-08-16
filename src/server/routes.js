@@ -1,4 +1,4 @@
-import {sendMail, createResetPasswordToken, isPasswordValid, mailExists, updateUser, hashIfPasswordChange, getInfo} from './routesHelpers.js';
+import {sendMail, createResetPasswordToken, isPasswordValid, mailExists, updateUser, hashIfPasswordChange, getInfo, deleteAccount, deleteMatches, deleteLikes} from './routesHelpers.js';
 var auth = require('./controllers/authentication');
 var jwt = require('jsonwebtoken');
 import Database from './database';
@@ -63,6 +63,12 @@ module.exports = function (app) {
 
     app.post('/togglelike')
 
+    app.post('/deleteaccount',
+    auth.checktoken,
+    deleteMatches,
+    deleteLikes,
+    deleteAccount);
+
     app.post('/updateuser',
     auth.checktoken,
     (req, res, next) => {
@@ -76,12 +82,19 @@ module.exports = function (app) {
             });
         }
     },
-    mailExists,
-    isPasswordValid,
+    (req, res, next) => {
+        if (req.body.password && req.body.password != "") {
+            isPasswordValid(req, res, next);
+        }
+        else {
+            next();
+        }
+    },
     hashIfPasswordChange,
     updateUser);
 
     app.get('/myinfo/:token',
     auth.checktoken,
     getInfo);
+
 }

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {validatePassword} from './controllers/aux/auth_helper';
+import {validatePassword, validatePseudo, validateBio, validateTags, validateLike, validateGender, validateTarget, validateEmail    } from './controllers/aux/auth_helper';
 var jwt = require('jsonwebtoken');
 var _ = require('lodash');
 var nodemailer = require('nodemailer');
@@ -27,7 +27,7 @@ export function sanitizeMongo(v) {
 
 export function tokenForUser(user) {
     var token = jwt.sign(user, process.env.SECRET_KEY, {
-        expiresIn: 4000
+        expiresIn: '11h'
     });
     return token;
 }
@@ -132,26 +132,62 @@ export function toggleLike (req, res, next) {
 export function updateUser (req, res, next) {
     var data = req.body;
     data.id =req.decode.id;
-    console.log('decode',data.id);
+    console.log('decode',req.decode);
     console.log('going to update with database');
-    Database.updateUserData(data.id, req.body).then((response) => {
-        console.log(response.result);
-        console.log('im in routesHelpers');
-        res.send({
-            success: true,
-            data: req.body
-        });
+    validateTarget(req.body)
+    .then(validateLike)
+    .then(validateBio)
+    .then(validateGender)
+    .then((infos) => {
+        console.log(req.decode.pseudo, infos.pseudo);
+        if (req.decode.pseudo == infos.pseudo) {
+            return infos;
+        }
+        else {
+            return validatePseudo(infos);
+        }
+        return infos;
+    })
+    .then((infos) => {
+        if (req.decode.email == infos.email) {
+            return infos;
+        }
+        else {
+            return validateEmail(infos);
+        }
+    })
+    .then((infos) => {
+        Database.updateUserData(data.id, infos).then((response) => {
+
+            var user = {
+                pseudo: infos.pseudo,
+                email: infos.email,
+                id: data.id
+            }
+            var token = tokenForUser(user);
+            console.log(token);
+            res.send({
+                success: true,
+                data: infos,
+                token: token
+            });
+        })
     })
 }
 
 export function hashIfPasswordChange (req, res, next) {
     var password = req.body.password;
-    bcrypt.genSalt(saltRounds, function(err, salt) {
-        bcrypt.hash(password, salt, function(err, hash) {
-            req.body.password = hash;
-            next();
+    if (password && password != "") {
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+            bcrypt.hash(password, salt, function(err, hash) {
+                req.body.password = hash;
+                next();
+            });
         });
-    });
+    }
+    else {
+        next();
+    }
 }
 
 export function getInfo (req, res, next) {
@@ -167,4 +203,30 @@ export function getInfo (req, res, next) {
     .catch((err) => {
         console.log(err);
     });
+}
+
+export function deleteAccount (req, res, next) {
+    console.log(req.decode);
+    User.delete(req.decode.id).
+    then((ret) => {
+        if (ret.result.n == 1 && ret.result.ok == 1) {
+            res.send({
+                success: true
+            })
+        }
+        else {
+            res.send({
+                success: false
+            });
+        }
+    })
+}
+
+export function deleteLikes (req, res, next) {
+    next();
+}
+
+
+export function deleteMatches (req, res, next) {
+    next();
 }

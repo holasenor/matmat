@@ -66,8 +66,6 @@ exports.getUser = function (obj) {
 exports.updateUserData = function (userId, obj) {
     delete obj['id'];
     delete obj['token'];
-    console.log('userId = ', userId);
-    console.log('obj = ', obj);
     return this.get()
     .then((db) => {
         return db.collection('users')

@@ -5,8 +5,7 @@ import {getData, updateUser, deleteUser} from '../../helpers/editHelper.js';
 import $ from "jquery";
 import {browserHistory} from "react-router";
 import * as tools from '../../helpers/loginHelpers.js';
-
-
+import {checkTokenIsSet, validateEmail} from "../../helpers/loginHelpers.js";
 import Header from "../Header";
 import Footer from "../Footer";
 
@@ -14,10 +13,9 @@ class EditProfil extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
-        if (!this.state.pseudo) {
-            console.log('setting this.props.location.state = ', this.props.location.state);
-            this.state.myInfo = this.props.location.state;
-        }
+        // if (!this.state.pseudo) {
+            // this.state.myInfo = this.props.location.state;
+        // }
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -214,7 +212,7 @@ class EditProfil extends React.Component {
         .then(tools.isMailValid)
         .then((infos) => {
             if (infos.password) {
-                return tools.validatePseudo(infos);
+                return tools.validatePassword(infos);
             }
             else {
                 return infos;
@@ -224,17 +222,25 @@ class EditProfil extends React.Component {
         .then(tools.validateLike)
         .then(tools.validateBio)
         .then((infos) => {
-            if (infos.town) {
-                return tools.validateTown(infos);
+            if (infos.pseudo == this.state.myInfo.pseudo) {
+                return infos;
             }
             else {
+                return tools.validatePseudo(infos);
+            }
+        })
+        .then((infos) => {
+            if (infos.email == this.state.myInfo.email) {
                 return infos;
+            }
+            else {
+                return tools.validateEmail(infos);
             }
         })
         .then(tools.validateTags)
         .then(updateUser)
         .then((res) => {
-            console.log(res);
+            console.log('pushiiing');
             browserHistory.push({pathname: "/map", state: res.data});
         })
         .catch((err) => {
@@ -243,48 +249,67 @@ class EditProfil extends React.Component {
     }
 
     handleDeleteAccount(mail) {
-        // deleteUser()
-        // .then((res) => {
-        //     console.log('after delete account response');
-        // });
+        deleteUser()
+        .catch((err) => {
+            alert(err);
+        });;
+    }
+
+    componentDidMount() {
+        checkTokenIsSet('map')
+        .then((res) => {
+            this.state.myInfo = res.data.user;
+            this.setState({myInfo: res.data.user});
+        })
+        .catch((err) => {
+            console.log(err);
+        });
     }
 
     render() {
-        return (
-            <div className='mybody'>
+        if (this.state.myInfo) {
+            return (
                 <div className='mybody'>
-                    <Header myInfo={this.state.myInfo}>
-                    </Header>
-                    <div id="page">
-                        <div className="page-inner">
-                            <div className="gtco-section border-bottom">
-                                <div className="gtco-container">
-                                    <Row>
-                                        <Col md={12} >
-                                            <Col md={7}>
-                                                <h3>
-                                                    Profil
-                                                </h3>
-                                                <form id='formUpdate' onSubmit={(e) => this.handleSubmit(e)}>
-                                                    {this.renderLogin()}
-                                                    {this.renderMail()}
-                                                    {this.renderPassAndUpload()}
-                                                    {this.renderGenderAndLike()}
-                                                    {this.renderTags()}
-                                                    {this.renderBio()}
-                                                    {this.renderButtons()}
-                                                </form>
+                    <div className='mybody'>
+                        <Header myInfo={this.state.myInfo}>
+                        </Header>
+                        <div id="page">
+                            <div className="page-inner">
+                                <div className="gtco-section border-bottom">
+                                    <div className="gtco-container">
+                                        <Row>
+                                            <Col md={12} >
+                                                <Col md={7}>
+                                                    <h3>
+                                                        Profil
+                                                    </h3>
+                                                    <form id='formUpdate' onSubmit={(e) => this.handleSubmit(e)}>
+                                                        {this.renderLogin()}
+                                                        {this.renderMail()}
+                                                        {this.renderPassAndUpload()}
+                                                        {this.renderGenderAndLike()}
+                                                        {this.renderTags()}
+                                                        {this.renderBio()}
+                                                        {this.renderButtons()}
+                                                    </form>
+                                                </Col>
+                                                {this.renderPhotoBlock()}
                                             </Col>
-                                            {this.renderPhotoBlock()}
-                                        </Col>
-                                    </Row>
+                                        </Row>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        );
+            );
+        }
+        else {
+            return (
+                <div className='mybody'>
+                </div>
+            );
+        }
     }
 }
 
