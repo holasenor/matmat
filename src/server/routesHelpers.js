@@ -8,7 +8,6 @@ import User from './models/user';
 var bcrypt = require('bcrypt');
 const saltRounds = 6;
 
-
 const mailOptions = {
     from: 'youremail@gmail.com',
     subject: 'You asked us to change your password',
@@ -206,7 +205,6 @@ export function getInfo (req, res, next) {
 }
 
 export function deleteAccount (req, res, next) {
-    console.log(req.decode);
     User.delete(req.decode.id).
     then((ret) => {
         if (ret.result.n == 1 && ret.result.ok == 1) {
@@ -229,4 +227,37 @@ export function deleteLikes (req, res, next) {
 
 export function deleteMatches (req, res, next) {
     next();
+}
+
+export function checkFileSize (err, req, res, next) {
+    if (err) {
+        console.log(err);
+        console.log('file is too big');
+        res.send({
+            success: false,
+            message: "file is too big"
+        });
+    }
+    else {
+        next();
+    }
+}
+
+export function deleteLastOneIfAny (req, res, next) {
+    console.log('deleteLastOneIfAny-----------------------------------------');
+    console.log(req.decode.id);
+    next();
+}
+
+export function uploadPicture (req, res, next) {
+    next();
+}
+
+
+export function addPictureToUser(req, res, next) {
+    res.send({
+        success: true,
+        file: req.file,
+        body: req.body
+    });
 }

@@ -103,4 +103,11 @@ User.delete = function (id) {
     })
 }
 
+User.addPicture = function (id, path) {
+    return Database.get().then((db) => {
+        return db.collection('users');
+    })
+}
+
+
 module.exports = User;

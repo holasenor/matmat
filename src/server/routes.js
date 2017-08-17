@@ -1,15 +1,26 @@
-import {sendMail, createResetPasswordToken, isPasswordValid, mailExists, updateUser, hashIfPasswordChange, getInfo, deleteAccount, deleteMatches, deleteLikes} from './routesHelpers.js';
+import {sendMail, createResetPasswordToken, isPasswordValid, mailExists, updateUser, hashIfPasswordChange, getInfo, deleteAccount, deleteMatches, deleteLikes, checkFileSize, checkFileExtension, deleteLastOneIfAny, uploadPicture, addPictureToUser} from './routesHelpers.js';
 var auth = require('./controllers/authentication');
 var jwt = require('jsonwebtoken');
 import Database from './database';
+var multer = require('multer');
+var path = require('path');
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  }
+})
+var upload = multer({ storage: storage, limits: { fileSize: 500000 }, fileFilter: function (req, file, cb) {
+    if (path.extname(file.originalname) !== '.jpg' && path.extname(file.originalname) !== '.png') {
+        return cb(new Error('Not a jpg or png file'));
+    }
+    cb(null, true)
+}})
+
 
 module.exports = function (app) {
-
-    // app.post('/user',
-    // function(req, res, next) {
-    //     next();
-    // },
-    // require('./controllers/users/create_user'));
 
     app.get('/user',
     // auth.checktoken,
@@ -96,5 +107,12 @@ module.exports = function (app) {
     app.get('/myinfo/:token',
     auth.checktoken,
     getInfo);
+
+    app.post('/upload',
+    upload.single('photo'),
+    auth.checktoken,
+    checkFileSize,
+    deleteLastOneIfAny,
+    addPictureToUser);
 
 }
