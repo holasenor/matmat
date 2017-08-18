@@ -8,21 +8,30 @@ import * as tools from '../../helpers/loginHelpers.js';
 import {checkTokenIsSet, validateEmail} from "../../helpers/loginHelpers.js";
 import Header from "../Header";
 import Footer from "../Footer";
+import Slider from 'react-slick';
 
 class EditProfil extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
-        // if (!this.state.pseudo) {
-            // this.state.myInfo = this.props.location.state;
-        // }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.validateFileSize = validateFileSize.bind(this);
         this.validateFileExtension = validateFileExtension.bind(this);
     }
 
+
     renderPhotoBlock() {
-        var picture = "https://cdn.intra.42.fr/users/medium_oseng.jpg";
+        var settings = {
+            dots: true,
+            infinite: true,
+            speed: 500,
+            slidesToShow: 1,
+            slidesToScroll: 1
+        };
+        var pictures = ["https://www.shareicon.net/download/2016/02/13/293861_msn_256x256.png"];
+        if (this.state.myInfo && this.state.myInfo.pictures && this.state.myInfo.pictures[0]) {
+            var pictures = this.state.myInfo.pictures;
+        }
         return (
             <Col md={5}>
                 <div className="gtco-contact-info">
@@ -46,8 +55,9 @@ class EditProfil extends React.Component {
                     <h3>
                         Your photo
                     </h3>
-                    <img src={picture}>
-                    </img>
+                    <Slider {...settings}>
+                        {pictures.map((picture, i) => <img key={i} id="profilePicture" src={"http://localhost:3000/images/uploads/" + picture}></img>)}
+                    </Slider>
                 </div>
             </Col>
         )
@@ -263,11 +273,10 @@ class EditProfil extends React.Component {
     componentDidMount() {
         checkTokenIsSet('map')
         .then((res) => {
-            this.state.myInfo = res.data.user;
             this.setState({myInfo: res.data.user});
         })
         .catch((err) => {
-            console.log(err);
+            console.log('asd', err);
         });
     }
 

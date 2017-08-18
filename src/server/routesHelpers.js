@@ -228,10 +228,14 @@ export function deleteMatches (req, res, next) {
     next();
 }
 
+export function deletePictures (req, res, next) {
+    next();
+}
+
 export function checkFileSize (err, req, res, next) {
     if (err) {
         console.log(err);
-        console.log('file is too big');
+        console.log('file is too big? maybe, but maybe it something else');
         res.send({
             success: false,
             message: "file is too big"
@@ -247,9 +251,8 @@ export function addPictureToUser(req, res, next) {
     var picturePath = req.file.originalname;
     User.addPicture(userId, picturePath)
     .then((result) => {
-        console.log('pictureToDeleteLater = ', result);
         if (result) {
-            fs.unlink("uploads/" + result);
+            fs.unlink("static/images/uploads/" + result);
         }
         res.send({
             success: true,
