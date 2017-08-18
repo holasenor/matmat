@@ -1,5 +1,6 @@
 var database = require('../database');
 import axios from 'axios';
+
 module.exports = function () {
 // database.get().createCollection('users').then((cursor) => {
 //     cursor.insertOne({ name: "olivier", address: "Paris" });

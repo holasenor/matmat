@@ -7,6 +7,8 @@ import Database from './database';
 import User from './models/user';
 var bcrypt = require('bcrypt');
 const saltRounds = 6;
+var fs = require('fs');
+
 
 const mailOptions = {
     from: 'youremail@gmail.com',
@@ -131,14 +133,12 @@ export function toggleLike (req, res, next) {
 export function updateUser (req, res, next) {
     var data = req.body;
     data.id =req.decode.id;
-    console.log('decode',req.decode);
     console.log('going to update with database');
     validateTarget(req.body)
     .then(validateLike)
     .then(validateBio)
     .then(validateGender)
     .then((infos) => {
-        console.log(req.decode.pseudo, infos.pseudo);
         if (req.decode.pseudo == infos.pseudo) {
             return infos;
         }
@@ -164,7 +164,6 @@ export function updateUser (req, res, next) {
                 id: data.id
             }
             var token = tokenForUser(user);
-            console.log(token);
             res.send({
                 success: true,
                 data: infos,
@@ -243,21 +242,19 @@ export function checkFileSize (err, req, res, next) {
     }
 }
 
-export function deleteLastOneIfAny (req, res, next) {
-    console.log('deleteLastOneIfAny-----------------------------------------');
-    console.log(req.decode.id);
-    next();
-}
-
-export function uploadPicture (req, res, next) {
-    next();
-}
-
-
 export function addPictureToUser(req, res, next) {
-    res.send({
-        success: true,
-        file: req.file,
-        body: req.body
+    var userId = req.decode.id;
+    var picturePath = req.file.originalname;
+    User.addPicture(userId, picturePath)
+    .then((result) => {
+        console.log('pictureToDeleteLater = ', result);
+        if (result) {
+            fs.unlink("uploads/" + result);
+        }
+        res.send({
+            success: true,
+            file: req.file,
+            body: req.body
+        });
     });
 }

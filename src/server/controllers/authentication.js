@@ -61,7 +61,6 @@ exports.checktoken = function (req, res, next) {
             else {
                 req.check = true;
                 req.decode = decode;
-                console.log('next at checktoken');
                 next();
             }
         }

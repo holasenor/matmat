@@ -9,21 +9,6 @@ const fields = ['pseudo','email', 'password', 'gender', 'like', 'bio', 'town', '
 const genders = ['male', 'female', '...'];
 const likes = ['male', 'female', '...'];
 
-// var file = form.find('#photo')[0].files[0];
-// var formData = new FormData();
-// var fileName
-// formData.append('photo', file, fileName);
-// formData.append('token', localStorage.getItem('token'));
-// const config = {
-//     headers: { 'content-type': 'multipart/form-data' }
-// }
-// axios.post('./upload', formData, config)
-// .then((res) => {
-//     console.log(res);
-// })
-// .catch((err) => {
-//     console.log(err);
-// });
 export function getData(target) {
     var form = $('#formUpdate');
     return new Promise(function(resolve,reject){

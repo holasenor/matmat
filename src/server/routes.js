@@ -112,7 +112,6 @@ module.exports = function (app) {
     upload.single('photo'),
     auth.checktoken,
     checkFileSize,
-    deleteLastOneIfAny,
     addPictureToUser);
 
 }
