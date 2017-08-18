@@ -2,7 +2,6 @@ import React from "react"
 import { Button, OverlayTrigger, popover, tooltip, overlay, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem, Modal} from 'react-bootstrap';
 import * as tools from '../../helpers/loginHelpers.js';
 import {browserHistory} from "react-router";
-import MySmallModal from '../bootstrap/MySmallModal';
 
 
 // .then(tools.checkUser)
