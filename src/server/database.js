@@ -1,4 +1,5 @@
 var MongoClient = require('mongodb').MongoClient
+var ObjectId = require('mongodb').ObjectID;
 
 var state = {
     db: null,
@@ -62,6 +63,19 @@ exports.getUser = function (obj) {
     })
 }
 
+exports.updateUserData = function (userId, obj) {
+    delete obj['id'];
+    delete obj['token'];
+    return this.get()
+    .then((db) => {
+        return db.collection('users')
+        .updateOne({_id: ObjectId(userId)}, {$set: obj})
+        .catch((err) => {
+            console.log(err);
+        });
+    })
+}
+
 exports.addLike = function (user, mail) {
-    
+
 }

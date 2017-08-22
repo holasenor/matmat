@@ -16,11 +16,12 @@ const myJson = {
 };
 
 export default class Header extends React.Component {
-	constructor() {
-		super();
-		this.state = {
-			myJson: myJson
-		};
+	constructor(props) {
+		super(props);
+		this.state = {login: "Admin"};
+		this.state.myInfo = this.props.myInfo;
+		this.toEdit = this.toEdit.bind(this);
+		this.toHome = this.toHome.bind(this);
 	}
 
 	renderLogo() {
@@ -36,6 +37,7 @@ export default class Header extends React.Component {
 	}
 
 	toHome() {
+		// browserHistory.push({pathname: "/map", state: this.state.myInfo});
 		browserHistory.push("/map");
 	}
 
@@ -54,7 +56,7 @@ export default class Header extends React.Component {
 	}
 
 	toEdit() {
-		browserHistory.push("/profil");
+		browserHistory.push({pathname: "/profil", state: this.state.myInfo});
 	}
 
 	render() {

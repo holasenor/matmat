@@ -30,25 +30,17 @@ app.get('*', function (req, res) {
 	res.send(out);
 });
 
-// database.connect(url, function () {
-	// initApp();
+database.connect(url, function () {
+    initApp();
 
-	const port = 3000;
-	const server = http.createServer(app);
+    const port = 3000;
+    const server = http.createServer(app);
 
-	server.listen(port, (err) => {
-		if (err) {
-			console.log(`
-				Error!
-				message: ${err.message}
-				type: ${err.type}
-				description: ${err.description}
-				`);
-			} else {
-				console.log('Server listening on port:', port);
-				io = io.listen(server);
-				mychat(io);
-			}
-		});
-
-	// });
+    server.listen(port, (err) => {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log('Server listening on port:', port);
+        }
+    });
+});
