@@ -80,8 +80,6 @@ exports.checklogin = function (req, res, next) {
         User.comparePassword(req.body.password,user.password)
         .then((passwordMatch) => {
             if (passwordMatch) {
-                console.log('debug user in checklogin');
-                console.log(user);
                 req.infos = user;
                 req.user = {
                     pseudo: user.pseudo,

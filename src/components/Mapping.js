@@ -30,7 +30,7 @@ export default class Mapping extends React.Component {
 								<MyMap myJson={this.state.people.myData} />
 							</Col>
 							<Col md={4}>
-								<RightBar myJson={this.state.people.myData}/>
+								<RightBar myPeople={this.state.people.myData}/>
 							</Col>
 						</Row>
 					</Col>

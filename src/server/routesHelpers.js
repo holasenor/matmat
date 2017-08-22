@@ -261,3 +261,12 @@ export function addPictureToUser(req, res, next) {
         });
     });
 }
+
+export function addLikeInUserLiked(req, res, next) {
+    console.log(req.body);
+    next();
+}
+
+export function addLikeInMe(req, res, next) {
+    next();
+}

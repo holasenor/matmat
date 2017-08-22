@@ -1,7 +1,7 @@
 import React from "react"
 import Research from "./Research"
 import { Button, OverlayTrigger, ProgressBar, popover, tooltip, overlay, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem, Modal} from 'react-bootstrap';
-
+import {likeThisId} from "./../../helpers/mainHelper.js";
 
 export default class RightBar extends React.Component {
 	constructor(props) {
@@ -9,10 +9,20 @@ export default class RightBar extends React.Component {
 		this.state = {
 			showModal: false,
 			idModal: 1,
-			myJson: this.props.myJson,
+			myPeople: this.props.myPeople,
 		};
 		this.open = this.open.bind(this);
 		this.close = this.close.bind(this);
+	}
+
+	handleClickLikeButton(id) {
+		likeThisId(id)
+		.then((res) => {
+			console.log('handle', res);
+		})
+		.catch((err) => {
+			err
+		});
 	}
 
 	renderPhoto(object, key, data) {
@@ -36,7 +46,7 @@ export default class RightBar extends React.Component {
 							</Modal.Body>
 							<Modal.Footer className="center">
 								{/* <Button onClick={this.close} className="center">Close</Button> */}
-								<Button bsStyle="primary">Like</Button>
+								<Button bsStyle="primary" onClick={() => {this.handleClickLikeButton(object.id)}}>Like</Button>
 								<Button bsStyle="success">Chat</Button>
 							</Modal.Footer>
 						</Modal>
@@ -64,7 +74,7 @@ export default class RightBar extends React.Component {
 
   render() {
 {/*}
-	  // const myJson = {
+	  // const myPeople = {
 		//   "myData":[
 		// 	  {"pseudo":"John", "email":"Doe@test.com", "age":"30","sexe":"male", "like":"female", "Lat":"48.8965533", "Lng":"2.3185364", "photo":"https://cdn.intra.42.fr/users/medium_oseng.jpg", "bio":"En recherche active"},
 		// 	  {"pseudo":"Anna", "email":"Smith@test.com", "age":"18","sexe":"male", "like":"male", "Lat":"45.856614" , "Lng":"12.352222", "photo":"https://cdn.intra.42.fr/users/medium_pguzman.jpg", "bio":"En recherche active"},
@@ -83,8 +93,8 @@ export default class RightBar extends React.Component {
 		// 	  {"pseudo":"Peter", "email":"Jones@test.com", "age":"58","sexe":"male", "like":"male", "Lat":"48.756614" , "Lng":"2.952222", "photo":"https://cdn.intra.42.fr/users/medium_stoussay.jpg", "bio":"En recherche active"}
 		//   ]
 	  // };
-	//   console.log(myJson);
-	//   console.log(myJson.data[0].pseudo);
+	//   console.log(myPeople);
+	//   console.log(myPeople.data[0].pseudo);
 	*/}
     return (
 	  <div className="rightBarMap">
@@ -92,7 +102,7 @@ export default class RightBar extends React.Component {
 			  <Research />
 			  <Row>
 			  	<Col md={12} className="resultPhotos">
-						{this.renderPhotos(this.state.myJson)}
+					{this.renderPhotos(this.state.myPeople)}
 	      	</Col>
 			  </Row>
 	    </div>
