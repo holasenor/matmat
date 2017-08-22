@@ -36,14 +36,9 @@ database.connect(url, function () {
 
     server.listen(port, (err) => {
         if (err) {
-            console.log(`
-                Error!
-                message: ${err.message}
-                type: ${err.type}
-                description: ${err.description}
-                `);
-            } else {
-                console.log('Server listening on port:', port);
-            }
-        });
+            console.log(err);
+        } else {
+            console.log('Server listening on port:', port);
+        }
     });
+});

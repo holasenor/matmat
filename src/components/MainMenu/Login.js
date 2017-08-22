@@ -3,6 +3,7 @@ import { Button, OverlayTrigger, popover, tooltip, overlay, Grid, Row, Col , Nav
 import * as tools from '../../helpers/loginHelpers.js';
 import {browserHistory} from "react-router";
 
+
 // .then(tools.checkUser)
 export default class Login extends React.Component {
 	constructor() {
@@ -29,7 +30,7 @@ export default class Login extends React.Component {
 		.then(tools.signIn)
 		.then((isLogged) => {
 			if (isLogged) {
-				browserHistory.push("/map");
+				browserHistory.push({pathname: "/map", state: isLogged});
 			}
 		})
 		.catch((err) => {
@@ -45,7 +46,7 @@ export default class Login extends React.Component {
 		.then(tools.sendMail)
 		.then((res) => {
 			this.setState({ showModal: false });
-			return res
+			return res;
 		})
 		.then((res) => {
 			alert(res.message);

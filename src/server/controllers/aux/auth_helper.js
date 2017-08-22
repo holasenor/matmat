@@ -4,7 +4,7 @@ import {browserHistory} from "react-router";
 import Database from '../../database';
 
 
-const fields = ['pseudo','email', 'password', 'gender', 'like', 'bio', 'town', 'age', 'tag'];
+const fields = ['pseudo','email', 'password', 'gender', 'like', 'bio', 'town', 'age', 'tag', 'lat', 'lng'];
 const genders = ['male', 'female', '...'];
 const likes = ['male', 'female', '...'];
 
@@ -225,5 +225,21 @@ export function checkTokenIsSet(location) {
     .catch((err) => {
         console.log('errorr = ');
         console.log(err);
+    });
+}
+
+export function validatePosition(infos) {
+    function isNumber(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+    return new Promise(function(resolve,reject){
+        console.log(infos.lat);
+        console.log(infos.lng);
+        if (isNumber(infos.lat) && isNumber(infos.lng)) {
+            resolve(infos);
+        }
+        else {
+            throw 'lat or lng are not numbers';
+        }
     });
 }

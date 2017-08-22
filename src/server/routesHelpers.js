@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {validatePassword} from './controllers/aux/auth_helper';
+import {validatePassword, validatePseudo, validateBio, validateTags, validateLike, validateGender, validateTarget, validateEmail    } from './controllers/aux/auth_helper';
 var jwt = require('jsonwebtoken');
 var _ = require('lodash');
 var nodemailer = require('nodemailer');
@@ -7,6 +7,7 @@ import Database from './database';
 import User from './models/user';
 var bcrypt = require('bcrypt');
 const saltRounds = 6;
+var fs = require('fs');
 
 
 const mailOptions = {
@@ -27,7 +28,7 @@ export function sanitizeMongo(v) {
 
 export function tokenForUser(user) {
     var token = jwt.sign(user, process.env.SECRET_KEY, {
-        expiresIn: 4000
+        expiresIn: '11h'
     });
     return token;
 }
@@ -70,9 +71,10 @@ export function createResetPasswordToken (req, res, next) {
                 hash: hash
             };
             jwt.sign(pass, process.env.SECRET_KEY, {
-                expiresIn: 6000
+                expiresIn: '12h'
             }, function (err, token) {
                 if (err) {
+                    console.log(err);
                     res.send({
                         success: false,
                         message: 'Something went wrong when creating you token'
@@ -126,4 +128,136 @@ export function sendMail (req, res, next) {
 export function toggleLike (req, res, next) {
     // var token = localStorage.
     // Database.
+}
+
+export function updateUser (req, res, next) {
+    var data = req.body;
+    data.id =req.decode.id;
+    console.log('going to update with database');
+    validateTarget(req.body)
+    .then(validateLike)
+    .then(validateBio)
+    .then(validateGender)
+    .then((infos) => {
+        if (req.decode.pseudo == infos.pseudo) {
+            return infos;
+        }
+        else {
+            return validatePseudo(infos);
+        }
+        return infos;
+    })
+    .then((infos) => {
+        if (req.decode.email == infos.email) {
+            return infos;
+        }
+        else {
+            return validateEmail(infos);
+        }
+    })
+    .then((infos) => {
+        Database.updateUserData(data.id, infos).then((response) => {
+
+            var user = {
+                pseudo: infos.pseudo,
+                email: infos.email,
+                id: data.id
+            }
+            var token = tokenForUser(user);
+            res.send({
+                success: true,
+                data: infos,
+                token: token
+            });
+        })
+    })
+}
+
+export function hashIfPasswordChange (req, res, next) {
+    var password = req.body.password;
+    if (password && password != "") {
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+            bcrypt.hash(password, salt, function(err, hash) {
+                req.body.password = hash;
+                next();
+            });
+        });
+    }
+    else {
+        next();
+    }
+}
+
+export function getInfo (req, res, next) {
+    var id = req.decode.id;
+    User.findById(id)
+    .then((user) => {
+        delete user['password'];
+        res.send({
+            success: true,
+            user: user
+        });
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+}
+
+export function deleteAccount (req, res, next) {
+    User.delete(req.decode.id).
+    then((ret) => {
+        if (ret.result.n == 1 && ret.result.ok == 1) {
+            res.send({
+                success: true
+            })
+        }
+        else {
+            res.send({
+                success: false
+            });
+        }
+    })
+}
+
+export function deleteLikes (req, res, next) {
+    next();
+}
+
+
+export function deleteMatches (req, res, next) {
+    next();
+}
+
+export function deletePictures (req, res, next) {
+    next();
+}
+
+export function checkFileSize (err, req, res, next) {
+    if (err) {
+        console.log(err);
+        console.log('file is too big? maybe, but maybe it something else');
+        res.send({
+            success: false,
+            message: "file is too big"
+        });
+    }
+    else {
+        next();
+    }
+}
+
+export function addPictureToUser(req, res, next) {
+    var userId = req.decode.id;
+    var picturePath = req.file.originalname;
+    User.addPicture(userId, picturePath)
+    .then((result) => {
+        if (result) {
+            fs.unlink("static/images/uploads/" + result);
+        }
+        res.send({
+            success: true,
+            file: req.file,
+            body: req.body
+        });
+    });
 }

@@ -3,6 +3,7 @@ var bcrypt = require('bcrypt');
 Promise.promisifyAll(bcrypt);
 var Database = require('../database');
 const saltRounds = 6;
+var ObjectId = require('mongodb').ObjectID;
 
 var User = function (data) {
     this.data = data;
@@ -20,7 +21,8 @@ User.create = function (data) {
                         console.log(res.insertedId);
                         var user = {
                             pseudo: data.pseudo,
-                            email: data.email
+                            email: data.email,
+                            id: res.insertedId
                         }
                         resolve(user);
                     })
@@ -43,6 +45,12 @@ User.comparePassword = function (passwordToCompare, hash) {
 User.findByMail = function (email) {
     return Database.get().then((db) => {
         return db.collection('users').findOne({email: email});
+    })
+}
+
+User.findById = function (id) {
+    return Database.get().then((db) => {
+        return db.collection('users').findOne({_id: ObjectId(id)});
     })
 }
 
@@ -87,4 +95,44 @@ User.getEmail = function () {
 User.toggleLike = function () {
     console.log('this user has mail ' + User.asdf);
 }
+
+User.delete = function (id) {
+    return Database.get().then((db) => {
+        return db.collection('users').deleteOne({_id: ObjectId(id)});
+    })
+}
+
+User.addPicture = function (id, path) {
+    var pictureToDeleteLater;
+    return Database.get().then((db) => {
+        return db.collection('users')
+        .findOne({_id: ObjectId(id)}).then((res) => {
+            if (res.pictures && res.pictures[4]) {
+                pictureToDeleteLater = res.pictures[0];
+            }
+            else {
+                pictureToDeleteLater = false;
+            }
+            return db;
+        })
+    })
+    .then((db) => {
+        return db.collection('users')
+        .updateOne({ _id: ObjectId(id), "pictures.4": { "$exists": 1 } },{ $pop: { pictures: -1 } } )
+        .then((res) => {
+            return db;
+        });
+    })
+    .then((db) => {
+        return db.collection('users')
+        .update({ _id: ObjectId(id) },{ $push: { pictures: { $each:[ path ], $slice : 5} }})
+        .then((res) => {
+            return pictureToDeleteLater;
+        });
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+}
+
 module.exports = User;
