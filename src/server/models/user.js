@@ -4,6 +4,7 @@ Promise.promisifyAll(bcrypt);
 var Database = require('../database');
 const saltRounds = 6;
 var ObjectId = require('mongodb').ObjectID;
+var geolib = require('geolib');
 
 var User = function (data) {
     this.data = data;
@@ -132,6 +133,27 @@ User.addPicture = function (id, path) {
     })
     .catch((err) => {
         console.log(err);
+    })
+}
+
+User.getMyPeople = function (myInfo) {
+    return Database.get()
+    .then((db) => {
+        return db.collection('users').find({}).toArray();
+    })
+    .then((everyone) => {
+        var myPeople = everyone.filter((someone) => {
+            var lat = parseFloat(someone.lat);
+            var mylat = parseFloat(myInfo.lat);
+            var lng = parseFloat(someone.lng);
+            var mylng = parseFloat(myInfo.lng);
+            var distance = geolib.getDistance(
+                {latitude: lat, longitude: lng},
+                {latitude: mylat, longitude: mylng}
+            );
+            return (distance < 50000)
+        })
+        return myPeople;
     })
 }
 
