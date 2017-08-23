@@ -1,4 +1,4 @@
-import {sendMail, createResetPasswordToken, isPasswordValid, mailExists, updateUser, hashIfPasswordChange, getInfo, deleteAccount, deleteMatches, deleteLikes, checkFileSize, checkFileExtension, deleteLastOneIfAny, uploadPicture, addPictureToUser, deletePictures, addLikeInUserLiked, addLikeInMe} from './routesHelpers.js';
+import {sendMail, createResetPasswordToken, isPasswordValid, mailExists, updateUser, hashIfPasswordChange, getInfo, deleteAccount, deleteMatches, deleteLikes, checkFileSize, checkFileExtension, deleteLastOneIfAny, uploadPicture, addPictureToUser, deletePictures, addLike} from './routesHelpers.js';
 var auth = require('./controllers/authentication');
 var jwt = require('jsonwebtoken');
 import Database from './database';
@@ -74,8 +74,7 @@ module.exports = function (app) {
 
     app.post('/togglelike',
     auth.checktoken,
-    addLikeInUserLiked,
-    addLikeInMe,
+    addLike,
     (req,res) => {
         if (req.like == 'done') {
             res.send({

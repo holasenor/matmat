@@ -8,7 +8,7 @@ import User from './models/user';
 var bcrypt = require('bcrypt');
 const saltRounds = 6;
 var fs = require('fs');
-
+var ObjectId = require('mongodb').ObjectID;
 
 const mailOptions = {
     from: 'youremail@gmail.com',
@@ -130,7 +130,7 @@ export function toggleLike (req, res, next) {
     // Database.
 }
 
-export function updateUser (req, res, next) {
+    export function updateUser (req, res, next) {
     var data = req.body;
     data.id =req.decode.id;
     console.log('going to update with database');
@@ -262,11 +262,18 @@ export function addPictureToUser(req, res, next) {
     });
 }
 
-export function addLikeInUserLiked(req, res, next) {
-    console.log(req.body);
-    next();
-}
-
-export function addLikeInMe(req, res, next) {
-    next();
+export function addLike(req, res, next) {
+    var id = ObjectId("5996efeaf4efe2595a79f3de");
+    req.body.id = id;
+    var userId = req.decode.id;
+    var likedId = req.body.id;
+    User.addLike(userId, likedId)
+    .then((result) => {
+        if (result) {
+            res.send({
+                success: true,
+                message: result.message
+            });
+        }
+    });
 }

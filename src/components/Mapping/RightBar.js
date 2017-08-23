@@ -2,6 +2,7 @@ import React from "react"
 import Research from "./Research"
 import { Button, OverlayTrigger, ProgressBar, popover, tooltip, overlay, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem, Modal} from 'react-bootstrap';
 import {likeThisId} from "./../../helpers/mainHelper.js";
+var $ = require("jquery");
 
 export default class RightBar extends React.Component {
 	constructor(props) {
@@ -10,6 +11,8 @@ export default class RightBar extends React.Component {
 			showModal: false,
 			idModal: 1,
 			myPeople: this.props.myPeople,
+			likeButtonBsStyle: 'primary',
+			myInfo: this.props.myInfo
 		};
 		this.open = this.open.bind(this);
 		this.close = this.close.bind(this);
@@ -18,15 +21,25 @@ export default class RightBar extends React.Component {
 	handleClickLikeButton(id) {
 		likeThisId(id)
 		.then((res) => {
-			console.log('handle', res);
+			console.log('handle', res.data);
+			this.setState({likeButtonBsStyle: 'info'});
 		})
 		.catch((err) => {
-			err
+			console.log(err);
 		});
 	}
 
 	renderPhoto(object, key, data) {
 		// console.log("test : "+ object + key);
+		var buttonBsStyle = this.state.likeButtonBsStyle;
+		var myLikes = this.state.myInfo.likes;
+		var objectId = object.id;
+		if (myLikes) {
+			if ($.inArray(objectId, myLikes)) {
+				console.log('Is in array');
+				buttonBsStyle = 'info';
+			}
+		}
 		return (
 				<Col md={4} xs={6} key={key} className="center">
 					<div className="center">{object.pseudo}, {object.age}</div>
@@ -46,7 +59,7 @@ export default class RightBar extends React.Component {
 							</Modal.Body>
 							<Modal.Footer className="center">
 								{/* <Button onClick={this.close} className="center">Close</Button> */}
-								<Button bsStyle="primary" onClick={() => {this.handleClickLikeButton(object.id)}}>Like</Button>
+								<Button bsStyle={buttonBsStyle} onClick={() => {this.handleClickLikeButton(object.id)}}>Like</Button>
 								<Button bsStyle="success">Chat</Button>
 							</Modal.Footer>
 						</Modal>

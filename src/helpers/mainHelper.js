@@ -16,7 +16,6 @@ export function sanitizeMongo(v) {
 
 export function likeThisId(id) {
     var token = localStorage.getItem('token');
-    console.log(id);
     return axios.post('/togglelike', {
         id: id,
         token: token
