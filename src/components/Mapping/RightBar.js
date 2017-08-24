@@ -12,37 +12,55 @@ export default class RightBar extends React.Component {
 			showModal: false,
 			idModal: 1,
 			myPeople: this.props.myPeople,
-			likeButtonBsStyle: 'primary',
+			buttonBsStyle: 'primary',
 			myInfo: this.props.myInfo
 		};
 		this.open = this.open.bind(this);
 		this.close = this.close.bind(this);
+		this.setStyleLikeButton =this.setStyleLikeButton.bind(this);
 	}
 
 	handleClickLikeButton(id) {
+		console.log(this.state.myInfo);
 		likeThisId(id)
 		.then((res) => {
-			console.log('handle', res.data);
-			this.setState({likeButtonBsStyle: 'info'});
+			var tempMyInfo = this.state.myInfo;
+			if (res.data.message == 'User remove like') {
+				var index = tempMyInfo.likes.indexOf(id);
+				if (index > -1) {
+					tempMyInfo.likes.splice(index, 1);
+				}
+				this.setState({buttonBsStyle: 'primary'});
+			}
+			else {
+				tempMyInfo.likes.push(id);
+				this.setState({buttonBsStyle: 'info'});
+			}
+			this.setState({myInfo: tempMyInfo});
 		})
 		.catch((err) => {
 			console.log(err);
 		});
 	}
 
+	setStyleLikeButton(id) {
+		var myLikes = this.state.myInfo.likes;
+		var objectId = id;
+		if (myLikes) {
+			if ($.inArray(objectId, myLikes) != -1) {
+				this.setState({buttonBsStyle: 'info'})
+			}
+			else {
+				this.setState({buttonBsStyle: 'primary'})
+			}
+		}
+	}
+
 	renderPhoto(object, key, data) {
 		if (!object.img_src) {
 			object.img_src = 'http://www.thesourcepartnership.com/wp-content/uploads/2017/05/facebook-default-no-profile-pic-300x300.jpg';
 		}
-		var buttonBsStyle = this.state.likeButtonBsStyle;
-		var myLikes = this.state.myInfo.likes;
-		var objectId = object.id;
-		if (myLikes) {
-			if ($.inArray(objectId, myLikes)) {
-				console.log('Is in array');
-				buttonBsStyle = 'info';
-			}
-		}
+
 		return (
 			<Col md={4} xs={6} key={key} className="center">
 				<div className="center">
@@ -75,7 +93,7 @@ export default class RightBar extends React.Component {
 							</div>
 						</Modal.Body>
 						<Modal.Footer className="center">
-							<Button bsStyle={buttonBsStyle} onClick={() => {this.handleClickLikeButton(object.id)}}>
+							<Button bsStyle={this.state.buttonBsStyle} onClick={(e) => {this.handleClickLikeButton(this.state.userIdInModal)}}>
 								Like
 							</Button>
 
@@ -114,6 +132,8 @@ export default class RightBar extends React.Component {
 			alert(err);
 		});
 
+		this.setStyleLikeButton(object._id);
+		this.setState({ userIdInModal: object._id});
 		this.setState({ showModal: true });
 		this.setState({ idModal: e.target.id });
 	}
