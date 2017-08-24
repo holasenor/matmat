@@ -27,7 +27,7 @@ export default class Mapping extends React.Component {
 								<MyMap myPeople={this.state.people} />
 							</Col>
 							<Col md={4}>
-								<RightBar myInfo={this.state.myInfo} myPeople={this.state.people.myData}/>
+								<RightBar myInfo={this.state.myInfo} myPeople={this.state.people}/>
 							</Col>
 						</Row>
 					</Col>

@@ -271,8 +271,6 @@ export function getMyPeople(req, res, next) {
 }
 
 export function addLike(req, res, next) {
-    var id = ObjectId("5996efeaf4efe2595a79f3de");
-    req.body.id = id;
     var userId = req.decode.id;
     var likedId = req.body.id;
     User.addLike(userId, likedId)
