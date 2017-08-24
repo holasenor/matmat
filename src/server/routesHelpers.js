@@ -261,3 +261,11 @@ export function addPictureToUser(req, res, next) {
         });
     });
 }
+
+export function getMyPeople(req, res, next) {
+    var myInfo = JSON.parse(req.query.myInfo);
+    return User.getMyPeople(myInfo)
+    .then((myPeople) => {
+        res.send(myPeople);
+    })
+}
