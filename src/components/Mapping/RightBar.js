@@ -1,6 +1,7 @@
 import React from "react"
 import Research from "./Research"
 import { Button, OverlayTrigger, ProgressBar, popover, tooltip, overlay, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem, Modal} from 'react-bootstrap';
+import * as tools from '../../helpers/mainHelper.js';
 
 
 export default class RightBar extends React.Component {
@@ -10,6 +11,7 @@ export default class RightBar extends React.Component {
 			showModal: false,
 			idModal: 1,
 			myJson: this.props.myJson,
+			myInfo: this.props.myInfo
 		};
 		this.open = this.open.bind(this);
 		this.close = this.close.bind(this);
@@ -18,30 +20,30 @@ export default class RightBar extends React.Component {
 	renderPhoto(object, key, data) {
 		// console.log("test : "+ object + key);
 		return (
-				<Col md={4} xs={6} key={key} className="center">
-					<div className="center">{object.pseudo}, {object.age}</div>
-				<img onClick={(e) => {this.open(e)}} id={key} className="photoThumbnail" src={object.img_src} key={Object.keys(object)} value={key}/>
-					<div>
-						<Modal show={this.state.showModal} onHide={this.close}>
-							<Modal.Header closeButton>
-								<Modal.Title className="center">{data[this.state.idModal].pseudo} , {data[this.state.idModal].age}</Modal.Title>
-							</Modal.Header>
-							<Modal.Body>
-								<img className="photoThumbnail center" src={data[this.state.idModal].img_src}/>
-							<div>Popularity : {data[this.state.idModal].popularity}</div>
-							{/*} <div><ProgressBar now={60} active/></div>*/}
-							<div><ProgressBar bsStyle='warning' now={parseInt(data[this.state.idModal].age)} active/></div>
-							<div>{data[this.state.idModal].bio}</div>
-							<div>#tags : {data[this.state.idModal].email}</div>
-							</Modal.Body>
-							<Modal.Footer className="center">
-								{/* <Button onClick={this.close} className="center">Close</Button> */}
-								<Button bsStyle="primary">Like</Button>
-								<Button bsStyle="success">Chat</Button>
-							</Modal.Footer>
-						</Modal>
-					</div>
-				</Col>
+			<Col md={4} xs={6} key={key} className="center">
+				<div className="center">{object.pseudo}, {object.age}</div>
+			<img onClick={(e) => {this.open(e)}} id={key} className="photoThumbnail" src={object.img_src} key={Object.keys(object)} value={key}/>
+				<div>
+					<Modal show={this.state.showModal} onHide={this.close}>
+						<Modal.Header closeButton>
+							<Modal.Title className="center">{data[this.state.idModal].pseudo} , {data[this.state.idModal].age}</Modal.Title>
+						</Modal.Header>
+						<Modal.Body>
+							<img className="photoThumbnail center" src={data[this.state.idModal].img_src}/>
+						<div>Popularity : {data[this.state.idModal].popularity}</div>
+						{/*} <div><ProgressBar now={60} active/></div>*/}
+						<div><ProgressBar bsStyle='warning' now={parseInt(data[this.state.idModal].age)} active/></div>
+						<div>{data[this.state.idModal].bio}</div>
+						<div>#tags : {data[this.state.idModal].email}</div>
+						</Modal.Body>
+						<Modal.Footer className="center">
+							{/* <Button onClick={this.close} className="center">Close</Button> */}
+							<Button bsStyle="primary">Like</Button>
+							<Button bsStyle="success">Chat</Button>
+						</Modal.Footer>
+					</Modal>
+				</div>
+			</Col>
 		)
 	}
 	renderPhotos(array) {
@@ -57,8 +59,19 @@ export default class RightBar extends React.Component {
   }
 
   open(e) {
-    this.setState({ showModal: true });
-		this.setState({ idModal: e.target.id });
+	  // .then(tools.validateEmail)
+	var userId = e.target.id;
+	var visitorId = this.state.myInfo._id;
+    tools.addVisit(userId, visitorId)
+	.then((result) => {
+		console.log(result);
+	})
+    .catch((err) => {
+        alert(err);
+    });
+
+	this.setState({ showModal: true });
+	this.setState({ idModal: e.target.id });
   }
 
 
@@ -92,8 +105,8 @@ export default class RightBar extends React.Component {
 			  <Research />
 			  <Row>
 			  	<Col md={12} className="resultPhotos">
-						{this.renderPhotos(this.state.myJson)}
-	      	</Col>
+					{this.renderPhotos(this.state.myJson)}
+      			</Col>
 			  </Row>
 	    </div>
 	  </div>

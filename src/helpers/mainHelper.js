@@ -24,5 +24,16 @@ export function toggleLike(mail) {
 }
 
 export function logmeOut() {
-    
+
+}
+
+export function addVisit(userId, visitorId) {
+	var visitorId = visitorId;
+	var token = localStorage.getItem('token');
+
+	return axios.post('/addVisit', {
+		userId: userId,
+		visitorId: visitorId,
+		token: token
+	})
 }
