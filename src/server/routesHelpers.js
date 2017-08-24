@@ -284,4 +284,23 @@ export function addLike(req, res, next) {
             });
         }
     });
+
+  export function addVisit(req, res, next) {
+	console.log('im in addVisit');
+	console.log(req.body);
+	// var userId = req.decode.id;
+	User.addOneVisit(req.body.userId, req.body.visitorId)
+	.then((ret) => {
+		console.log(userId);
+		if (ret) {
+			res.send({
+				success: true
+			})
+		}
+		else {
+			res.send({
+				success: false
+			});
+		}
+	})
 }

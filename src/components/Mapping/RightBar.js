@@ -3,6 +3,8 @@ import Research from "./Research"
 import { Button, OverlayTrigger, ProgressBar, popover, tooltip, overlay, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem, Modal} from 'react-bootstrap';
 import {likeThisId} from "./../../helpers/mainHelper.js";
 var $ = require("jquery");
+import * as tools from '../../helpers/mainHelper.js';
+
 
 export default class RightBar extends React.Component {
 	constructor(props) {
@@ -81,11 +83,11 @@ export default class RightBar extends React.Component {
 							<Button bsStyle="success">
 								Chat
 							</Button>
+
 						</Modal.Footer>
 					</Modal>
 				</div>
 			</Col>
-
 		)
 	}
 
@@ -101,11 +103,21 @@ export default class RightBar extends React.Component {
 		this.setState({ showModal: false });
 	}
 
-	open(e) {
-		this.setState({ showModal: true });
-		this.setState({ idModal: e.target.id });
-	}
+  open(e) {
+	  // .then(tools.validateEmail)
+	var userId = e.target.id;
+	var visitorId = this.state.myInfo._id;
+    tools.addVisit(userId, visitorId)
+	.then((result) => {
+		console.log(result);
+	})
+    .catch((err) => {
+        alert(err);
+    });
 
+	this.setState({ showModal: true });
+	this.setState({ idModal: e.target.id });
+  }
 
 	render() {
 		return (
@@ -119,8 +131,6 @@ export default class RightBar extends React.Component {
 				</Row>
 			</div>
 		</div>
-
-
 	);
 }
 }
