@@ -198,6 +198,32 @@ User.getMyPeople = function (myInfo) {
         })
         return myPeople;
     })
+
+    User.addOneVisit = function(id, idVisitor) {
+        var visitor;
+        console.log(id, idVisitor, Date.now());
+
+        return Database.get()
+        .then((db) => {
+            console.log('first then', id);
+            return db.collection('users')
+            .findOne({_id: ObjectId(id)})
+            .then((res) => {
+                if(res.visits) {//mettre une limite des 5 dernieres visites seulement
+                    console.log(res);
+                }
+                else {
+                    console.log("visite fail ", id);
+                }
+                return db;
+            })
+        })
+        .then((db) => {
+            console.log('second then');
+            return db.collection('users')
+            .update({ _id: ObjectId(id)}, { $push :{ visits: {  who:[idVisitor], when:[Date.now()]} }})
+        })
+    }
 }
 
 module.exports = User;
