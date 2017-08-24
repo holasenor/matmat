@@ -130,7 +130,7 @@ export function toggleLike (req, res, next) {
     // Database.
 }
 
-    export function updateUser (req, res, next) {
+export function updateUser (req, res, next) {
     var data = req.body;
     data.id =req.decode.id;
     console.log('going to update with database');
@@ -284,23 +284,24 @@ export function addLike(req, res, next) {
             });
         }
     });
+}
 
-  export function addVisit(req, res, next) {
-	console.log('im in addVisit');
-	console.log(req.body);
-	// var userId = req.decode.id;
-	User.addOneVisit(req.body.userId, req.body.visitorId)
-	.then((ret) => {
-		console.log(userId);
-		if (ret) {
-			res.send({
-				success: true
-			})
-		}
-		else {
-			res.send({
-				success: false
-			});
-		}
-	})
+export function addVisit(req, res, next) {
+    console.log('im in addVisit');
+    console.log(req.body);
+    // var userId = req.decode.id;
+    User.addOneVisit(req.body.userId, req.body.visitorId)
+    .then((ret) => {
+        console.log(userId);
+        if (ret) {
+            res.send({
+                success: true
+            })
+        }
+        else {
+            res.send({
+                success: false
+            });
+        }
+    })
 }
