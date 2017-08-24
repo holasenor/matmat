@@ -14,34 +14,6 @@ var User = function (data) {
 }
 
 User.create = function (data) {
-	<<<<<<< HEAD
-	return Database.get().then((db) => {
-		return new Promise(function(resolve,reject){
-			bcrypt.genSalt(saltRounds, function(err, salt) {
-				bcrypt.hash(data.password, salt, function(err, hash) {
-					data.password = hash;
-					db.collection('users')
-					.insertOne(data)
-					.then((res) => {
-						console.log(res.insertedId);
-						var user = {
-							pseudo: data.pseudo,
-							email: data.email,
-							id: res.insertedId
-						}
-						resolve(user);
-					})
-					.catch((err) => {
-						console.log(err);
-					});
-				});
-			});
-		})
-		.catch((err) => {
-			console.log(err);
-		})
-	});
-	=======
 	return Database.get().then((db) => {
 		return new Promise(function(resolve,reject){
 			bcrypt.genSalt(saltRounds, function(err, salt) {
@@ -67,7 +39,6 @@ User.create = function (data) {
 			console.log(err);
 		})
 	});
-	>>>>>>> master
 }
 
 User.comparePassword = function (passwordToCompare, hash) {
@@ -232,7 +203,7 @@ User.getMyPeople = function (myInfo) {
 
 User.addOneVisit = function(userId, idVisitor) {
 	console.log(userId, idVisitor, Date.now());
-	
+
 	return Database.get()
 	.then((db) => {
 		console.log('first then', userId); // il faut mettre sur l'id en cours

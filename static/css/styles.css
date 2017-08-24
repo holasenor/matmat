@@ -34,7 +34,21 @@
 	justify-content: center;
 	margin: auto;
 }
+/*===================== header =========================*/
+#badgeNotificationHeader {
+	padding: 0 0 0 0!important;
+}
 
+#showVisitors {
+	position: absolute!important;
+	z-index: 10;
+	right: 0;
+	background-color: #FEFEFE;
+	border-radius: 10px;
+	/*visibility: hidden;*/
+}
+
+/*======================= googlemap=======================================*/
 /*la fentre ou il y a la carte  https://www.fullstackreact.com/articles/how-to-write-a-google-maps-react-component/ */
 .mapping {
   height: inherit;
