@@ -34,6 +34,10 @@ export default class RightBar extends React.Component {
 		this.setStyleLikeButton =this.setStyleLikeButton.bind(this);
 	}
 
+	handleTouchTap() {
+		console.log('handleTouchTap');
+	}
+
 	handleClickLikeButton(id) {
 		console.log(this.state.myInfo);
 		likeThisId(id)
@@ -118,24 +122,29 @@ export default class RightBar extends React.Component {
 						</Modal.Footer>
 					</Modal>
 				</div>
-				{this.renderLikesBar()}
 			</Col>
 		)
 	}
 
-	renderLikesBar() {
+	renderLike(key) {
 		return (
-			<div className="likesBar">
 				<Chip
-					onClick={handleTouchTap}
+					onClick={this.handleTouchTap}
 					style={styles.chip}
+					key={key}
 					>
 						<Avatar src="images/uxceo-128.jpg">
 					</Avatar>
 					Image Avatar Chip
 				</Chip>
-			</div>
 		)
+	}
+	renderLikesBar(myLikes) {
+		var grid = [];
+		for (var i = 0; i < myLikes.length; i++) {
+			grid.push(this.renderLike(i));
+		}
+		return grid;
 	}
 
 	renderPhotos(myPeople) {
@@ -168,6 +177,11 @@ export default class RightBar extends React.Component {
 					</Col>
 				</Row>
 			</div>
+			<Row className="likesBar" style={styles.wrapper}>
+
+			{this.renderLikesBar(this.state.myInfo.likes)}
+		</Row>
+
 		</div>
 	);
 }
