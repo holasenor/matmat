@@ -1,4 +1,4 @@
-import {sendMail, createResetPasswordToken, isPasswordValid, mailExists, updateUser, hashIfPasswordChange, getInfo, deleteAccount, deleteMatches, deleteLikes, checkFileSize, checkFileExtension, deleteLastOneIfAny, uploadPicture, addPictureToUser, deletePictures, addLike} from './routesHelpers.js';
+import {sendMail, createResetPasswordToken, isPasswordValid, mailExists, updateUser, hashIfPasswordChange, getInfo, deleteAccount, deleteMatches, deleteLikes, checkFileSize, checkFileExtension, deleteLastOneIfAny, uploadPicture, addPictureToUser, deletePictures, getMyPeople, addLike} from './routesHelpers.js';
 var auth = require('./controllers/authentication');
 var jwt = require('jsonwebtoken');
 import Database from './database';
@@ -129,5 +129,9 @@ module.exports = function (app) {
     auth.checktoken,
     checkFileSize,
     addPictureToUser);
+
+    app.get('/mypeople',
+    auth.checktoken,
+    getMyPeople);
 
 }

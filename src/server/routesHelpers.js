@@ -262,6 +262,14 @@ export function addPictureToUser(req, res, next) {
     });
 }
 
+export function getMyPeople(req, res, next) {
+    var myInfo = JSON.parse(req.query.myInfo);
+    return User.getMyPeople(myInfo)
+    .then((myPeople) => {
+        res.send(myPeople);
+    })
+}
+
 export function addLike(req, res, next) {
     var id = ObjectId("5996efeaf4efe2595a79f3de");
     req.body.id = id;
