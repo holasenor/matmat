@@ -1,4 +1,8 @@
 import React from "react"
+import ReactDOM from 'react-dom';
+import Badge from 'material-ui/Badge';
+import IconButton from 'material-ui/IconButton';
+import NotificationsIcon from 'material-ui/svg-icons/social/notifications';
 import Title from "./Header/Title";
 import { Col, Button, Nav, Navbar, NavItem, MenuItem, NavDropdown } from 'react-bootstrap';
 import {browserHistory} from "react-router";
@@ -56,7 +60,7 @@ export default class Header extends React.Component {
 							</Navbar.Brand>
 						</Navbar.Header>
 					</Col>
-					<Col xs={6} md={4}>
+					<Col xs={6} md={3}>
 						<Nav>
 							<NavItem onClick={this.toHome}>
 								People
@@ -69,14 +73,25 @@ export default class Header extends React.Component {
 									Edit
 								</MenuItem>
 								<MenuItem divider />
-							<MenuItem onClick={this.handleLogout}>
-								Logout
-							</MenuItem>
-						</NavDropdown>
-					</Nav>
-				</Col>
-			</Navbar>
-		</header>
-	);
-}
+								<MenuItem onClick={this.handleLogout}>
+									Logout
+								</MenuItem>
+							</NavDropdown>
+						</Nav>
+					</Col>
+					<Col xs={12} md={1}>
+						<Badge
+					      badgeContent={42}
+					      secondary={true}
+					      badgeStyle={{top: 12, right: 12}}
+					    >
+					      <IconButton tooltip="Notifications">
+					        <NotificationsIcon />
+					      </IconButton>
+					    </Badge>
+					</Col>
+				</Navbar>
+			</header>
+		);
+	}
 }

@@ -134,7 +134,7 @@ module.exports = function (app) {
     auth.checktoken,
     getMyPeople);
 
-  app.post('/addVisit',
+  	app.post('/addVisit',
 	auth.checktoken,
 	addVisit);
 

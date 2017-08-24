@@ -1,9 +1,8 @@
 import React from "react"
 import Research from "./Research"
 import { Button, OverlayTrigger, ProgressBar, popover, tooltip, overlay, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem, Modal} from 'react-bootstrap';
-import {likeThisId} from "./../../helpers/mainHelper.js";
+import {likeThisId, addVisit} from "./../../helpers/mainHelper.js";
 var $ = require("jquery");
-import * as tools from '../../helpers/mainHelper.js';
 
 
 export default class RightBar extends React.Component {
@@ -35,7 +34,7 @@ export default class RightBar extends React.Component {
 		if (!object.img_src) {
 			object.img_src = 'http://www.thesourcepartnership.com/wp-content/uploads/2017/05/facebook-default-no-profile-pic-300x300.jpg';
 		}
-    		var buttonBsStyle = this.state.likeButtonBsStyle;
+		var buttonBsStyle = this.state.likeButtonBsStyle;
 		var myLikes = this.state.myInfo.likes;
 		var objectId = object.id;
 		if (myLikes) {
@@ -49,7 +48,7 @@ export default class RightBar extends React.Component {
 				<div className="center">
 					{object.pseudo}, {object.age}
 				</div>
-				<img onClick={(e) => {this.open(e)}} id={key} className="photoThumbnail" src={object.img_src} key={Object.keys(object)} value={key}>
+					<img onClick={(e) => {this.open(e, object)}} id={key} className="photoThumbnail" src={object.img_src} key={Object.keys(object)} value={object._id}>
 				</img>
 				<div>
 					<Modal show={this.state.showModal} onHide={this.close}>
@@ -76,9 +75,9 @@ export default class RightBar extends React.Component {
 							</div>
 						</Modal.Body>
 						<Modal.Footer className="center">
-								<Button bsStyle={buttonBsStyle} onClick={() => {this.handleClickLikeButton(object.id)}}>
-                  Like
-              </Button>
+							<Button bsStyle={buttonBsStyle} onClick={() => {this.handleClickLikeButton(object.id)}}>
+								Like
+							</Button>
 
 							<Button bsStyle="success">
 								Chat
@@ -103,34 +102,34 @@ export default class RightBar extends React.Component {
 		this.setState({ showModal: false });
 	}
 
-  open(e) {
-	  // .then(tools.validateEmail)
-	var userId = e.target.id;
-	var visitorId = this.state.myInfo._id;
-    tools.addVisit(userId, visitorId)
-	.then((result) => {
-		console.log(result);
-	})
-    .catch((err) => {
-        alert(err);
-    });
+	open(e, object) {
+		// .then(tools.validateEmail)
+		var userId = object._id;//id de la personne que l'on visite | clique
+		var visitorId = this.state.myInfo._id;
+		addVisit(userId, visitorId)
+		.then((result) => {
+			console.log(result);
+		})
+		.catch((err) => {
+			alert(err);
+		});
 
-	this.setState({ showModal: true });
-	this.setState({ idModal: e.target.id });
-  }
+		this.setState({ showModal: true });
+		this.setState({ idModal: e.target.id });
+	}
 
 	render() {
 		return (
 			<div className="rightBarMap">
 				<div >
 					<Research />
-				<Row>
-					<Col md={12} className="resultPhotos">
-						{this.renderPhotos(this.state.myPeople)}
-					</Col>
-				</Row>
+					<Row>
+						<Col md={12} className="resultPhotos">
+							{this.renderPhotos(this.state.myPeople)}
+						</Col>
+					</Row>
+				</div>
 			</div>
-		</div>
-	);
-}
+		);
+	}
 }
