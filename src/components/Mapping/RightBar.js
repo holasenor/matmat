@@ -2,9 +2,20 @@ import React from "react"
 import Research from "./Research"
 import { Button, OverlayTrigger, ProgressBar, popover, tooltip, overlay, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem, Modal} from 'react-bootstrap';
 import {likeThisId} from "./../../helpers/mainHelper.js";
+import Chip from 'material-ui/Chip';
+import Avatar from 'material-ui/Avatar';
 var $ = require("jquery");
 import * as tools from '../../helpers/mainHelper.js';
 
+const styles = {
+  chip: {
+    margin: 4,
+  },
+  wrapper: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+};
 
 export default class RightBar extends React.Component {
 	constructor(props) {
@@ -35,7 +46,7 @@ export default class RightBar extends React.Component {
 		if (!object.img_src) {
 			object.img_src = 'http://www.thesourcepartnership.com/wp-content/uploads/2017/05/facebook-default-no-profile-pic-300x300.jpg';
 		}
-    		var buttonBsStyle = this.state.likeButtonBsStyle;
+		var buttonBsStyle = this.state.likeButtonBsStyle;
 		var myLikes = this.state.myInfo.likes;
 		var objectId = object.id;
 		if (myLikes) {
@@ -76,9 +87,9 @@ export default class RightBar extends React.Component {
 							</div>
 						</Modal.Body>
 						<Modal.Footer className="center">
-								<Button bsStyle={buttonBsStyle} onClick={() => {this.handleClickLikeButton(object.id)}}>
-                  Like
-              </Button>
+							<Button bsStyle={buttonBsStyle} onClick={() => {this.handleClickLikeButton(object.id)}}>
+								Like
+							</Button>
 
 							<Button bsStyle="success">
 								Chat
@@ -87,7 +98,23 @@ export default class RightBar extends React.Component {
 						</Modal.Footer>
 					</Modal>
 				</div>
+				{this.renderLikesBar()}
 			</Col>
+		)
+	}
+
+	renderLikesBar() {
+		return (
+			<div className="likesBar">
+				<Chip
+					onClick={handleTouchTap}
+					style={styles.chip}
+					>
+						<Avatar src="images/uxceo-128.jpg">
+					</Avatar>
+					Image Avatar Chip
+				</Chip>
+			</div>
 		)
 	}
 
@@ -103,21 +130,21 @@ export default class RightBar extends React.Component {
 		this.setState({ showModal: false });
 	}
 
-  open(e) {
-	  // .then(tools.validateEmail)
-	var userId = e.target.id;
-	var visitorId = this.state.myInfo._id;
-    tools.addVisit(userId, visitorId)
-	.then((result) => {
-		console.log(result);
-	})
-    .catch((err) => {
-        alert(err);
-    });
+	open(e) {
+		// // .then(tools.validateEmail)
+		// var userId = e.target.id;
+		// var visitorId = this.state.myInfo._id;
+		// tools.addVisit(userId, visitorId)
+		// .then((result) => {
+		// 	console.log(result);
+		// })
+		// .catch((err) => {
+		// 	alert(err);
+		// });
 
-	this.setState({ showModal: true });
-	this.setState({ idModal: e.target.id });
-  }
+		this.setState({ showModal: true });
+		this.setState({ idModal: e.target.id });
+	}
 
 	render() {
 		return (
