@@ -22,7 +22,6 @@ User.create = function (data) {
                     db.collection('users')
                     .insertOne(data)
                     .then((res) => {
-                        console.log(res.insertedId);
                         var user = {
                             pseudo: data.pseudo,
                             email: data.email,
@@ -117,8 +116,9 @@ User.addLike = function (userId, likedId) {
             .updateOne({_id: ObjectId(userId)}, { $pull: {likes: likedId.toString()}})
             .then((res) => {
                 return db.collection('users')
-                .updateOne({_id: likedId}, { $pull: {likedBy: userId}})
+                .updateOne({_id: ObjectId(likedId)}, { $pull: {likedBy: userId}})
                 .then((res) => {
+                    console.log("\n",userId, ' does not like ', likedId, " anymore\n");
                     return {message: 'User remove like'};
                 })
             })
@@ -127,6 +127,7 @@ User.addLike = function (userId, likedId) {
             return db.collection('users')
             .updateOne({_id: ObjectId(likedId)}, { $addToSet: {likedBy: userId}})
             .then((res) => {
+                console.log("\n",userId, ' likes ', likedId, "\n");
                 return {message: 'like was successful'};
             })
         }
@@ -198,32 +199,33 @@ User.getMyPeople = function (myInfo) {
         })
         return myPeople;
     })
-
-    User.addOneVisit = function(id, idVisitor) {
-        var visitor;
-        console.log(id, idVisitor, Date.now());
-
-        return Database.get()
-        .then((db) => {
-            console.log('first then', id);
-            return db.collection('users')
-            .findOne({_id: ObjectId(id)})
-            .then((res) => {
-                if(res.visits) {//mettre une limite des 5 dernieres visites seulement
-                    console.log(res);
-                }
-                else {
-                    console.log("visite fail ", id);
-                }
-                return db;
-            })
-        })
-        .then((db) => {
-            console.log('second then');
-            return db.collection('users')
-            .update({ _id: ObjectId(id)}, { $push :{ visits: {  who:[idVisitor], when:[Date.now()]} }})
-        })
-    }
 }
+
+User.addOneVisit = function(id, idVisitor) {
+    var visitor;
+    console.log(id, idVisitor, Date.now());
+
+    return Database.get()
+    .then((db) => {
+        console.log('first then', id);
+        return db.collection('users')
+        .findOne({_id: ObjectId(id)})
+        .then((res) => {
+            if(res.visits) {//mettre une limite des 5 dernieres visites seulement
+                console.log(res);
+            }
+            else {
+                console.log("visite fail ", id);
+            }
+            return db;
+        })
+    })
+    .then((db) => {
+        console.log('second then');
+        return db.collection('users')
+        .update({ _id: ObjectId(id)}, { $push :{ visits: {  who:[idVisitor], when:[Date.now()]} }})
+    })
+}
+
 
 module.exports = User;
