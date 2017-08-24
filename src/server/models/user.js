@@ -6,6 +6,9 @@ const saltRounds = 6;
 var ObjectId = require('mongodb').ObjectID;
 var geolib = require('geolib');
 
+const LIKE_ADDED = 1;
+const ALREADY_LIKED = 0;
+
 var User = function (data) {
     this.data = data;
 }
@@ -97,6 +100,46 @@ User.toggleLike = function () {
     console.log('this user has mail ' + User.asdf);
 }
 
+User.addLike = function (userId, likedId) {
+    var likeAction = 0;
+    return Database.get()
+    .then((db) => {
+        return db.collection('users')
+        .updateOne({_id: ObjectId(userId)}, { $addToSet: {likes: likedId.toString()}})
+        .then((res) => {
+            likeAction = res.result.nModified;
+            return db;
+        })
+    })
+    .then((db) => {
+        if (likeAction == ALREADY_LIKED) {
+            return db.collection('users')
+            .updateOne({_id: ObjectId(userId)}, { $pull: {likes: likedId.toString()}})
+            .then((res) => {
+                return db.collection('users')
+                .updateOne({_id: likedId}, { $pull: {likedBy: userId}})
+                .then((res) => {
+                    return {message: 'User remove like'};
+                })
+            })
+        }
+        else if (likeAction == LIKE_ADDED) {
+            return db.collection('users')
+            .updateOne({_id: ObjectId(likedId)}, { $addToSet: {likedBy: userId}})
+            .then((res) => {
+                return {message: 'like was successful'};
+            })
+        }
+    })
+    .catch((err) => {
+        console.log('Error in addLike');
+        console.log(err);
+    })
+}
+
+User.wasLikedBy = function () {
+
+}
 User.delete = function (id) {
     return Database.get().then((db) => {
         return db.collection('users').deleteOne({_id: ObjectId(id)});

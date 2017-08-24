@@ -1,16 +1,16 @@
-import {sendMail, createResetPasswordToken, isPasswordValid, mailExists, updateUser, hashIfPasswordChange, getInfo, deleteAccount, deleteMatches, deleteLikes, checkFileSize, checkFileExtension, deleteLastOneIfAny, uploadPicture, addPictureToUser, deletePictures, getMyPeople} from './routesHelpers.js';
+import {sendMail, createResetPasswordToken, isPasswordValid, mailExists, updateUser, hashIfPasswordChange, getInfo, deleteAccount, deleteMatches, deleteLikes, checkFileSize, checkFileExtension, deleteLastOneIfAny, uploadPicture, addPictureToUser, deletePictures, getMyPeople, addLike} from './routesHelpers.js';
 var auth = require('./controllers/authentication');
 var jwt = require('jsonwebtoken');
 import Database from './database';
 var multer = require('multer');
 var path = require('path');
 var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'static/images/uploads/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  }
+    destination: function (req, file, cb) {
+        cb(null, 'static/images/uploads/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname);
+    }
 })
 var upload = multer({ storage: storage, limits: { fileSize: 500000 }, fileFilter: function (req, file, cb) {
     if (path.extname(file.originalname) !== '.jpg' && path.extname(file.originalname) !== '.png') {
@@ -72,7 +72,22 @@ module.exports = function (app) {
         res.send({success: true});
     });
 
-    app.post('/togglelike')
+    app.post('/togglelike',
+    auth.checktoken,
+    addLike,
+    (req,res) => {
+        if (req.like == 'done') {
+            res.send({
+                success: true
+            });
+        }
+        else {
+            res.send({
+                success: false,
+                message: req.like
+            });
+        }
+    });
 
     app.post('/deleteaccount',
     auth.checktoken,

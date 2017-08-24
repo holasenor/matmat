@@ -1,7 +1,8 @@
 import React from "react"
 import Research from "./Research"
 import { Button, OverlayTrigger, ProgressBar, popover, tooltip, overlay, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem, Modal} from 'react-bootstrap';
-
+import {likeThisId} from "./../../helpers/mainHelper.js";
+var $ = require("jquery");
 
 export default class RightBar extends React.Component {
 	constructor(props) {
@@ -10,15 +11,36 @@ export default class RightBar extends React.Component {
 			showModal: false,
 			idModal: 1,
 			myPeople: this.props.myPeople,
+			likeButtonBsStyle: 'primary',
+			myInfo: this.props.myInfo
 		};
 		this.open = this.open.bind(this);
 		this.close = this.close.bind(this);
 	}
 
+	handleClickLikeButton(id) {
+		likeThisId(id)
+		.then((res) => {
+			console.log('handle', res.data);
+			this.setState({likeButtonBsStyle: 'info'});
+		})
+		.catch((err) => {
+			console.log(err);
+		});
+	}
+
 	renderPhoto(object, key, data) {
-		console.log(object.img_src);
 		if (!object.img_src) {
 			object.img_src = 'http://www.thesourcepartnership.com/wp-content/uploads/2017/05/facebook-default-no-profile-pic-300x300.jpg';
+		}
+    		var buttonBsStyle = this.state.likeButtonBsStyle;
+		var myLikes = this.state.myInfo.likes;
+		var objectId = object.id;
+		if (myLikes) {
+			if ($.inArray(objectId, myLikes)) {
+				console.log('Is in array');
+				buttonBsStyle = 'info';
+			}
 		}
 		return (
 			<Col md={4} xs={6} key={key} className="center">
@@ -52,10 +74,10 @@ export default class RightBar extends React.Component {
 							</div>
 						</Modal.Body>
 						<Modal.Footer className="center">
-							{/* <Button onClick={this.close} className="center">Close</Button> */}
-							<Button bsStyle="primary">
-								Like
-							</Button>
+								<Button bsStyle={buttonBsStyle} onClick={() => {this.handleClickLikeButton(object.id)}}>
+                  Like
+              </Button>
+
 							<Button bsStyle="success">
 								Chat
 							</Button>
@@ -63,6 +85,7 @@ export default class RightBar extends React.Component {
 					</Modal>
 				</div>
 			</Col>
+
 		)
 	}
 
