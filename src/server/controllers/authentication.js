@@ -19,6 +19,9 @@ exports.signup = function (req, res, next) {
     .then(Validator.validatePosition)
     .then(Validator.validateTags)
     .then((data) => {
+        data.likes = [];
+        data.likedBy = [];
+        data.visits = [];
         User.create(data)
         .then((user) => {
             return tokenForUser(user);
