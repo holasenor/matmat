@@ -6,7 +6,9 @@ import Chip from 'material-ui/Chip';
 import Avatar from 'material-ui/Avatar';
 var $ = require("jquery");
 import * as tools from '../../helpers/mainHelper.js';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 
+injectTapEventPlugin();
 const styles = {
   chip: {
     margin: 4,
