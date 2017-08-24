@@ -16,6 +16,10 @@ export default class RightBar extends React.Component {
 	}
 
 	renderPhoto(object, key, data) {
+		console.log(object.img_src);
+		if (!object.img_src) {
+			object.img_src = 'http://www.thesourcepartnership.com/wp-content/uploads/2017/05/facebook-default-no-profile-pic-300x300.jpg';
+		}
 		return (
 			<Col md={4} xs={6} key={key} className="center">
 				<div className="center">
