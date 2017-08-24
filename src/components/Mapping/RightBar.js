@@ -65,7 +65,7 @@ export default class RightBar extends React.Component {
 	renderPhotos(myPeople) {
 		var grid = [];
 		for (var i = 0; i < myPeople.length; i++) {
-			grid.push(this.renderPhoto(myPeople[i], i, array));
+			grid.push(this.renderPhoto(myPeople[i], i, myPeople));
 		}
 		return grid;
 	}
