@@ -163,6 +163,7 @@ export default class RightBar extends React.Component {
 
     close() {
         this.setState({ showModal: false });
+        this.getLikes();
     }
 
     open(e, object) {
@@ -173,6 +174,10 @@ export default class RightBar extends React.Component {
     }
 
     componentDidMount() {
+        this.getLikes();
+    }
+
+    getLikes() {
         getMyLikesInfo(this.state.myInfo.likes)
         .then((myLikesInfo) => {
             this.setState({myLikesInfo: myLikesInfo});
@@ -180,6 +185,7 @@ export default class RightBar extends React.Component {
     }
 
     render() {
+        console.log('render was called');
         if (this.state.myLikesInfo) {
             return (
                 <div className="rightBarMap">

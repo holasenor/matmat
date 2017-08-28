@@ -305,7 +305,6 @@ export function addVisit(req, res, next) {
 }
 
 export function getMyLikesInfo(req, res, next) {
-    console.log('getting my like info in the back');
     var ids = req.query.likes;
     Database.getUsers(ids)
     .then((users) => {

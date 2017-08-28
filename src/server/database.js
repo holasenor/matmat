@@ -81,9 +81,14 @@ exports.addLike = function (user, mail) {
 }
 
 exports.getUsers = function (ids) {
-    var obj_ids = ids.map(function(id) {
-        return ObjectId(id);
-    });
+    if (ids) {
+        var obj_ids = ids.map(function(id) {
+            return ObjectId(id);
+        });
+    }
+    else {
+        var obj_ids = [];
+    }
     return this.get()
     .then((db) => {
         return db.collection('users')
