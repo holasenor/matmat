@@ -39,13 +39,19 @@
 	padding: 0 0 0 0!important;
 }
 
-#showVisitors {
-	position: absolute!important;
-	z-index: 10;
-	right: 0;
+.showVisitors {
 	background-color: #FEFEFE;
-	border-radius: 10px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	word-wrap: break-word;
 	/*visibility: hidden;*/
+}
+
+.avatarVisitor {
+	max-width: 2em;
+	max-height: 2em;
+	border-radius: 50%;
 }
 
 /*======================= googlemap=======================================*/

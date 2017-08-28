@@ -9,7 +9,7 @@ import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 import Title from "./Header/Title";
-import { Col, Button, Nav, Navbar, NavItem, MenuItem, NavDropdown } from 'react-bootstrap';
+import { Col, Button, Nav, Navbar, NavItem, MenuItem, NavDropdown, ButtonToolbar, DropdownButton,  Glyphicon} from 'react-bootstrap';
 import RaisedButton from 'material-ui/RaisedButton';
 import Popover, {PopoverAnimationVertical} from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
@@ -26,9 +26,6 @@ export default class Header extends React.Component {
 	}
 
 	handleTouchTap = (event) => {
-		// This prevents ghost click.
-		event.preventDefault();
-
 		this.setState({
 			open: true,
 			anchorEl: event.currentTarget,
@@ -40,6 +37,7 @@ export default class Header extends React.Component {
 			open: false,
 		});
 	};
+
 	renderLogo() {
 		var src = "../../images/Logo.png";
 		var classname = "mylogo";
@@ -52,122 +50,111 @@ export default class Header extends React.Component {
 		);
 	}
 
-	showVisitors() {
+	renderListVisitor2(object, key, data) {
 		return (
-			<Col md={3} xs={6} id="showVisitors">
+			<MenuItem key={key} eventKey={key} className="showVisitors">
+				<img className="avatarVisitor" src="https://cdn.intra.42.fr/users/medium_default.png"/>
+				<span>{object.who} |</span>
+				<span>{object.when}</span>
+			</MenuItem>
+		)
+	}
 
 
-				<Popover
-					open={this.state.open}
-					anchorEl={this.state.anchorEl}
-					anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-					targetOrigin={{horizontal: 'left', vertical: 'top'}}
-					onRequestClose={this.handleRequestClose}
-					animation={PopoverAnimationVertical}
-					>
-						<List>
-							<Subheader>Recent visits</Subheader>
-							<ListItem
-								primaryText="Brendan Lim"
-								leftAvatar={<Avatar src="https://cdn.intra.42.fr/users/medium_default.png" />}
-								rightIcon={<CommunicationChatBubble />}
-							/>
-							<ListItem
-								primaryText="Eric Hoffman"
-								leftAvatar={<Avatar src="https://cdn.intra.42.fr/users/medium_default.png" />}
-								rightIcon={<CommunicationChatBubble />}
-							/>
-							<ListItem
-								primaryText="Grace Ng"
-								leftAvatar={<Avatar src="https://cdn.intra.42.fr/users/medium_default.png" />}
-								rightIcon={<CommunicationChatBubble />}
-							/>
-							<ListItem
-								primaryText="Kerem Suer"
-								leftAvatar={<Avatar src="https://cdn.intra.42.fr/users/medium_default.png" />}
-								rightIcon={<CommunicationChatBubble />}
-							/>
-							<ListItem
-								primaryText="Raquel Parrado"
-								leftAvatar={<Avatar src="https://cdn.intra.42.fr/users/medium_default.png" />}
-								rightIcon={<CommunicationChatBubble />}
-							/>
-						</List>
-					</Popover>
-				</Col>
-			)
+	listVisitor2(myPeople) {
+		var grid = [];
+		grid.push(<MenuItem header key={myPeople.length}>Recent visits</MenuItem>);
+		grid.push(<MenuItem key={myPeople.length + 1} divider />)
+		for (var i = 0; i < myPeople.length; i++) {
+			grid.push(this.renderListVisitor2(myPeople[i], i, myPeople));
 		}
+		return grid;
+	}
 
-		toHome() {
-			// browserHistory.push({pathname: "/map", state: this.state.myInfo});
-			browserHistory.push("/map");
+	toHome() {
+		// browserHistory.push({pathname: "/map", state: this.state.myInfo});
+		browserHistory.push("/map");
+	}
+
+	toChat() {
+		browserHistory.push("/chat");
+	}
+
+	handleLogout() {
+		localStorage.removeItem('token');
+		localStorage.removeItem('username');
+		browserHistory.push("/");
+	}
+
+	toEdit() {
+		browserHistory.push({pathname: "/profil", state: this.state.myInfo});
+	}
+
+	renderVisitsMenu(numberOfVisits) {
+		return (
+			<NavDropdown title={<i className="glyphicon glyphicon-bell">{numberOfVisits}</i>} id="basic-nav-dropdown">
+			{this.listVisitor2(this.state.myInfo.visits)}
+		</NavDropdown>
+	);
+}
+
+render() {
+	if (this.state.myInfo) {
+		if (this.state.myInfo.visits) {
+			console.log('you have ' + this.state.myInfo.visits.length + ' visits');
+			var numberOfVisits = this.state.myInfo.visits.length;
 		}
-
-		toChat() {
-			browserHistory.push("/chat");
+		else {
+			console.log('you do not have visits');
 		}
+	}
+	else {
+		console.log('You do not have YourInfo');
+	}
+	if (numberOfVisits) {
+		return (
+			<header id="myHeader">
+				<Title>
+				</Title>
+				<Navbar>
+					<Col xs={12} md={8}>
+						<Navbar.Header>
+							<Navbar.Brand>
+								{this.renderLogo()}
+							</Navbar.Brand>
+						</Navbar.Header>
+					</Col>
+					<Col xs={6} md={4}>
+						<Nav>
+							<NavItem onClick={this.toHome}>
+								People
+							</NavItem>
+							<NavItem onClick={this.toChat}>
+								Chat
+							</NavItem>
+							<NavDropdown title="Account" id="basic-nav-dropdown">
+								<MenuItem onClick={this.toEdit}>
+									Edit
+								</MenuItem>
+								<MenuItem divider />
+								<MenuItem onClick={this.handleLogout}>
+									Logout
+								</MenuItem>
+							</NavDropdown>
+							{this.renderVisitsMenu(numberOfVisits)}
+						</Nav>
+					</Col>
 
-		handleLogout() {
-			localStorage.removeItem('token');
-			localStorage.removeItem('username');
-			browserHistory.push("/");
-		}
-
-		toEdit() {
-			browserHistory.push({pathname: "/profil", state: this.state.myInfo});
-		}
-
-
-
-		render() {
-			return (
-				<header id="myHeader">
-					<Title>
-					</Title>
-					<Navbar>
-						<Col xs={12} md={8}>
-							<Navbar.Header>
-								<Navbar.Brand>
-									{this.renderLogo()}
-								</Navbar.Brand>
-							</Navbar.Header>
-						</Col>
-						<Col xs={6} md={3}>
-							<Nav>
-								<NavItem onClick={this.toHome}>
-									People
-								</NavItem>
-								<NavItem onClick={this.toChat}>
-									Chat
-								</NavItem>
-								<NavDropdown title="Account" id="basic-nav-dropdown">
-									<MenuItem onClick={this.toEdit}>
-										Edit
-									</MenuItem>
-									<MenuItem divider />
-									<MenuItem onClick={this.handleLogout}>
-										Logout
-									</MenuItem>
-								</NavDropdown>
-							</Nav>
-						</Col>
-						<Col xs={12} md={1}>
-							<Badge
-								badgeContent={this.state.myInfo.visits.length}//mettre le bon nombre de visites
-								secondary={true}
-								badgeStyle={{top: 1, right: 1}}
-								id="badgeNotificationHeader"
-								onClick={this.handleTouchTap}
-								>
-									<IconButton tooltip="Notifications">
-										<NotificationsIcon />
-									</IconButton>
-								</Badge>
-
-							</Col>
-						</Navbar>
-						{this.showVisitors()}
-					</header>
-				);
-			}
-		}
+				</Navbar>
+			</header>
+		);
+	}
+	else {
+		console.log(' no numberOfVisits', this.state.myInfo);
+		return (
+			<header id="myHeader">
+			</header>
+		)
+	}
+}
+}
