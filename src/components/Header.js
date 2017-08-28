@@ -51,11 +51,17 @@ export default class Header extends React.Component {
 	}
 
 	renderListVisitor2(object, key, data) {
+		var srcList = "https://cdn.intra.42.fr/users/medium_default.png";
 		return (
 			<MenuItem key={key} eventKey={key} className="showVisitors">
-				<img className="avatarVisitor" src="https://cdn.intra.42.fr/users/medium_default.png"/>
-				<span>{object.who} |</span>
-				<span>{object.when}</span>
+				<img className="avatarVisitor" src={srcList}>
+				</img>
+				<span>
+					{object.who} |
+				</span>
+				<span>
+					{object.when}
+				</span>
 			</MenuItem>
 		)
 	}
@@ -91,27 +97,28 @@ export default class Header extends React.Component {
 	}
 
 	renderVisitsMenu(numberOfVisits) {
-		return (
-			<NavDropdown title={<i className="glyphicon glyphicon-bell">{numberOfVisits}</i>} id="basic-nav-dropdown">
-			{this.listVisitor2(this.state.myInfo.visits)}
-		</NavDropdown>
-	);
-}
+		var title = <i className="glyphicon glyphicon-bell">{numberOfVisits}</i>;
+			return (
+				<NavDropdown title={<i className="glyphicon glyphicon-bell">{numberOfVisits}</i>} id="basic-nav-dropdown">
+				{this.listVisitor2(this.state.myInfo.visits)}
+			</NavDropdown>
+		);
+	}
 
-render() {
-	if (this.state.myInfo) {
-		if (this.state.myInfo.visits) {
-			console.log('you have ' + this.state.myInfo.visits.length + ' visits');
-			var numberOfVisits = this.state.myInfo.visits.length;
+	render() {
+		var numberOfVisits = 0;
+		if (this.state.myInfo) {
+			if (this.state.myInfo.visits) {
+				console.log('you have ' + this.state.myInfo.visits.length + ' visits');
+				var numberOfVisits = this.state.myInfo.visits.length;
+			}
+			else {
+				console.log('you do not have visits');
+			}
 		}
 		else {
-			console.log('you do not have visits');
+			console.log('You do not have YourInfo');
 		}
-	}
-	else {
-		console.log('You do not have YourInfo');
-	}
-	if (numberOfVisits) {
 		return (
 			<header id="myHeader">
 				<Title>
@@ -137,24 +144,16 @@ render() {
 									Edit
 								</MenuItem>
 								<MenuItem divider />
-								<MenuItem onClick={this.handleLogout}>
-									Logout
-								</MenuItem>
-							</NavDropdown>
-							{this.renderVisitsMenu(numberOfVisits)}
-						</Nav>
-					</Col>
+							<MenuItem onClick={this.handleLogout}>
+								Logout
+							</MenuItem>
+						</NavDropdown>
+						{this.renderVisitsMenu(numberOfVisits)}
+					</Nav>
+				</Col>
 
-				</Navbar>
-			</header>
-		);
-	}
-	else {
-		console.log(' no numberOfVisits', this.state.myInfo);
-		return (
-			<header id="myHeader">
-			</header>
-		)
-	}
+			</Navbar>
+		</header>
+	);
 }
 }
