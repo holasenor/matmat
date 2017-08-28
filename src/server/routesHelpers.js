@@ -303,3 +303,25 @@ export function addVisit(req, res, next) {
         }
     })
 }
+
+export function getMyLikesInfo(req, res, next) {
+    console.log('getting my like info in the back');
+    var ids = req.query.likes;
+    Database.getUsers(ids)
+    .then((users) => {
+        if (users) {
+            res.send({
+                success: true,
+                users: users
+            });
+        }
+        else {
+            res.send({
+                success: false
+            });
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+}

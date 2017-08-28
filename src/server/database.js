@@ -79,3 +79,19 @@ exports.updateUserData = function (userId, obj) {
 exports.addLike = function (user, mail) {
 
 }
+
+exports.getUsers = function (ids) {
+    var obj_ids = ids.map(function(id) {
+        return ObjectId(id);
+    });
+    return this.get()
+    .then((db) => {
+        return db.collection('users')
+        .find({
+            _id: {
+                $in: obj_ids
+            }
+        })
+        .toArray();
+    });
+}
