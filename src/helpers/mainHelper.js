@@ -25,6 +25,25 @@ export function likeThisId(id) {
     });
 }
 
+export function getMyLikesInfo(myLikes) {
+    var token = localStorage.getItem('token');
+    return axios.get('/mylikesinfo', {
+        params: {
+            token: token,
+            likes: myLikes
+        }
+    })
+    .then((result) => {
+        if (result.data.success) {
+            return result.data.users;
+        }
+        else {
+            console.log('No users were found');
+            return [];
+        }
+    })
+}
+
 export function toggleLike(mail) {
     var infos = {
         mailLikedOne : mail
