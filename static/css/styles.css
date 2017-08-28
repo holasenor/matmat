@@ -351,3 +351,7 @@ height: 100%;
     width: 240px;
     object-fit: contain;
 }
+
+.likesBar {
+    margin-top: 20px;
+}

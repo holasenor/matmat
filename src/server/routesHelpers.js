@@ -302,3 +302,24 @@ export function addVisit(req, res, next) {
         }
     })
 }
+
+export function getMyLikesInfo(req, res, next) {
+    var ids = req.query.likes;
+    Database.getUsers(ids)
+    .then((users) => {
+        if (users) {
+            res.send({
+                success: true,
+                users: users
+            });
+        }
+        else {
+            res.send({
+                success: false
+            });
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+}
