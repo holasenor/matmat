@@ -290,7 +290,6 @@ export function addVisit(req, res, next) {
     // var userId = req.decode.id;
     User.addOneVisit(req.body.userId, req.body.visitorId)
     .then((ret) => {
-        console.log(userId);
         if (ret) {
             res.send({
                 success: true

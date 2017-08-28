@@ -1,16 +1,42 @@
 import React from "react"
+import ReactDOM from 'react-dom';
+import Badge from 'material-ui/Badge';
+import IconButton from 'material-ui/IconButton';
+import NotificationsIcon from 'material-ui/svg-icons/social/notifications';
+import Avatar from 'material-ui/Avatar';
+import {List, ListItem} from 'material-ui/List';
+import Subheader from 'material-ui/Subheader';
+import Divider from 'material-ui/Divider';
+import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 import Title from "./Header/Title";
-import { Col, Button, Nav, Navbar, NavItem, MenuItem, NavDropdown } from 'react-bootstrap';
+import { Col, Button, Nav, Navbar, NavItem, MenuItem, NavDropdown, ButtonToolbar, DropdownButton,  Glyphicon} from 'react-bootstrap';
+import RaisedButton from 'material-ui/RaisedButton';
+import Popover, {PopoverAnimationVertical} from 'material-ui/Popover';
+import Menu from 'material-ui/Menu';
+import MenuItemUI from 'material-ui/MenuItem';
 import {browserHistory} from "react-router";
 
 export default class Header extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {login: "Admin"};
+		this.state = {login: "Admin", open: false};
 		this.state.myInfo = this.props.myInfo;
 		this.toEdit = this.toEdit.bind(this);
 		this.toHome = this.toHome.bind(this);
 	}
+
+	handleTouchTap = (event) => {
+		this.setState({
+			open: true,
+			anchorEl: event.currentTarget,
+		});
+	};
+
+	handleRequestClose = () => {
+		this.setState({
+			open: false,
+		});
+	};
 
 	renderLogo() {
 		var src = "../../images/Logo.png";
@@ -22,6 +48,27 @@ export default class Header extends React.Component {
 				</img>
 			</div>
 		);
+	}
+
+	renderListVisitor2(object, key, data) {
+		return (
+			<MenuItem key={key} eventKey={key} className="showVisitors">
+				<img className="avatarVisitor" src="https://cdn.intra.42.fr/users/medium_default.png"/>
+				<span>{object.who} |</span>
+				<span>{object.when}</span>
+			</MenuItem>
+		)
+	}
+
+
+	listVisitor2(myPeople) {
+		var grid = [];
+		grid.push(<MenuItem header key={myPeople.length}>Recent visits</MenuItem>);
+		grid.push(<MenuItem key={myPeople.length + 1} divider />)
+		for (var i = 0; i < myPeople.length; i++) {
+			grid.push(this.renderListVisitor2(myPeople[i], i, myPeople));
+		}
+		return grid;
 	}
 
 	toHome() {
@@ -43,7 +90,28 @@ export default class Header extends React.Component {
 		browserHistory.push({pathname: "/profil", state: this.state.myInfo});
 	}
 
-	render() {
+	renderVisitsMenu(numberOfVisits) {
+		return (
+			<NavDropdown title={<i className="glyphicon glyphicon-bell">{numberOfVisits}</i>} id="basic-nav-dropdown">
+			{this.listVisitor2(this.state.myInfo.visits)}
+		</NavDropdown>
+	);
+}
+
+render() {
+	if (this.state.myInfo) {
+		if (this.state.myInfo.visits) {
+			console.log('you have ' + this.state.myInfo.visits.length + ' visits');
+			var numberOfVisits = this.state.myInfo.visits.length;
+		}
+		else {
+			console.log('you do not have visits');
+		}
+	}
+	else {
+		console.log('You do not have YourInfo');
+	}
+	if (numberOfVisits) {
 		return (
 			<header id="myHeader">
 				<Title>
@@ -69,14 +137,24 @@ export default class Header extends React.Component {
 									Edit
 								</MenuItem>
 								<MenuItem divider />
-							<MenuItem onClick={this.handleLogout}>
-								Logout
-							</MenuItem>
-						</NavDropdown>
-					</Nav>
-				</Col>
-			</Navbar>
-		</header>
-	);
+								<MenuItem onClick={this.handleLogout}>
+									Logout
+								</MenuItem>
+							</NavDropdown>
+							{this.renderVisitsMenu(numberOfVisits)}
+						</Nav>
+					</Col>
+
+				</Navbar>
+			</header>
+		);
+	}
+	else {
+		console.log(' no numberOfVisits', this.state.myInfo);
+		return (
+			<header id="myHeader">
+			</header>
+		)
+	}
 }
 }

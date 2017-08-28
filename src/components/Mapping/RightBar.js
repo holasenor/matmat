@@ -1,7 +1,7 @@
 import React from "react"
 import Research from "./Research"
 import { Button, OverlayTrigger, ProgressBar, popover, tooltip, overlay, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem, Modal} from 'react-bootstrap';
-import {likeThisId, getMyLikesInfo} from "./../../helpers/mainHelper.js";
+import {likeThisId, getMyLikesInfo, addVisit} from "./../../helpers/mainHelper.js";
 import Chip from 'material-ui/Chip';
 import Avatar from 'material-ui/Avatar';
 var $ = require("jquery");
@@ -167,8 +167,18 @@ export default class RightBar extends React.Component {
     }
 
     open(e, object) {
+		  var userId = object._id;//id de la personne que l'on visite | clique
+		  var visitorId = this.state.myInfo._id;
+		  addVisit(userId, visitorId)
+		  .then((result) => {
+			  console.log(result);
+		  })
+		  .catch((err) => {
+		  	alert(err);
+		  });
+      
         this.setStyleLikeButton(object._id);
-        this.setState({ userIdInModal: object._id});
+          this.setState({ userIdInModal: object._id});
         this.setState({ showModal: true });
         this.setState({ idModal: e.target.id });
     }
@@ -208,7 +218,7 @@ export default class RightBar extends React.Component {
             return (
                 <div className="rightBarMap">
                 </div>
-            )
+            );
         }
     }
 }
