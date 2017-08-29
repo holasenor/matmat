@@ -15,14 +15,47 @@ import Popover, {PopoverAnimationVertical} from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
 import MenuItemUI from 'material-ui/MenuItem';
 import {browserHistory} from "react-router";
+import * as tools from '../helpers/mainHelper.js';
+import { getMyVisitorsInfo } from "./../helpers/mainHelper.js";
+
+
 
 export default class Header extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {login: "Admin", open: false};
+		this.state = {
+			login: "Admin",
+			 open: false,
+			 myVisitorsInfo: [],
+
+		 };
 		this.state.myInfo = this.props.myInfo;
 		this.toEdit = this.toEdit.bind(this);
 		this.toHome = this.toHome.bind(this);
+	}
+	//je vais chercher les infos dans la bdd apres le constructeur
+	// - componentDidMount
+	// - la fonction getVisitors ici
+	// - le mainHelper : fonction getMyVisitorsInfo
+	// - creer la route /myvisitorsinfo
+	// - dans route :  creer getMyVisitorsInfo
+	// - dns routHelpers => creer et utiliser la fonction getMyVisitorsInfo
+
+	componentDidMount() {
+        if (this.state.myInfo) {
+			this.getVisitors(this.state.myInfo.visits);
+        }
+    }
+
+	getVisitors(visits) {
+		var tab = [];
+		for (var i = 0; i < visits.length; i++) {
+			tab.push(visits[i].who);
+		}
+		getMyVisitorsInfo(tab)
+		.then((result) => {
+			this.setState({myVisitorsInfo: result});
+		});
 	}
 
 	handleTouchTap = (event) => {
@@ -50,29 +83,30 @@ export default class Header extends React.Component {
 		);
 	}
 
-	renderListVisitor2(object, key, data) {
+	renderListVisitor(object, key) {
 		var srcList = "https://cdn.intra.42.fr/users/medium_default.png";
+		if (object.pictures) {
+			srcList = object.pictures
+		}
 		return (
 			<MenuItem key={key} eventKey={key} className="showVisitors">
 				<img className="avatarVisitor" src={srcList}>
 				</img>
 				<span>
-					{object.who} |
+					{object.pseudo} |
 				</span>
-				<span>
-					{object.when}
-				</span>
+
 			</MenuItem>
 		)
 	}
 
 
-	listVisitor2(myPeople) {
+	listVisitor(myPeople) {
 		var grid = [];
 		grid.push(<MenuItem header key={myPeople.length}>Recent visits</MenuItem>);
 		grid.push(<MenuItem key={myPeople.length + 1} divider />)
 		for (var i = 0; i < myPeople.length; i++) {
-			grid.push(this.renderListVisitor2(myPeople[i], i, myPeople));
+			grid.push(this.renderListVisitor(myPeople[i], i));
 		}
 		return grid;
 	}
@@ -100,8 +134,8 @@ export default class Header extends React.Component {
 		if (this.state.myInfo) {
 		var title = <i className="glyphicon glyphicon-bell">{numberOfVisits}</i>;
 			return (
-				<NavDropdown title={<i className="glyphicon glyphicon-bell">{numberOfVisits}</i>} id="basic-nav-dropdown">
-				{this.listVisitor2(this.state.myInfo.visits)}
+				<NavDropdown title={<i className="glyphicon glyphicon-bell"> {numberOfVisits} </i>} id="basic-nav-dropdown">
+				{this.listVisitor(this.state.myVisitorsInfo)}
 			</NavDropdown>
 		);
 		}

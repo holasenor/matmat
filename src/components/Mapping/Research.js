@@ -145,7 +145,7 @@ export default class Research extends React.Component {
 					<Col md={3}>
 						<div title="Tags" id="SortTags" name="SortTags" onClick={this.sortTags}>
 							Tags <span className={this.state.glyphiconSortTags}></span>
-							<span className={this.state.glyphiconSelectTags}></span> 
+							<span className={this.state.glyphiconSelectTags}></span>
 						</div>
 					</Col>
 				</Row>
