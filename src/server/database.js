@@ -1,5 +1,7 @@
 var MongoClient = require('mongodb').MongoClient
 var ObjectId = require('mongodb').ObjectID;
+var geolib = require('geolib');
+var _ = require('lodash');
 
 var state = {
     db: null,
@@ -100,3 +102,47 @@ exports.getUsers = function (ids) {
         .toArray();
     });
 }
+
+exports.getUsersFromSearch = function (options, myInfo) {
+    return this.get()
+    .then((db) => {
+        return db.collection('users')
+        .find(
+            {
+                age: {
+                    $gt: options.ageInterval[0],
+                    $lt: options.ageInterval[1]
+                },
+                popularity: {
+                    $gt: options.popularityInterval[0],
+                    $lt: options.popularityInterval[1]
+                }
+            }
+        )
+        .toArray()})
+        .then((users) => {
+            return users.filter((person) => {
+                var distance = geolib.getDistance(
+                    {latitude: person.lat, longitude: person.lng},
+                    {latitude: myInfo.lat, longitude: myInfo.lng}
+                )
+                return (distance < options.distance * 1000)
+            });
+        })
+        .then((users) => {
+            if (options.tags && options.tags != "") {
+                return users.filter((person) => {
+                    person.tag = person.tag.replace(/\s+/g, ' ').trim().split(' ');
+                    myInfo.tag = myInfo.tag.replace(/\s+/g, ' ').trim().split(' ');
+                    options.tags = options.tags.replace(/\s+/g, ' ').trim().split(' ');
+                    var tagsInCommon = _.intersection(person.tag, myInfo.tag);
+                    var intersection = _.intersection(tagsInCommon, options.tags)
+                    return (intersection.length > 0);
+                });
+            }
+            else {
+                return users;
+            }
+        })
+        // return this.get().then(() => {return options;});
+    }

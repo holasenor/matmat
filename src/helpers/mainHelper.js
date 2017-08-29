@@ -68,3 +68,18 @@ export function addVisit(userId, visitorId) {
 		token: token
 	})
 }
+
+export function getSearchResults(myInfo, options) {
+    var token = localStorage.getItem('token');
+
+    return axios.get('/search', {
+        params: {
+            token: token,
+            options: options,
+            myInfo: myInfo
+        }
+    })
+    .then((result) => {
+        return result.data.users;
+    });
+}

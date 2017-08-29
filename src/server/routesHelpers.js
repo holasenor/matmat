@@ -323,3 +323,29 @@ export function getMyLikesInfo(req, res, next) {
         console.log(err);
     })
 }
+
+export function getPeopleFromSearch(req, res, next) {
+    var options = req.query.options || {};
+    var myInfo = JSON.parse(req.query.myInfo);
+    options.distance = parseInt(options.distance);
+    Database.getUsersFromSearch(options, myInfo)
+    .then((users) => {
+        if (users) {
+            res.send({
+                success: true,
+                users: users
+            });
+        }
+        else {
+            res.send({
+                success: false
+            });
+        }
+    })
+}
+
+
+export function prepareOptions(req, res, next) {
+    req.query.options = JSON.parse(req.query.options);
+    next();
+}

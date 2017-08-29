@@ -1,21 +1,22 @@
-// import 'rc-slider/assets/index.css';
 import React from "react"
 import { Button, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
 import Slider from 'rc-slider';
+import {getSearchResults} from '../../helpers/mainHelper.js';
 const Range = Slider.Range;
-
-const style = { width: 100, margin: 5 };
-
-
+var $ = require("jquery");
 
 export default class Research extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
+		this.state.myInfo = this.props.myInfo;
 		this.state.fromAge = 0;
 		this.state.toAge = 100;
+		this.state.fromPop = 0;
+		this.state.toPop = 100;
 		this.handleOnChangeAge = this.handleOnChangeAge.bind(this);
 		this.handleOnChangePopularity = this.handleOnChangePopularity.bind(this);
+		this.handleSearch = this.handleSearch.bind(this);
 	}
 
 	handleOnChangeAge(value) {
@@ -32,11 +33,40 @@ export default class Research extends React.Component {
 		});
 	}
 
+	getSearchOptions() {
+		var form = $('#searchForm');
+		var ageInterval = [this.state.fromAge, this.state.toAge];
+		var	popularityInterval = [this.state.fromPop, this.state.toPop];
+		var distance = form.find('#distance').val();
+		var tags = form.find('#tag').val();
+		return {
+			ageInterval: ageInterval,
+			popularityInterval: popularityInterval,
+			distance: distance,
+			tags: tags
+		}
+	}
+
+	handleSearch() {
+		// use this.props.setMyPeople to change mypeople everywhere
+		var options = this.getSearchOptions();
+		var myInfo = this.state.myInfo;
+		getSearchResults(myInfo, options)
+		.then((newPeople) => {
+			console.log('getting new People');
+			console.log(newPeople);
+			this.props.setMyPeople(newPeople);
+		})
+		.catch((err) => {
+			console.log(err);
+		})
+	}
+
 	render() {
 		return (
 			<div>
 				<div >
-					<form action="#">
+					<form id="searchForm" action="#">
 						<Row>
 							<Col md={6}>
 								<label>
@@ -62,7 +92,7 @@ export default class Research extends React.Component {
 								<label>
 									Distance
 								</label>
-								<select name="#" id="like" className="form-control">
+								<select name="#" id="distance" className="form-control">
 									<option value="10">
 										10km
 									</option>
@@ -87,7 +117,9 @@ export default class Research extends React.Component {
 						</Row>
 						<Row className="form-group">
 							<Col md={12}>
-								<Button className="btn-block" bsStyle="primary" bsSize="large" active type="submit" value="Submit">
+								<label>
+								</label>
+								<Button className="btn-block" bsStyle="primary" bsSize="large" type="button" onClick={this.handleSearch}>
 									Search
 								</Button>
 							</Col>

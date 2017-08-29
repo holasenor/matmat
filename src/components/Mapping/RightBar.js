@@ -29,6 +29,8 @@ export default class RightBar extends React.Component {
             buttonBsStyle: 'primary',
             myInfo: this.props.myInfo
         };
+        console.log('entering RightBar');
+        console.log(this.props.myPeople);
         this.open = this.open.bind(this);
         this.close = this.close.bind(this);
         this.setStyleLikeButton =this.setStyleLikeButton.bind(this);
@@ -145,6 +147,7 @@ export default class RightBar extends React.Component {
             </Chip>
         )
     }
+
     renderLikesBar(myLikesInfo) {
         var grid = [];
         for (var i = 0; i < myLikesInfo.length; i++) {
@@ -176,7 +179,7 @@ export default class RightBar extends React.Component {
 		  .catch((err) => {
 		  	alert(err);
 		  });
-      
+
         this.setStyleLikeButton(object._id);
           this.setState({ userIdInModal: object._id});
         this.setState({ showModal: true });
@@ -200,7 +203,7 @@ export default class RightBar extends React.Component {
             return (
                 <div className="rightBarMap">
                     <div>
-                        <Research>
+                        <Research setMyPeople={this.props.setMyPeople} myInfo={this.state.myInfo}>
                         </Research>
                         <Row>
                             <Col md={12} className="resultPhotos">
