@@ -285,8 +285,8 @@ export function addLike(req, res, next) {
 }
 
 export function addVisit(req, res, next) {
-    console.log('im in addVisit');
-    console.log(req.body);
+    // console.log('im in addVisit');
+    // console.log(req.body);
     // var userId = req.decode.id;
     User.addOneVisit(req.body.userId, req.body.visitorId)
     .then((ret) => {
@@ -305,6 +305,28 @@ export function addVisit(req, res, next) {
 
 export function getMyLikesInfo(req, res, next) {
     var ids = req.query.likes;
+    Database.getUsers(ids)
+    .then((users) => {
+        if (users) {
+            res.send({
+                success: true,
+                users: users
+            });
+        }
+        else {
+            res.send({
+                success: false
+            });
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+}
+
+export function getMyVisitorsInfo(req, res, next) {
+    var ids = req.query.visits;
+	console.log(ids);
     Database.getUsers(ids)
     .then((users) => {
         if (users) {
