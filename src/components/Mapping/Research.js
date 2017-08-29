@@ -66,7 +66,7 @@ export default class Research extends React.Component {
 		return (
 			<div>
 				<div >
-					<form id="searchForm" action="#">
+					<form id="searchForm" action="#" onSubmit={(e) => {e.preventDefault();this.handleSearch();}}>
 						<Row>
 							<Col md={6}>
 								<label>

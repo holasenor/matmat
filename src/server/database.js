@@ -132,11 +132,11 @@ exports.getUsersFromSearch = function (options, myInfo) {
         .then((users) => {
             if (options.tags && options.tags != "") {
                 return users.filter((person) => {
-                    person.tag = person.tag.replace(/\s+/g, ' ').trim().split(' ');
-                    myInfo.tag = myInfo.tag.replace(/\s+/g, ' ').trim().split(' ');
-                    options.tags = options.tags.replace(/\s+/g, ' ').trim().split(' ');
-                    var tagsInCommon = _.intersection(person.tag, myInfo.tag);
-                    var intersection = _.intersection(tagsInCommon, options.tags)
+                    var personTag = person.tag.replace(/\s+/g, ' ').trim().split(' ');
+                    var myInfoTag = myInfo.tag.replace(/\s+/g, ' ').trim().split(' ');
+                    var optionsTags = options.tags.replace(/\s+/g, ' ').trim().split(' ');
+                    var tagsInCommon = _.intersection(personTag, myInfoTag);
+                    var intersection = _.intersection(tagsInCommon, optionsTags)
                     return (intersection.length > 0);
                 });
             }
