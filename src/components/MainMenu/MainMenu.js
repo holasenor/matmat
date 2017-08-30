@@ -48,7 +48,7 @@ export default class MainMenu extends React.Component {
 					<Col xs={12} md={3} id="menu-inscription">
 						<Nav bsStyle="tabs" justified activeKey={this.state.activeKey}>
 							<NavItem onClick={() => this.handleSelect(1)} activeKey="1" >
-								Inscription
+								Inscrption
 							</NavItem>
 							<NavItem onClick={() => this.handleSelect(2)} activeKey="2" title="Item" className="loginButton">
 								Login

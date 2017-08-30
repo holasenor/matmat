@@ -4,7 +4,6 @@ import Welcome from './components/Welcome.js';
 import FindPeople from './components/FindPeople.js';
 import YourMatches from './components/YourMatches.js';
 import EditProfil from './components/Profil/EditProfil';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Router, Route, browserHistory} from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';

@@ -19,9 +19,6 @@ exports.signup = function (req, res, next) {
     .then(Validator.validatePosition)
     .then(Validator.validateTags)
     .then((data) => {
-        data.likes = [];
-        data.likedBy = [];
-        data.visits = [];
         User.create(data)
         .then((user) => {
             return tokenForUser(user);
@@ -51,7 +48,7 @@ exports.signin = function (req, res, next) {
 }
 
 exports.checktoken = function (req, res, next) {
-    var token = req.body.token || req.params.token || req.query.token;
+    var token = req.body.token || req.params.token;
     jwt.verify(token, process.env.SECRET_KEY, function(err, decode){
         if (token) {
             if (err) {
@@ -83,6 +80,8 @@ exports.checklogin = function (req, res, next) {
         User.comparePassword(req.body.password,user.password)
         .then((passwordMatch) => {
             if (passwordMatch) {
+                console.log('debug user in checklogin');
+                console.log(user);
                 req.infos = user;
                 req.user = {
                     pseudo: user.pseudo,

@@ -261,16 +261,6 @@ export function checkTokenIsSet(location) {
     });
 }
 
-export function getMyPeople(myInfo) {
-    var token = localStorage.getItem('token');
-    return axios.get('/mypeople', {
-        params: {
-            token: token,
-            myInfo: myInfo
-        }
-    });
-}
-
 export function validateModalTarget (target) {
     return new Promise(function (res, rej) {
         var UserMail = target.children[1].children[1].value;
