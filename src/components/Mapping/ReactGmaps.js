@@ -7,6 +7,9 @@ const Person = ({  marker }) => <div className="mapPhotoLover"><img id={marker.k
 export default class MyMap extends Component {
     constructor(props){
         super(props);
+        this.state = {
+            myPeople: this.props.myPeople
+        };
     }
 
     static defaultProps = {
@@ -15,8 +18,7 @@ export default class MyMap extends Component {
     }
 
     renderPeople() {
-        var myPeople = this.props.myPeople;
-        return myPeople.map((marker, i) =>{
+        return this.state.myPeople.map((marker, i) =>{
             if (marker.pictures) {
                 marker.img_src = marker.pictures[0]
             }
