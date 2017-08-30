@@ -4,54 +4,37 @@ import Inscription from "./MainMenu/Inscription";
 import Login from "./MainMenu/Login";
 import Footer from "./Footer";
 import RightBar from "./Mapping/RightBar";
-import Container from "./Mapping/Container";
 import MyMap from './Mapping/ReactGmaps';
 import {checkTokenIsSet} from "../helpers/loginHelpers.js";
 
 export default class Mapping extends React.Component {
-	constructor() {
-		super();
-		this.state = {
-			login: "Admin",
-			// Lng: this.props.myJson[0].lng
-		}
+	constructor(props) {
+		super(props);
+		this.state = {};
+		this.state.login ='admin';
+		this.state.myInfo = this.props.myInfo;
+		this.state.people = this.props.people;
 	}
-	// logMyJson() {
-	// 	// console.log(this.props.myJson);
-	// 	// console.log(this.props.myJson.myData[0].Lat);
-	// 	// console.log(this.props.myJson.myData[0].Lng);
-	// 	// console.log(this.props.myJson.myData[0].pseudo);
-	// }
 
 	render() {
-		const markers = 135;
-		var initialCenter = { lng: 2.3163477, lat: 48.8965533 }
-		// var initialCenter = { lng: this.props.myJson.myData[0].lng, lat: this.props.myJson.myData[0].lat }
-		// this.logMyJson();
 		return (
 			<div className="mapping">
-				<Container />
 				{this.state.login}
 				<div id="gtco-header" className="gtco-cover gtco-cover-md">
 					<Col md={12}>
 						<Row className="row-mt-15em">
 							<Col md={8} className="iframe-rwd">
-								{/* ===============GOOGLEMAP============== */}
-								<MyMap myJson={this.props.myJson.myData} />
-								{/* ===============/GOOGLEMAP============== */}
+								<MyMap myPeople={this.state.people} />
 							</Col>
 							<Col md={4}>
-								<RightBar myJson={this.props.myJson.myData}/>
+								<RightBar myInfo={this.state.myInfo} myPeople={this.state.people}/>
 							</Col>
 						</Row>
 					</Col>
 				</div>
 				<div> _ </div>
 				<Footer />
-
 			</div>
-
-
 		);
 	}
 }

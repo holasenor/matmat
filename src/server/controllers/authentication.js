@@ -7,6 +7,7 @@ var jwt = require('jsonwebtoken');
 import * as Validator from './aux/auth_helper.js';
 
 exports.signup = function (req, res, next) {
+    console.log('req.body', req.body);
     Validator.validateTarget(req.body)
     .then(Validator.validateEmail)
     .then(Validator.validatePseudo)
@@ -14,10 +15,13 @@ exports.signup = function (req, res, next) {
     .then(Validator.validateGender)
     .then(Validator.validateLike)
     .then(Validator.validateBio)
-    .then(Validator.validateTown)
     .then(Validator.validateAge)
+    .then(Validator.validatePosition)
     .then(Validator.validateTags)
     .then((data) => {
+        data.likes = [];
+        data.likedBy = [];
+        data.visits = [];
         User.create(data)
         .then((user) => {
             return tokenForUser(user);
@@ -38,33 +42,33 @@ exports.signup = function (req, res, next) {
 }
 
 exports.signin = function (req, res, next) {
+    delete req.infos['password']
     res.send({
         success: true,
-        token: tokenForUser(req.user)
+        token: tokenForUser(req.user),
+        user: req.infos
     });
 }
 
 exports.checktoken = function (req, res, next) {
-    var token = req.body.token;
-    var mail = req.body.mail;
+    var token = req.body.token || req.params.token || req.query.token;
     jwt.verify(token, process.env.SECRET_KEY, function(err, decode){
         if (token) {
             if (err) {
-                console.log(err);
+                console.log('Something wrong with it\'s token');
                 res.send({
                     success: false,
                     message: "Invalide Token"
                 });
             }
             else {
-                console.log(decode);
-                res.send({
-                    success: true
-                });
-
+                req.check = true;
+                req.decode = decode;
+                next();
             }
         }
         else {
+            console.log('sorry----------------------------------------');
             res.send({
                 success: false,
                 message: 'You don\'t have a token'
@@ -79,10 +83,11 @@ exports.checklogin = function (req, res, next) {
         User.comparePassword(req.body.password,user.password)
         .then((passwordMatch) => {
             if (passwordMatch) {
-                console.log(user);
+                req.infos = user;
                 req.user = {
                     pseudo: user.pseudo,
-                    email: req.body.email
+                    email: req.body.email,
+                    id: user._id
                 }
                 next();
             }

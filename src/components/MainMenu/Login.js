@@ -3,6 +3,7 @@ import { Button, OverlayTrigger, popover, tooltip, overlay, Grid, Row, Col , Nav
 import * as tools from '../../helpers/loginHelpers.js';
 import {browserHistory} from "react-router";
 
+
 // .then(tools.checkUser)
 export default class Login extends React.Component {
 	constructor() {
@@ -29,7 +30,7 @@ export default class Login extends React.Component {
 		.then(tools.signIn)
 		.then((isLogged) => {
 			if (isLogged) {
-				browserHistory.push("/map");
+				browserHistory.push({pathname: "/map", state: isLogged});
 			}
 		})
 		.catch((err) => {
@@ -39,16 +40,20 @@ export default class Login extends React.Component {
 
 	handleResetPassword(e) {
 		e.preventDefault();
-		// tools.validateModalTarget(e.target)
-		// .then(tools.validatePassword)
-		// .then(tools.mailExists)
-		// .then(tools.sendMail)
-		// .then((res) => {
-		// 	alert(res.message);
-		// })
-		// .catch((err) => {
-		// 	alert(err);
-		// })
+		tools.validateModalTarget(e.target)
+		.then(tools.validatePassword)
+		.then(tools.mailExists)
+		.then(tools.sendMail)
+		.then((res) => {
+			this.setState({ showModal: false });
+			return res;
+		})
+		.then((res) => {
+			alert(res.message);
+		})
+		.catch((err) => {
+			alert(err);
+		})
 	}
 
 
@@ -70,7 +75,7 @@ export default class Login extends React.Component {
 								<label>
 									Password:
 								</label>
-								<input type="text" name="password" id="password" className="form-control">
+								<input type="password" name="password" id="password" className="form-control">
 								</input>
 
 							</Col>
@@ -101,12 +106,12 @@ export default class Login extends React.Component {
 								<label>
 									em@il:
 								</label>
-								<input type="text" name="email" id="email" className="form-control">
+								<input type="text" name="email" id="emailForgot" className="form-control">
 								</input>
 								<label>
 									new password:
 								</label>
-								<input type="password" name="password" id="password" className="form-control">
+								<input type="password" name="password" id="passwordForgot" className="form-control">
 								</input>
 
 							</Modal.Body>

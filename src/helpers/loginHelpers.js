@@ -1,8 +1,9 @@
 import axios from 'axios';
 var _ = require('lodash');
 import {browserHistory} from "react-router";
+var $ = require("jquery");
 
-const fields = ['pseudo','email', 'password', 'gender', 'like', 'bio', 'town', 'age', 'tag'];
+const fields = ['pseudo','email', 'password', 'gender', 'like', 'bio', 'age', 'tag', 'geo'];
 const genders = ['male', 'female', '...'];
 const likes = ['male', 'female', '...'];
 
@@ -32,6 +33,18 @@ export function validateTarget(target) {
         });
         res(infos)
     });
+}
+
+export function isMailValid(infos) {
+    return new Promise(function(resolve,reject){
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if (re.test(infos.email)) {
+            resolve(infos);
+        }
+        else {
+            throw 'This is not a valid mail';
+        }
+    })
 }
 
 export function mailExists(infos) {
@@ -71,6 +84,17 @@ export function validateEmail(infos) {
     });
 }
 
+export function isPseudoLongEnough(infos) {
+    return new Promise(function(resolve,reject){
+        if (infos.pseudo.length > 10) {
+            throw 'Pseudo is too long';
+        }
+        else {
+            resolve(infos);
+        }
+    });
+}
+
 export function validatePseudo(infos) {
     if (infos.pseudo != "") {
         return axios.get("/user", {
@@ -82,6 +106,9 @@ export function validatePseudo(infos) {
         .then((data) => {
             if (data.data.success) {
                 throw 'Pseudo already exists'
+            }
+            if (infos.pseudo.length > 10) {
+                throw 'Pseudo is too long';
             }
             return infos;
         })
@@ -168,6 +195,9 @@ export function validateAge(infos) {
 
 export function validateTags(infos) {
     return new Promise(function(resolve,reject){
+        if (infos.tag.length > 200) {
+            throw 'You have too many tags';
+        }
         var tags =infos.tag.trim().replace(/\s\s+/g, ' ').split(' ');
         for (var i = 0; i < tags.length; i++) {
             if (tags[i].length > 10) {
@@ -206,11 +236,11 @@ export function signIn(data) {
             if (res.data.success) {
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('username', infos.email);
-                return true;
+                return res.data.user;
             }
             else {
                 alert(res.data.message);
-                return false;
+                return null;
             }
         })
     }
@@ -222,31 +252,32 @@ export function signIn(data) {
 export function checkTokenIsSet(location) {
     var token = localStorage.getItem('token');
     var username = localStorage.getItem('username');
-    // console.log(token, username);
-    axios.post('/checktoken', {
+    return axios.post('/checktoken', {
         token:token,
         username:username
     })
-    .then((res) => {
-        if (!res.data.success) {
-            if (location != 'main') {
-                browserHistory.push("/");
-            }
-        }
-        else {
-            if (location == 'main') {
-                browserHistory.push("/map");
-            }
-        }
-    })
     .catch((err) => {
-        console.log(err);
+        console.log('this user has no token or it\'s expired');
+    });
+}
+
+export function getMyPeople(myInfo) {
+    var token = localStorage.getItem('token');
+    return axios.get('/mypeople', {
+        params: {
+            token: token,
+            myInfo: myInfo
+        }
     });
 }
 
 export function validateModalTarget (target) {
-
     return new Promise(function (res, rej) {
+        var UserMail = target.children[1].children[1].value;
+        var newPassword = target.children[1].children[3].value;
+        if (UserMail == "" || newPassword == "") {
+            throw 'Something is missing';
+        }
         res({
             email: UserMail,
             password: newPassword
@@ -266,8 +297,44 @@ export function sendMail (data) {
             }
             return res.data;
         })
+        .catch((err) => {
+            console.log(err);
+        });
     }
     else {
         throw 'We don\'t know this mail';
     }
+}
+
+export function getLocation (infos) {
+    var options = {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+    };
+    return new Promise(function(resolve,reject){
+
+        function success(pos) {
+            var crd = pos.coords;
+            infos.lat = crd.latitude;
+            infos.lng = crd.longitude;
+            resolve(infos);
+        };
+
+        function getItAnyway(err) {
+            $.getJSON('//freegeoip.net/json/?callback=?', function(data) {
+                infos.lat = data.latitude;
+                infos.lng = data.longitude;
+                resolve(infos);
+            });
+        };
+
+        if (infos.geo) {
+            navigator.geolocation.getCurrentPosition(success, getItAnyway, options);
+        }
+        else {
+            getItAnyway();
+        }
+
+    });
 }
