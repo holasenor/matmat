@@ -4,6 +4,7 @@ import {browserHistory} from "react-router";
 import $ from "jquery";
 var path = require('path');
 const uuidv4 = require('uuid/v4');
+var mime = require('mime-types')
 
 const fields = ['pseudo','email', 'password', 'gender', 'like', 'bio', 'town', 'age', 'tag'];
 const genders = ['male', 'female', '...'];
@@ -87,6 +88,18 @@ export function validateFileExtension(infos) {
         }
     }
     return infos;
+}
+
+export function checkMimeType(infos) {
+	if (infos.file)	{
+		var fileName = infos.file.name;
+		var mimetype = mime.contentType(path.extname(fileName));
+		if (mimetype != 'image/jpeg' && mimetype != 'image/jpg' && mimetype != 'image/png')
+		{
+			throw 'error mime type : not a jpg, png or jpeg, sorry.';
+		}
+	}
+	return infos;
 }
 
 export function uploadFile(infos) {

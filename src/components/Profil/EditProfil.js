@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem, InputGroup, FormGroup, Addon, FormControl, ProgressBar, bsStyle} from 'react-bootstrap';
 import { Button } from 'react-bootstrap';
-import {getData, updateUser, deleteUser, validateFileSize, validateFileExtension, uploadFile} from '../../helpers/editHelper.js';
+import {getData, updateUser, deleteUser, validateFileSize, validateFileExtension, uploadFile, checkMimeType} from '../../helpers/editHelper.js';
 import $ from "jquery";
 import {browserHistory} from "react-router";
 import * as tools from '../../helpers/loginHelpers.js';
@@ -252,6 +252,7 @@ class EditProfil extends React.Component {
         })
         .then(tools.validateTags)
         .then(this.validateFileSize)
+		.then(checkMimeType)
         .then(uploadFile)
         .then(updateUser)
         .then((res) => {
