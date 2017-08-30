@@ -131,13 +131,13 @@ export default class Header extends React.Component {
 	}
 
 	renderVisitsMenu(numberOfVisits) {
-		if (this.state.myInfo) { //temporary, header should be removed once all is done.
-			var title = <i className="glyphicon glyphicon-bell">{numberOfVisits}</i>;
-				return (
-					<NavDropdown title={<i className="glyphicon glyphicon-bell">{numberOfVisits}</i>} id="basic-nav-dropdown">
-					{this.listVisitor2(this.state.myInfo.visits)}
-				</NavDropdown>
-			);
+		if (this.state.myInfo) {
+		var title = <i className="glyphicon glyphicon-bell">{numberOfVisits}</i>;
+			return (
+				<NavDropdown title={<i className="glyphicon glyphicon-bell"> {numberOfVisits} </i>} id="basic-nav-dropdown">
+				{this.listVisitor(this.state.myVisitorsInfo)}
+			</NavDropdown>
+		);
 		}
 	}
 

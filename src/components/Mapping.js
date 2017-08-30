@@ -14,49 +14,27 @@ export default class Mapping extends React.Component {
 		this.state.login ='admin';
 		this.state.myInfo = this.props.myInfo;
 		this.state.people = this.props.people;
-		this.setMyPeople = this.setMyPeople.bind(this);
-	}
-
-	setMyPeople(myPeople) {
-		console.log('calling setMyPeople\n');
-		this.setState({
-			people: myPeople
-		});
 	}
 
 	render() {
-		if (this.state.people) {
-			console.log('people  =', this.state.people);
-			return (
-				<div className="mapping">
-					{this.state.login}
-					<div id="gtco-header" className="gtco-cover gtco-cover-md">
-						<Col md={12}>
-							<Row className="row-mt-15em">
-								<Col md={8} className="iframe-rwd">
-									<MyMap myPeople={this.state.people}>
-									</MyMap>
-								</Col>
-								<Col md={4}>
-									<RightBar myInfo={this.state.myInfo} myPeople={this.state.people} setMyPeople={this.setMyPeople}>
-									</RightBar>
-								</Col>
-							</Row>
-						</Col>
-					</div>
-					<div>
-						_
-					</div>
-					<Footer>
-					</Footer>
+		return (
+			<div className="mapping">
+				{this.state.login}
+				<div id="gtco-header" className="gtco-cover gtco-cover-md">
+					<Col md={12}>
+						<Row className="row-mt-15em">
+							<Col md={8} className="iframe-rwd">
+								<MyMap myPeople={this.state.people} />
+							</Col>
+							<Col md={4}>
+								<RightBar myInfo={this.state.myInfo} myPeople={this.state.people}/>
+							</Col>
+						</Row>
+					</Col>
 				</div>
-			);
-		}
-		else {
-			return (
-				<div className="mapping">
-				</div>
-			);
-		}
+				<div> _ </div>
+				<Footer />
+			</div>
+		);
 	}
 }
