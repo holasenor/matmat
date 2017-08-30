@@ -72,7 +72,7 @@ export default class RightBar extends React.Component {
         }
     }
 
-    renderPhoto(object, key) {
+    renderPhoto(object, key, data) {
         if (!object.img_src) {
             object.img_src = 'http://www.thesourcepartnership.com/wp-content/uploads/2017/05/facebook-default-no-profile-pic-300x300.jpg';
         }
@@ -88,24 +88,24 @@ export default class RightBar extends React.Component {
                     <Modal show={this.state.showModal} onHide={this.close}>
                         <Modal.Header closeButton>
                             <Modal.Title className="center">
-                                {object.pseudo} , {object.age}
+                                {data[this.state.idModal].pseudo} , {data[this.state.idModal].age}
                             </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <img className="photoThumbnail center" src={object.img_src}>
+                            <img className="photoThumbnail center" src={data[this.state.idModal].img_src}>
                             </img>
                             <div>
-                                Popularity : {object.popularity}
+                                Popularity : {data[this.state.idModal].popularity}
                             </div>
                             <div>
-                                <ProgressBar bsStyle='warning' now={parseInt(object.age)} active>
+                                <ProgressBar bsStyle='warning' now={parseInt(data[this.state.idModal].age)} active>
                                 </ProgressBar>
                             </div>
                             <div>
-                                {object.bio}
+                                {data[this.state.idModal].bio}
                             </div>
                             <div>
-                                #tags : {object.email}
+                                #tags : {data[this.state.idModal].email}
                             </div>
                         </Modal.Body>
                         <Modal.Footer className="center">
@@ -139,86 +139,86 @@ export default class RightBar extends React.Component {
                 key={key}
                 >
                     <Avatar src={pictures[0]}>
-                </Avatar>
-                {myLikesInfo[key].pseudo}
-            </Chip>
-        )
-    }
-    renderLikesBar(myLikesInfo) {
-        var grid = [];
-        for (var i = 0; i < myLikesInfo.length; i++) {
-            grid.push(this.renderLike(myLikesInfo, i));
+                    </Avatar>
+                    {myLikesInfo[key].pseudo}
+                </Chip>
+            )
         }
-        return grid;
-    }
-
-    renderPhotos(myPeople) {
-        var grid = [];
-        for (var i = 0; i < myPeople.length; i++) {
-            grid.push(this.renderPhoto(myPeople[i], i));
+        renderLikesBar(myLikesInfo) {
+            var grid = [];
+            for (var i = 0; i < myLikesInfo.length; i++) {
+                grid.push(this.renderLike(myLikesInfo, i));
+            }
+            return grid;
         }
-        return grid;
-    }
 
-    close() {
-        this.setState({ showModal: false });
-        this.getLikes();
-    }
+        renderPhotos(myPeople) {
+            var grid = [];
+            for (var i = 0; i < myPeople.length; i++) {
+                grid.push(this.renderPhoto(myPeople[i], i, myPeople));
+            }
+            return grid;
+        }
 
-    open(e, object) {
-		  var userId = object._id;//id de la personne que l'on visite | clique
-		  var visitorId = this.state.myInfo._id;
-		  addVisit(userId, visitorId)
-		  .then((result) => {
-			  console.log(result);
-		  })
-		  .catch((err) => {
-		  	alert(err);
-		  });
+        close() {
+            this.setState({ showModal: false });
+            this.getLikes();
+        }
 
-        this.setStyleLikeButton(object._id);
-          this.setState({ userIdInModal: object._id});
-        this.setState({ showModal: true });
-        this.setState({ idModal: e.target.id });
-    }
+        open(e, object) {
+            var userId = object._id;//id de la personne que l'on visite | clique
+            var visitorId = this.state.myInfo._id;
+            addVisit(userId, visitorId)
+            .then((result) => {
+                console.log(result);
+            })
+            .catch((err) => {
+                alert(err);
+            });
 
-    componentDidMount() {
-        this.getLikes();
-    }
+            this.setStyleLikeButton(object._id);
+            this.setState({ userIdInModal: object._id});
+            this.setState({ showModal: true });
+            this.setState({ idModal: e.target.id });
+        }
 
-    getLikes() {
-        getMyLikesInfo(this.state.myInfo.likes)
-        .then((myLikesInfo) => {
-            this.setState({myLikesInfo: myLikesInfo});
-        });
-    }
+        componentDidMount() {
+            this.getLikes();
+        }
 
-    render() {
-        console.log('render was called');
-        var myPeople = this.props.myPeople;
-        if (this.state.myLikesInfo) {
-            return (
-                <div className="rightBarMap">
-                    <div>
-                        <Research setMyPeople={this.props.setMyPeople} myInfo={this.state.myInfo}>
-                        </Research>
-                        <Row>
-                            <Col md={12} className="resultPhotos">
-                                {this.renderPhotos(myPeople)}
-                            </Col>
+        getLikes() {
+            getMyLikesInfo(this.state.myInfo.likes)
+            .then((myLikesInfo) => {
+                this.setState({myLikesInfo: myLikesInfo});
+            });
+        }
+
+        render() {
+            console.log('render was called');
+            var myPeople = this.props.myPeople;
+            if (this.state.myLikesInfo) {
+                return (
+                    <div className="rightBarMap">
+                        <div>
+                            <Research setMyPeople={this.props.setMyPeople} myInfo={this.state.myInfo}>
+                            </Research>
+                            <Row>
+                                <Col md={12} className="resultPhotos">
+                                    {this.renderPhotos(myPeople)}
+                                </Col>
+                            </Row>
+                        </div>
+                        <Row className="likesBar" style={styles.wrapper}>
+                            {this.renderLikesBar(this.state.myLikesInfo)}
                         </Row>
                     </div>
-                    <Row className="likesBar" style={styles.wrapper}>
-                        {this.renderLikesBar(this.state.myLikesInfo)}
-                    </Row>
-                </div>
-            );
-        }
-        else {
-            return (
-                <div className="rightBarMap">
-                </div>
-            );
+                );
+            }
+            else {
+                return (
+                    <div className="rightBarMap">
+                    </div>
+                );
+            }
         }
     }
-}
