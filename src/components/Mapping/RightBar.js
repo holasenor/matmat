@@ -26,7 +26,8 @@ export default class RightBar extends React.Component {
             showModal: false,
             idModal: 1,
             buttonBsStyle: 'primary',
-            myInfo: this.props.myInfo
+            myInfo: this.props.myInfo,
+            userModal: {}
         };
         this.open = this.open.bind(this);
         this.close = this.close.bind(this);
@@ -72,7 +73,7 @@ export default class RightBar extends React.Component {
         }
     }
 
-    renderPhoto(object, key, data) {
+    renderPhoto(object, key) {
         if (!object.img_src) {
             object.img_src = 'http://www.thesourcepartnership.com/wp-content/uploads/2017/05/facebook-default-no-profile-pic-300x300.jpg';
         }
@@ -88,24 +89,24 @@ export default class RightBar extends React.Component {
                     <Modal show={this.state.showModal} onHide={this.close}>
                         <Modal.Header closeButton>
                             <Modal.Title className="center">
-                                {data[this.state.idModal].pseudo} , {data[this.state.idModal].age}
+                                {this.state.userModal.pseudo} , {this.state.userModal.age}
                             </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <img className="photoThumbnail center" src={data[this.state.idModal].img_src}>
+                            <img className="photoThumbnail center" src={this.state.userModal.img_src}>
                             </img>
                             <div>
-                                Popularity : {data[this.state.idModal].popularity}
+                                Popularity : {this.state.userModal.popularity}
                             </div>
                             <div>
-                                <ProgressBar bsStyle='warning' now={parseInt(data[this.state.idModal].age)} active>
+                                <ProgressBar bsStyle='warning' now={parseInt(this.state.userModal.age)} active>
                                 </ProgressBar>
                             </div>
                             <div>
-                                {data[this.state.idModal].bio}
+                                {this.state.userModal.bio}
                             </div>
                             <div>
-                                #tags : {data[this.state.idModal].email}
+                                #tags : {this.state.userModal.email}
                             </div>
                         </Modal.Body>
                         <Modal.Footer className="center">
@@ -155,7 +156,7 @@ export default class RightBar extends React.Component {
         renderPhotos(myPeople) {
             var grid = [];
             for (var i = 0; i < myPeople.length; i++) {
-                grid.push(this.renderPhoto(myPeople[i], i, myPeople));
+                grid.push(this.renderPhoto(myPeople[i], i));
             }
             return grid;
         }
@@ -175,7 +176,7 @@ export default class RightBar extends React.Component {
             .catch((err) => {
                 alert(err);
             });
-
+            this.setState({userModal: object});
             this.setStyleLikeButton(object._id);
             this.setState({ userIdInModal: object._id});
             this.setState({ showModal: true });
