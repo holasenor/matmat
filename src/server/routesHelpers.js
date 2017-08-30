@@ -344,24 +344,6 @@ export function getPeopleFromSearch(req, res, next) {
     })
 }
 
-export function getMyVisitorsInfo(req, res, next) {
-    var ids = req.query.visits;
-	console.log(ids);
-    Database.getUsers(ids)
-    .then((users) => {
-        if (users) {
-            res.send({
-                success: true,
-                users: users
-            });
-        }
-        else {
-            res.send({
-                success: false
-            });
-        }
-    })
-}
 
 export function prepareOptions(req, res, next) {
     req.query.options = JSON.parse(req.query.options);
