@@ -83,3 +83,22 @@ export function getSearchResults(myInfo, options) {
         return result.data.users;
     });
 }
+
+export function getMyVisitorsInfo(myVisitors) {
+    var token = localStorage.getItem('token');
+    return axios.get('/myvisitorsinfo', {
+        params: {
+            token: token,
+            visits: myVisitors
+        }
+    })
+    .then((result) => {
+        if (result.data.success) {
+            return result.data.users;
+        }
+        else {
+            console.log('No visitors were found');
+            return [];
+        }
+    })
+}
