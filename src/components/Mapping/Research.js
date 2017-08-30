@@ -39,6 +39,13 @@ export default class Research extends React.Component {
 		});
 	}
 
+	handleOnChangePopularity(value) {
+		this.setState({
+			fromPop: value[0],
+			toPop: value[1]
+		});
+	}
+
 	getSearchOptions() {
 		var form = $('#searchForm');
 		var ageInterval = [this.state.fromAge, this.state.toAge];
