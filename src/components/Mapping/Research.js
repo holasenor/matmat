@@ -1,5 +1,5 @@
 import React from "react"
-import { Button, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem, SplitButton, ToggleButton} from 'react-bootstrap';
+import { Button, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
 import Slider from 'rc-slider';
 import {getSearchResults} from '../../helpers/mainHelper.js';
 const Range = Slider.Range;
@@ -8,16 +8,7 @@ var $ = require("jquery");
 export default class Research extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			glyphiconSortLocation: "glyphicon glyphicon-sort-by-attributes",
-			glyphiconSortAge: "glyphicon glyphicon-sort-by-attributes",
-			glyphiconSortPopularity: "glyphicon glyphicon-sort-by-attributes",
-			glyphiconSortTags: "glyphicon glyphicon-sort-by-attributes",
-			glyphiconSelectLocation: "",
-			glyphiconSelectAge: "",
-			glyphiconSelectPopularity: "",
-			glyphiconSelectTags: "",
-		};
+		this.state = {};
 		this.state.myInfo = this.props.myInfo;
 		this.state.fromAge = 0;
 		this.state.toAge = 100;
@@ -26,64 +17,7 @@ export default class Research extends React.Component {
 		this.handleOnChangeAge = this.handleOnChangeAge.bind(this);
 		this.handleOnChangePopularity = this.handleOnChangePopularity.bind(this);
 		this.handleSearch = this.handleSearch.bind(this);
-		this.sortLocation = this.sortLocation.bind(this);
-		this.sortAge = this.sortAge.bind(this);
-		this.sortPopularity = this.sortPopularity.bind(this);
-		this.sortTags = this.sortTags.bind(this);
 	}
-  
-	sortLocation() {
-		if (this.state.glyphiconSortLocation == "glyphicon glyphicon-sort-by-attributes") {
-			this.setState({ glyphiconSortLocation: "glyphicon glyphicon-sort-by-attributes-alt"});
-		}
-		else {
-			this.setState({ glyphiconSortLocation: "glyphicon glyphicon-sort-by-attributes" });
-		}
-		this.setState({ glyphiconSelectLocation: "glyphicon glyphicon-triangle-left" });
-		this.setState({ glyphiconSelectAge: "" });
-		this.setState({ glyphiconSelectPopularity: "" });
-		this.setState({ glyphiconSelectTags: "" });
-
-	}
-
-	sortAge() {
-		if (this.state.glyphiconSortAge == "glyphicon glyphicon-sort-by-attributes") {
-			this.setState({ glyphiconSortAge: "glyphicon glyphicon-sort-by-attributes-alt"});
-		}
-		else {
-			this.setState({ glyphiconSortAge: "glyphicon glyphicon-sort-by-attributes" });
-		}
-		this.setState({ glyphiconSelectLocation: "" });
-		this.setState({ glyphiconSelectAge: "glyphicon glyphicon-triangle-left" });
-		this.setState({ glyphiconSelectPopularity: "" });
-		this.setState({ glyphiconSelectTags: "" });
-	}
-
-
-	sortPopularity() {
-		if (this.state.glyphiconSortPopularity == "glyphicon glyphicon-sort-by-attributes") {
-			this.setState({ glyphiconSortPopularity: "glyphicon glyphicon-sort-by-attributes-alt"});
-		}
-		else {
-			this.setState({ glyphiconSortPopularity: "glyphicon glyphicon-sort-by-attributes" });
-		}
-		this.setState({ glyphiconSelectLocation: "" });
-		this.setState({ glyphiconSelectAge: "" });
-		this.setState({ glyphiconSelectPopularity: "glyphicon glyphicon-triangle-left" });
-		this.setState({ glyphiconSelectTags: "" });
-	}
-
-	sortTags() {
-		if (this.state.glyphiconSortTags == "glyphicon glyphicon-sort-by-attributes") {
-			this.setState({ glyphiconSortTags: "glyphicon glyphicon-sort-by-attributes-alt"});
-		}
-		else {
-			this.setState({ glyphiconSortTags: "glyphicon glyphicon-sort-by-attributes" });
-		}
-		this.setState({ glyphiconSelectLocation: "" });
-		this.setState({ glyphiconSelectAge: "" });
-		this.setState({ glyphiconSelectPopularity: "" });
-		this.setState({ glyphiconSelectTags: "glyphicon glyphicon-triangle-left" });
 
 	handleOnChangeAge(value) {
 		this.setState({
@@ -192,32 +126,6 @@ export default class Research extends React.Component {
 						</Row>
 					</form>
 				</div>
-				<Row>
-					<Col md={3}>
-						<div title="Location" id="SortLocation" name="SortLocation" onClick={this.sortLocation}>
-							Location <span className={this.state.glyphiconSortLocation}></span>
-							<span className={this.state.glyphiconSelectLocation}></span>
-						</div>
-					</Col>
-					<Col md={3}>
-						<div title="Age" id="SortAge" name="SortAge" onClick={this.sortAge}>
-							Age <span className={this.state.glyphiconSortAge}></span>
-							<span className={this.state.glyphiconSelectAge}></span>
-						</div>
-					</Col>
-					<Col md={3}>
-						<div title="Popularity" id="SortPopularity" name="SortPopularity" onClick={this.sortPopularity}>
-							Popularity <span className={this.state.glyphiconSortPopularity}></span>
-							<span className={this.state.glyphiconSelectPopularity}></span>
-						</div>
-					</Col>
-					<Col md={3}>
-						<div title="Tags" id="SortTags" name="SortTags" onClick={this.sortTags}>
-							Tags <span className={this.state.glyphiconSortTags}></span>
-							<span className={this.state.glyphiconSelectTags}></span>
-						</div>
-					</Col>
-				</Row>
 			</div>
 		);
 	}
