@@ -206,7 +206,6 @@ User.addOneVisit = function(userId, idVisitor) {
 
 	return Database.get()
 	.then((db) => {
-		// console.log('first then', userId); // il faut mettre sur l'id en cours
 		return db.collection('users')
 		.findOne({_id: ObjectId(userId)})
 		.then((res) => {
@@ -220,7 +219,6 @@ User.addOneVisit = function(userId, idVisitor) {
 		})
 	})
 	.then((db) => {
-		// console.log('second then');
 		return db.collection('users')
 		.update({ _id: ObjectId(userIdVisitor)}, { $push :{ visits: {  who:[id], when:[Date.now()]} }})
 		.then((res) => {
