@@ -1,6 +1,9 @@
 import React from "react"
 import { Button, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem, SplitButton, ToggleButton} from 'react-bootstrap';
-
+import Slider from 'rc-slider';
+import {getSearchResults} from '../../helpers/mainHelper.js';
+const Range = Slider.Range;
+var $ = require("jquery");
 
 export default class Research extends React.Component {
 	constructor(props) {
@@ -15,12 +18,20 @@ export default class Research extends React.Component {
 			glyphiconSelectPopularity: "",
 			glyphiconSelectTags: "",
 		};
+		this.state.myInfo = this.props.myInfo;
+		this.state.fromAge = 0;
+		this.state.toAge = 100;
+		this.state.fromPop = 0;
+		this.state.toPop = 100;
+		this.handleOnChangeAge = this.handleOnChangeAge.bind(this);
+		this.handleOnChangePopularity = this.handleOnChangePopularity.bind(this);
+		this.handleSearch = this.handleSearch.bind(this);
 		this.sortLocation = this.sortLocation.bind(this);
 		this.sortAge = this.sortAge.bind(this);
 		this.sortPopularity = this.sortPopularity.bind(this);
 		this.sortTags = this.sortTags.bind(this);
 	}
-
+  
 	sortLocation() {
 		if (this.state.glyphiconSortLocation == "glyphicon glyphicon-sort-by-attributes") {
 			this.setState({ glyphiconSortLocation: "glyphicon glyphicon-sort-by-attributes-alt"});
@@ -73,56 +84,114 @@ export default class Research extends React.Component {
 		this.setState({ glyphiconSelectAge: "" });
 		this.setState({ glyphiconSelectPopularity: "" });
 		this.setState({ glyphiconSelectTags: "glyphicon glyphicon-triangle-left" });
+
+	handleOnChangeAge(value) {
+		this.setState({
+			fromAge: value[0],
+			toAge: value[1]
+		});
+	}
+
+	handleOnChangePopularity(value) {
+		this.setState({
+			fromPop: value[0],
+			toPop: value[1]
+		});
+	}
+
+	getSearchOptions() {
+		var form = $('#searchForm');
+		var ageInterval = [this.state.fromAge, this.state.toAge];
+		var	popularityInterval = [this.state.fromPop, this.state.toPop];
+		var distance = form.find('#distance').val();
+		var tags = form.find('#tag').val();
+		return {
+			ageInterval: ageInterval,
+			popularityInterval: popularityInterval,
+			distance: distance,
+			tags: tags
+		}
+	}
+
+	handleSearch() {
+		// use this.props.setMyPeople to change mypeople everywhere
+		var options = this.getSearchOptions();
+		var myInfo = this.state.myInfo;
+		getSearchResults(myInfo, options)
+		.then((newPeople) => {
+			console.log('getting new People');
+			console.log(newPeople);
+			this.props.setMyPeople(newPeople);
+		})
+		.catch((err) => {
+			console.log(err);
+		})
 	}
 
 	render() {
 		return (
 			<div>
 				<div >
-					<form action="#">
+					<form id="searchForm" action="#" onSubmit={(e) => {e.preventDefault();this.handleSearch();}}>
 						<Row>
 							<Col md={6}>
-								<label>Like</label>
-								<select name="#" id="sexe" className="form-control">
-									<option value="male">Male</option>
-									<option value="female">Female</option>
-									<option value="both">both</option>
-								</select>
-							</Col>
-							<Col md={6}>
-								<label>disance</label>
-								<select name="#" id="like" className="form-control">
-									<option value="10">10km</option>
-									<option value="20">20km</option>
-									<option value="50">50km</option>
-									<option value="100">100km</option>
-								</select>
+								<label>
+									Age
+								</label>
+								<Range allowCross={false} defaultValue={[0, 100]} onChange={this.handleOnChangeAge}>
+								</Range>
+								<label>
+									from {this.state.fromAge} to {this.state.toAge} years old
+								</label>
 							</Col>
 							<Col md={6}>
 								<label>
-									Pseudo:
+									Popularity
 								</label>
-								<input type="text" name="pseudo" id="pseudo" className="form-control"/>
+								<Range allowCross={false} defaultValue={[0, 100]} onChange={this.handleOnChangePopularity}>
+								</Range>
+								<label>
+									from {this.state.fromPop} to {this.state.toPop} points
+								</label>
+							</Col>
+							<Col md={6}>
+								<label>
+									Distance
+								</label>
+								<select name="#" id="distance" className="form-control">
+									<option value="10">
+										10km
+									</option>
+									<option value="20">
+										20km
+									</option>
+									<option value="50">
+										50km
+									</option>
+									<option value="100">
+										100km
+									</option>
+								</select>
 							</Col>
 							<Col md={6}>
 								<label>
 									#tags:
 								</label>
-								<input type="text" name="tag" id="tag" className="form-control"/>
+								<input type="text" name="tag" id="tag" className="form-control">
+								</input>
 							</Col>
 						</Row>
-
 						<Row className="form-group">
 							<Col md={12}>
-								<label>   </label>
-								<Button className="btn-block" bsStyle="primary" bsSize="large" active type="submit" value="Submit">Search</Button>
+								<label>
+								</label>
+								<Button className="btn-block" bsStyle="primary" bsSize="large" type="button" onClick={this.handleSearch}>
+									Search
+								</Button>
 							</Col>
 						</Row>
 					</form>
 				</div>
-
-
-				{/* âge, localisation, popularité et par tags en */}
 				<Row>
 					<Col md={3}>
 						<div title="Location" id="SortLocation" name="SortLocation" onClick={this.sortLocation}>

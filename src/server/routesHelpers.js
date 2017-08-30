@@ -325,9 +325,32 @@ export function getMyLikesInfo(req, res, next) {
 }
 
 export function getMyVisitorsInfo(req, res, next) {
-    var ids = req.query.visits;
-	console.log(ids);
-    Database.getUsers(ids)
+  var ids = req.query.visits;
+  console.log(ids);
+  Database.getUsers(ids)
+  .then((users) => {
+    if (users) {
+      res.send({
+        success: true,
+        users: users
+      });
+    }
+    else {
+    res.send({
+      success: false
+    });
+    }
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+}
+
+export function getPeopleFromSearch(req, res, next) {
+    var options = req.query.options || {};
+    var myInfo = JSON.parse(req.query.myInfo);
+    options.distance = parseInt(options.distance);
+    Database.getUsersFromSearch(options, myInfo)
     .then((users) => {
         if (users) {
             res.send({
@@ -344,4 +367,10 @@ export function getMyVisitorsInfo(req, res, next) {
     .catch((err) => {
         console.log(err);
     })
+}
+
+
+export function prepareOptions(req, res, next) {
+    req.query.options = JSON.parse(req.query.options);
+    next();
 }
