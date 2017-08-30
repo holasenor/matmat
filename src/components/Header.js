@@ -101,7 +101,7 @@ export default class Header extends React.Component {
 			var title = <i className="glyphicon glyphicon-bell">{numberOfVisits}</i>;
 				return (
 					<NavDropdown title={<i className="glyphicon glyphicon-bell">{numberOfVisits}</i>} id="basic-nav-dropdown">
-					{this.listVisitor2(this.state.myInfo.visits)}
+					{this.listVisitor(this.state.myVisitorsInfo)}
 				</NavDropdown>
 			);
 		}
