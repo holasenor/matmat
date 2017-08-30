@@ -103,3 +103,14 @@ export function getSearchResults(myInfo, options) {
         return result.data.users;
     });
 }
+
+export function blockThisId(id) {
+    var token = localStorage.getItem('token');
+    return axios.post('/blockid', {
+        id: id,
+        token: token
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+}
