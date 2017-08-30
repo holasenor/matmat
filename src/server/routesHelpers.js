@@ -8,7 +8,7 @@ import User from './models/user';
 var bcrypt = require('bcrypt');
 const saltRounds = 6;
 var fs = require('fs');
-
+var ObjectId = require('mongodb').ObjectID;
 
 const mailOptions = {
     from: 'youremail@gmail.com',
@@ -260,4 +260,66 @@ export function addPictureToUser(req, res, next) {
             body: req.body
         });
     });
+}
+
+export function getMyPeople(req, res, next) {
+    var myInfo = JSON.parse(req.query.myInfo);
+    return User.getMyPeople(myInfo)
+    .then((myPeople) => {
+        res.send(myPeople);
+    })
+}
+
+export function addLike(req, res, next) {
+    var userId = req.decode.id;
+    var likedId = req.body.id;
+    User.addLike(userId, likedId)
+    .then((result) => {
+        if (result) {
+            res.send({
+                success: true,
+                message: result.message
+            });
+        }
+    });
+}
+
+export function addVisit(req, res, next) {
+    console.log('im in addVisit');
+    console.log(req.body);
+    // var userId = req.decode.id;
+    User.addOneVisit(req.body.userId, req.body.visitorId)
+    .then((ret) => {
+        if (ret) {
+            res.send({
+                success: true
+            })
+        }
+        else {
+            res.send({
+                success: false
+            });
+        }
+    })
+}
+
+export function getMyLikesInfo(req, res, next) {
+    var ids = req.query.likes;
+    Database.getUsers(ids)
+    .then((users) => {
+        if (users) {
+            res.send({
+                success: true,
+                users: users
+            });
+        }
+        else {
+            res.send({
+                success: false
+            });
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+    })
 }

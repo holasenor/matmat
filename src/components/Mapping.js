@@ -17,9 +17,6 @@ export default class Mapping extends React.Component {
 	}
 
 	render() {
-		const markers = 135;
-		var initialCenter = { lng: 2.3163477, lat: 48.8965533 }
-		// var initialCenter = { lng: this.props.myJson.myData[0].lng, lat: this.props.myJson.myData[0].lat }
 		return (
 			<div className="mapping">
 				{this.state.login}
@@ -27,10 +24,10 @@ export default class Mapping extends React.Component {
 					<Col md={12}>
 						<Row className="row-mt-15em">
 							<Col md={8} className="iframe-rwd">
-								<MyMap myJson={this.state.people.myData} />
+								<MyMap myPeople={this.state.people} />
 							</Col>
 							<Col md={4}>
-								<RightBar myJson={this.state.people.myData}/>
+								<RightBar myInfo={this.state.myInfo} myPeople={this.state.people}/>
 							</Col>
 						</Row>
 					</Col>
