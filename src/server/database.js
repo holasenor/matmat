@@ -131,10 +131,13 @@ exports.getUsersFromSearch = function (options, myInfo) {
         })
         .then((users) => {
             if (options.tags && options.tags != "") {
+                console.log('comparing options\n');
                 return users.filter((person) => {
                     var personTag = person.tag.replace(/\s+/g, ' ').trim().split(' ');
                     var myInfoTag = myInfo.tag.replace(/\s+/g, ' ').trim().split(' ');
                     var optionsTags = options.tags.replace(/\s+/g, ' ').trim().split(' ');
+                    console.log(personTag);
+                    console.log(myInfoTag);
                     var tagsInCommon = _.intersection(personTag, myInfoTag);
                     var intersection = _.intersection(tagsInCommon, optionsTags)
                     return (intersection.length > 0);
