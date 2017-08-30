@@ -25,7 +25,6 @@ export default class RightBar extends React.Component {
         this.state = {
             showModal: false,
             idModal: 1,
-            myPeople: this.props.myPeople,
             buttonBsStyle: 'primary',
             myInfo: this.props.myInfo
         };
@@ -73,7 +72,7 @@ export default class RightBar extends React.Component {
         }
     }
 
-    renderPhoto(object, key, data) {
+    renderPhoto(object, key) {
         if (!object.img_src) {
             object.img_src = 'http://www.thesourcepartnership.com/wp-content/uploads/2017/05/facebook-default-no-profile-pic-300x300.jpg';
         }
@@ -89,24 +88,24 @@ export default class RightBar extends React.Component {
                     <Modal show={this.state.showModal} onHide={this.close}>
                         <Modal.Header closeButton>
                             <Modal.Title className="center">
-                                {data[this.state.idModal].pseudo} , {data[this.state.idModal].age}
+                                {object.pseudo} , {object.age}
                             </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <img className="photoThumbnail center" src={data[this.state.idModal].img_src}>
+                            <img className="photoThumbnail center" src={object.img_src}>
                             </img>
                             <div>
-                                Popularity : {data[this.state.idModal].popularity}
+                                Popularity : {object.popularity}
                             </div>
                             <div>
-                                <ProgressBar bsStyle='warning' now={parseInt(data[this.state.idModal].age)} active>
+                                <ProgressBar bsStyle='warning' now={parseInt(object.age)} active>
                                 </ProgressBar>
                             </div>
                             <div>
-                                {data[this.state.idModal].bio}
+                                {object.bio}
                             </div>
                             <div>
-                                #tags : {data[this.state.idModal].email}
+                                #tags : {object.email}
                             </div>
                         </Modal.Body>
                         <Modal.Footer className="center">
@@ -156,7 +155,7 @@ export default class RightBar extends React.Component {
     renderPhotos(myPeople) {
         var grid = [];
         for (var i = 0; i < myPeople.length; i++) {
-            grid.push(this.renderPhoto(myPeople[i], i, myPeople));
+            grid.push(this.renderPhoto(myPeople[i], i));
         }
         return grid;
     }
@@ -176,7 +175,7 @@ export default class RightBar extends React.Component {
 		  .catch((err) => {
 		  	alert(err);
 		  });
-      
+
         this.setStyleLikeButton(object._id);
           this.setState({ userIdInModal: object._id});
         this.setState({ showModal: true });
@@ -196,15 +195,16 @@ export default class RightBar extends React.Component {
 
     render() {
         console.log('render was called');
+        var myPeople = this.props.myPeople;
         if (this.state.myLikesInfo) {
             return (
                 <div className="rightBarMap">
                     <div>
-                        <Research>
+                        <Research setMyPeople={this.props.setMyPeople} myInfo={this.state.myInfo}>
                         </Research>
                         <Row>
                             <Col md={12} className="resultPhotos">
-                                {this.renderPhotos(this.state.myPeople)}
+                                {this.renderPhotos(myPeople)}
                             </Col>
                         </Row>
                     </div>
