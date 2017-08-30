@@ -32,6 +32,7 @@ export default class RightBar extends React.Component {
         this.open = this.open.bind(this);
         this.close = this.close.bind(this);
         this.setStyleLikeButton =this.setStyleLikeButton.bind(this);
+        this.renderLikeButton = this.renderLikeButton.bind(this);
     }
 
     handleTouchTap(e, someUser) {
@@ -73,6 +74,16 @@ export default class RightBar extends React.Component {
         }
     }
 
+    renderLikeButton() {
+        if (this.state.myInfo.pictures && this.state.myInfo.pictures[0]) {
+            return (
+                <Button bsStyle={this.state.buttonBsStyle} onClick={(e) => {this.handleClickLikeButton(this.state.userIdInModal)}}>
+                    Like
+                </Button>
+            );
+        }
+    }
+
     renderPhoto(object, key) {
         if (!object.img_src) {
             object.img_src = 'http://www.thesourcepartnership.com/wp-content/uploads/2017/05/facebook-default-no-profile-pic-300x300.jpg';
@@ -110,10 +121,7 @@ export default class RightBar extends React.Component {
                             </div>
                         </Modal.Body>
                         <Modal.Footer className="center">
-                            <Button bsStyle={this.state.buttonBsStyle} onClick={(e) => {this.handleClickLikeButton(this.state.userIdInModal)}}>
-                                Like
-                            </Button>
-
+                            {this.renderLikeButton()}
                             <Button bsStyle="success">
                                 Chat
                             </Button>
