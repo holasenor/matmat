@@ -63,6 +63,7 @@ export default class Header extends React.Component {
 		getMyVisitorsInfo(tab)
 		.then((result) => {
 			this.setState({myVisitorsInfo: result});
+			// console.log(this.state.myVisitorsInfo);
 		});
 	}
 

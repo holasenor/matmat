@@ -5,6 +5,7 @@
 
 
 	$('#loginform').submit(function(event){
+		// console.log(event);
 		event.preventDefault();
 		//on emet un evenemtn cote cient pour le servuer
 		socket.emit('login', {

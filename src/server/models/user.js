@@ -222,7 +222,7 @@ User.addOneVisit = function(userId, idVisitor) {
 	.then((db) => {
 		// console.log('second then');
 		return db.collection('users')
-		.update({ _id: ObjectId(userId)}, { $push :{ visits: {  who:[idVisitor], when:[Date.now()]} }})
+		.update({ _id: ObjectId(userId)}, { $push :{ visits: {  who:idVisitor, when:Date.now()} }})
 		.then((res) => {
 			return {message: 'visit success'};
 		})
