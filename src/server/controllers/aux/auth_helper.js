@@ -189,7 +189,6 @@ export function checkUser(infos) {
 }
 
 export function signIn(infos) {
-    console.log('infos',infos);
     return axios.post('signin', infos)
     .then((res) => {
         if (res.data.success) {
@@ -233,8 +232,6 @@ export function validatePosition(infos) {
         return !isNaN(parseFloat(n)) && isFinite(n);
     }
     return new Promise(function(resolve,reject){
-        console.log(infos.lat);
-        console.log(infos.lng);
         if (isNumber(infos.lat) && isNumber(infos.lng)) {
             resolve(infos);
         }

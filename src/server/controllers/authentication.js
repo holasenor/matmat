@@ -7,7 +7,6 @@ var jwt = require('jsonwebtoken');
 import * as Validator from './aux/auth_helper.js';
 
 exports.signup = function (req, res, next) {
-    console.log('req.body', req.body);
     Validator.validateTarget(req.body)
     .then(Validator.validateEmail)
     .then(Validator.validatePseudo)
@@ -22,6 +21,7 @@ exports.signup = function (req, res, next) {
         data.likes = [];
         data.likedBy = [];
         data.visits = [];
+        data.popularity = 1;
         User.create(data)
         .then((user) => {
             return tokenForUser(user);
@@ -68,7 +68,7 @@ exports.checktoken = function (req, res, next) {
             }
         }
         else {
-            console.log('sorry----------------------------------------');
+            console.log('This user does not have a token\n');
             res.send({
                 success: false,
                 message: 'You don\'t have a token'
