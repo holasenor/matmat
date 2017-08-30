@@ -36,7 +36,7 @@ export default class Mapping extends React.Component {
 								</MyMap>
 							</Col>
 							<Col md={4}>
-								<RightBar myInfo={this.state.myInfo} myPeople={this.state.people}>
+								<RightBar myInfo={this.state.myInfo} myPeople={this.state.people} setMyPeople={this.setMyPeople}>
 								</RightBar>
 							</Col>
 						</Row>
