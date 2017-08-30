@@ -14,6 +14,14 @@ export default class Mapping extends React.Component {
 		this.state.login ='admin';
 		this.state.myInfo = this.props.myInfo;
 		this.state.people = this.props.people;
+		this.setMyPeople = this.setMyPeople.bind(this);
+	}
+
+	setMyPeople(myPeople) {
+		console.log('calling setMyPeople\n');
+		this.setState({
+			people: myPeople
+		});
 	}
 
 	render() {
@@ -24,16 +32,19 @@ export default class Mapping extends React.Component {
 					<Col md={12}>
 						<Row className="row-mt-15em">
 							<Col md={8} className="iframe-rwd">
-								<MyMap myPeople={this.state.people} />
+								<MyMap myPeople={this.state.people} >
+								</MyMap>
 							</Col>
 							<Col md={4}>
-								<RightBar myInfo={this.state.myInfo} myPeople={this.state.people}/>
+								<RightBar myInfo={this.state.myInfo} myPeople={this.state.people}>
+								</RightBar>
 							</Col>
 						</Row>
 					</Col>
 				</div>
-				<div> _ </div>
-				<Footer />
+				<div>
+					_
+				</div>
 			</div>
 		);
 	}

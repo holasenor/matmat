@@ -1,6 +1,9 @@
 import React from "react"
-import { Button, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem, SplitButton, ToggleButton} from 'react-bootstrap';
-
+import { Button, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
+import Slider from 'rc-slider';
+import {getSearchResults} from '../../helpers/mainHelper.js';
+const Range = Slider.Range;
+var $ = require("jquery");
 
 export default class Research extends React.Component {
 	constructor(props) {
@@ -15,10 +18,54 @@ export default class Research extends React.Component {
 			glyphiconSelectPopularity: "",
 			glyphiconSelectTags: "",
 		};
+		this.state.myInfo = this.props.myInfo;
+		this.state.fromAge = 0;
+		this.state.toAge = 100;
+		this.state.fromPop = 0;
+		this.state.toPop = 100;
+		this.handleOnChangeAge = this.handleOnChangeAge.bind(this);
+		this.handleOnChangePopularity = this.handleOnChangePopularity.bind(this);
+		this.handleSearch = this.handleSearch.bind(this);
 		this.sortLocation = this.sortLocation.bind(this);
 		this.sortAge = this.sortAge.bind(this);
 		this.sortPopularity = this.sortPopularity.bind(this);
 		this.sortTags = this.sortTags.bind(this);
+	}
+
+	handleOnChangeAge(value) {
+		this.setState({
+			fromAge: value[0],
+			toAge: value[1]
+		});
+	}
+
+	getSearchOptions() {
+		var form = $('#searchForm');
+		var ageInterval = [this.state.fromAge, this.state.toAge];
+		var     popularityInterval = [this.state.fromPop, this.state.toPop];
+		var distance = form.find('#distance').val();
+		var tags = form.find('#tag').val();
+		return {
+			ageInterval: ageInterval,
+			popularityInterval: popularityInterval,
+			distance: distance,
+			tags: tags
+		}
+	}
+
+	handleSearch() {
+		// use this.props.setMyPeople to change mypeople everywhere
+		var options = this.getSearchOptions();
+		var myInfo = this.state.myInfo;
+		getSearchResults(myInfo, options)
+		.then((newPeople) => {
+			console.log('getting new People');
+			console.log(newPeople);
+			this.props.setMyPeople(newPeople);
+		})
+		.catch((err) => {
+			console.log(err);
+		})
 	}
 
 	sortLocation() {
