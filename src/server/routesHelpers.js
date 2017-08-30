@@ -349,3 +349,24 @@ export function prepareOptions(req, res, next) {
     req.query.options = JSON.parse(req.query.options);
     next();
 }
+
+export function getMyVisitorsInfo(req, res, next) {
+    var ids = req.query.visits;
+    Database.getUsers(ids)
+    .then((users) => {
+        if (users) {
+            res.send({
+                success: true,
+                users: users
+            });
+        }
+        else {
+            res.send({
+                success: false
+            });
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+}
