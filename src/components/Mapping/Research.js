@@ -126,50 +126,66 @@ export default class Research extends React.Component {
 		return (
 			<div>
 				<div >
-					<form action="#">
+					<form id="searchForm" action="#" onSubmit={(e) => {e.preventDefault();this.handleSearch();}}>
 						<Row>
 							<Col md={6}>
-								<label>Like</label>
-								<select name="#" id="sexe" className="form-control">
-									<option value="male">Male</option>
-									<option value="female">Female</option>
-									<option value="both">both</option>
-								</select>
-							</Col>
-							<Col md={6}>
-								<label>disance</label>
-								<select name="#" id="like" className="form-control">
-									<option value="10">10km</option>
-									<option value="20">20km</option>
-									<option value="50">50km</option>
-									<option value="100">100km</option>
-								</select>
+								<label>
+									Age
+								</label>
+								<Range allowCross={false} defaultValue={[0, 100]} onChange={this.handleOnChangeAge}>
+								</Range>
+								<label>
+									from {this.state.fromAge} to {this.state.toAge} years old
+								</label>
 							</Col>
 							<Col md={6}>
 								<label>
-									Pseudo:
+									Popularity
 								</label>
-								<input type="text" name="pseudo" id="pseudo" className="form-control"/>
+								<Range allowCross={false} defaultValue={[0, 100]} onChange={this.handleOnChangePopularity}>
+								</Range>
+								<label>
+									from {this.state.fromPop} to {this.state.toPop} points
+								</label>
+							</Col>
+							<Col md={6}>
+								<label>
+									Distance
+								</label>
+								<select name="#" id="distance" className="form-control">
+									<option value="10">
+										10km
+									</option>
+									<option value="20">
+										20km
+									</option>
+									<option value="50">
+										50km
+									</option>
+									<option value="100">
+										100km
+									</option>
+								</select>
 							</Col>
 							<Col md={6}>
 								<label>
 									#tags:
 								</label>
-								<input type="text" name="tag" id="tag" className="form-control"/>
+								<input type="text" name="tag" id="tag" className="form-control">
+								</input>
 							</Col>
 						</Row>
-
 						<Row className="form-group">
 							<Col md={12}>
-								<label>   </label>
-								<Button className="btn-block" bsStyle="primary" bsSize="large" active type="submit" value="Submit">Search</Button>
+								<label>
+								</label>
+								<Button className="btn-block" bsStyle="primary" bsSize="large" type="button" onClick={this.handleSearch}>
+									Search
+								</Button>
 							</Col>
 						</Row>
 					</form>
 				</div>
-
-
-				{/* âge, localisation, popularité et par tags en */}
 				<Row>
 					<Col md={3}>
 						<div title="Location" id="SortLocation" name="SortLocation" onClick={this.sortLocation}>
