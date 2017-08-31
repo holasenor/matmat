@@ -1,7 +1,7 @@
 import React from "react"
 import Research from "./Research"
 import { Button, OverlayTrigger, ProgressBar, popover, tooltip, overlay, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem, Modal} from 'react-bootstrap';
-import {likeThisId, getMyLikesInfo, addVisit, blockThisId} from "./../../helpers/mainHelper.js";
+import {likeThisId, getMyLikesInfo, addVisit, blockThisId, reportThisId} from "./../../helpers/mainHelper.js";
 import Chip from 'material-ui/Chip';
 import Avatar from 'material-ui/Avatar';
 var $ = require("jquery");
@@ -79,6 +79,17 @@ export default class RightBar extends React.Component {
         })
     }
 
+    handleReportButton(id) {
+        this.close();
+        reportThisId(id)
+        .then((res) => {
+            alert(res.data.message);
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+    }
+
     setStyleLikeButton(id) {
         var myLikes = this.state.myInfo.likes;
         var objectId = id;
@@ -139,6 +150,10 @@ export default class RightBar extends React.Component {
 
                             <Button bsStyle="danger" onClick={() => {this.handleBlockButton(this.state.userIdInModal)}}>
                                 Block
+                            </Button>
+
+                            <Button bsStyle="danger" onClick={() => {this.handleReportButton(this.state.userIdInModal)}}>
+                                Report
                             </Button>
 
                         </Modal.Footer>

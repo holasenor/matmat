@@ -391,3 +391,37 @@ export function blockUser(req, res, next) {
         }
     })
 }
+
+export function reportUser(req, res, next) {
+    var idToReport = req.body.id;
+    var myId = req.decode.id;
+    var webmasterMail = 'wedonthaveallnight@gmail.com';
+
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: webmasterMail,
+            pass: 'Ij7pycEa'
+        }
+    });
+
+    mailOptions.to = webmasterMail;
+    mailOptions.subject = 'USER REPORTED';
+    mailOptions.text = 'User ' + myId + ' reported this User ' + idToReport;
+
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+            console.log(error);
+            res.send({
+                success: false,
+                message: error
+            });
+        } else {
+            console.log('Email sent: ' + info.response);
+            res.send({
+                success: true,
+                message: 'We have received your complaint.'
+            });
+        }
+    });
+}
