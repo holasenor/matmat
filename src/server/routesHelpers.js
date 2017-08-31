@@ -370,3 +370,24 @@ export function getMyVisitorsInfo(req, res, next) {
         console.log(err);
     })
 }
+
+export function blockUser(req, res, next) {
+    var idToBlock = req.body.id;
+    var myId = req.decode.id;
+    User.blockSomeone(myId, idToBlock)
+    .then((blocked) => {
+        if (blocked == 'added' || blocked == 'already') {
+            res.send({
+                success: true,
+                message: 'User was blocked',
+                action: blocked
+            });
+        }
+        else {
+            res.send({
+                success:false,
+                message: 'Something went Wrong'
+            });
+        }
+    })
+}

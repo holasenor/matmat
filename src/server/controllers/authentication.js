@@ -22,6 +22,7 @@ exports.signup = function (req, res, next) {
         data.likedBy = [];
         data.visits = [];
         data.popularity = 1;
+        data.block = [];
         User.create(data)
         .then((user) => {
             return tokenForUser(user);

@@ -1,7 +1,7 @@
 import React from "react"
 import Research from "./Research"
 import { Button, OverlayTrigger, ProgressBar, popover, tooltip, overlay, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem, Modal} from 'react-bootstrap';
-import {likeThisId, getMyLikesInfo, addVisit} from "./../../helpers/mainHelper.js";
+import {likeThisId, getMyLikesInfo, addVisit, blockThisId} from "./../../helpers/mainHelper.js";
 import Chip from 'material-ui/Chip';
 import Avatar from 'material-ui/Avatar';
 var $ = require("jquery");
@@ -58,6 +58,25 @@ export default class RightBar extends React.Component {
         .catch((err) => {
             console.log(err);
         });
+    }
+
+    handleBlockButton(id) {
+        blockThisId(id)
+        .then((res) => {
+            if (res.data.success) {
+                var tempMyInfo = this.state.myInfo;
+                if (res.data.action == 'added') {
+                    tempMyInfo.block.push(id);
+                    this.setState({myInfo: tempMyInfo});
+                    this.props.setMyPeople(this.props.myPeople);
+                }
+                this.close();
+                alert('YOU WILL NEVER SEE HIM AGAIN !!!!');
+            }
+        })
+        .catch((res) => {
+            console.log(res);
+        })
     }
 
     setStyleLikeButton(id) {
@@ -118,6 +137,10 @@ export default class RightBar extends React.Component {
                                 Chat
                             </Button>
 
+                            <Button bsStyle="danger" onClick={() => {this.handleBlockButton(this.state.userIdInModal)}}>
+                                Block
+                            </Button>
+
                         </Modal.Footer>
                     </Modal>
                 </div>
@@ -143,7 +166,7 @@ export default class RightBar extends React.Component {
                     </Avatar>
                     {myLikesInfo[key].pseudo}
                 </Chip>
-            )
+            );
         }
         renderLikesBar(myLikesInfo) {
             var grid = [];
@@ -156,7 +179,7 @@ export default class RightBar extends React.Component {
         renderPhotos(myPeople) {
             var grid = [];
             for (var i = 0; i < myPeople.length; i++) {
-                grid.push(this.renderPhoto(myPeople[i], i));
+                    grid.push(this.renderPhoto(myPeople[i], i));
             }
             return grid;
         }
@@ -195,7 +218,6 @@ export default class RightBar extends React.Component {
         }
 
         render() {
-            console.log('render was called');
             var myPeople = this.props.myPeople;
             if (this.state.myLikesInfo) {
                 return (

@@ -18,13 +18,26 @@ export default class Mapping extends React.Component {
 	}
 
 	setMyPeople(myPeople) {
-		console.log('calling setMyPeople\n');
 		this.setState({
 			people: myPeople
 		});
 	}
 
+	removePeopleThatTheUserBlocked() {
+		var blockedIds = this.state.myInfo.block;
+		return this.state.people.filter((person) => {
+			if (blockedIds.indexOf(person._id) == -1) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		});
+
+	}
+
 	render() {
+		var peopleToDisplay = this.removePeopleThatTheUserBlocked();
 		return (
 			<div className="mapping">
 				{this.state.login}
@@ -32,11 +45,11 @@ export default class Mapping extends React.Component {
 					<Col md={12}>
 						<Row className="row-mt-15em">
 							<Col md={8} className="iframe-rwd">
-								<MyMap myPeople={this.state.people} >
+								<MyMap myPeople={peopleToDisplay} >
 								</MyMap>
 							</Col>
 							<Col md={4}>
-								<RightBar myInfo={this.state.myInfo} myPeople={this.state.people} setMyPeople={this.setMyPeople}>
+								<RightBar myInfo={this.state.myInfo} myPeople={peopleToDisplay} setMyPeople={this.setMyPeople}>
 								</RightBar>
 							</Col>
 						</Row>

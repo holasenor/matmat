@@ -227,4 +227,29 @@ User.addOneVisit = function(userId, idVisitor) {
 	})
 }
 
+User.blockSomeone = function(myId, idToBlock) {
+	return Database.get()
+	.then((db) => {
+		return db.collection('users')
+		.updateOne({_id: ObjectId(myId)}, {$addToSet: {block: idToBlock.toString()}})
+		.then((res) => {
+			return res;
+		})
+	})
+	.then((result) => {
+		if (result.result.nModified) {
+			return 'added';
+		}
+		else if (result.result.nModified == 0){
+			return 'already';
+		}
+		else {
+			return 'error';
+		}
+	})
+	.catch((err) => {
+		console.log(err);
+	})
+}
+
 module.exports = User;
