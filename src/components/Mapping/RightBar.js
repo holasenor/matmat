@@ -7,6 +7,7 @@ import Avatar from 'material-ui/Avatar';
 var $ = require("jquery");
 import * as tools from '../../helpers/mainHelper.js';
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import socketIOClient from "socket.io-client";
 
 injectTapEventPlugin();
 const styles = {
@@ -103,6 +104,10 @@ export default class RightBar extends React.Component {
         }
     }
 
+    setClassStatus(user) {
+        return "glyphicon glyphicon-globe connected";
+    }
+
     renderPhoto(object, key) {
         if (!object.img_src) {
             object.img_src = 'http://www.thesourcepartnership.com/wp-content/uploads/2017/05/facebook-default-no-profile-pic-300x300.jpg';
@@ -111,7 +116,7 @@ export default class RightBar extends React.Component {
         return (
             <Col md={4} xs={6} key={key} className="center">
                 <div className="center">
-                    {object.pseudo}, {object.age}
+                    {object.pseudo}, {object.age}, <span className={this.setClassStatus(object)}></span>
                 </div>
                 <img onClick={(e) => {this.open(e, object)}} id={key} className="photoThumbnail" src={object.img_src} key={Object.keys(object)} value={key}>
                 </img>

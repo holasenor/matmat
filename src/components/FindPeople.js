@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Button } from 'react-bootstrap';
 import { Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
-import {checkTokenIsSet, getMyPeople} from '../helpers/loginHelpers';
+import {checkTokenIsSet, getMyPeople, tellTheWorldimConnected} from '../helpers/loginHelpers';
 import Header from "./Header";
 import Footer from "./Footer";
 import Video from "./Video";
 import Mapping from "./Mapping";
+import socketIOClient from "socket.io-client";
+
 
 class FindPeople extends React.Component {
     constructor(props) {
@@ -15,6 +17,7 @@ class FindPeople extends React.Component {
     }
 
     componentDidMount() {
+        var socket = this.props.route.socket;
         checkTokenIsSet('map')
         .then((res) => {
             this.state.myInfo = res.data.user;
@@ -25,6 +28,11 @@ class FindPeople extends React.Component {
         .then((res) => {
             var myPeople = res.data;
             this.setState({people: myPeople});
+            return this.state.myInfo;
+        })
+        .then((user) => {
+            socket.emit('userConnecting', user._id);
+            tellTheWorldimConnected(user, this.props.route.socket);
         })
         .catch((err) => {
             console.log(err);

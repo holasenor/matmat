@@ -355,3 +355,11 @@ height: 100%;
 .likesBar {
     margin-top: 20px;
 }
+
+.connected {
+    color: green;
+}
+
+.notConnected {
+    color: red;
+}
