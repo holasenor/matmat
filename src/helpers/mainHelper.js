@@ -114,3 +114,14 @@ export function blockThisId(id) {
         console.log(err);
     });
 }
+
+export function reportThisId(id) {
+    var token = localStorage.getItem('token');
+    return axios.post('/reportid', {
+        id: id,
+        token: token
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+}
