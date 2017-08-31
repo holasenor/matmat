@@ -26,7 +26,7 @@ export default class Newchat extends React.Component {
 			this.setState({messages: [message, ...this.state.messages] })
 		})
 		this.socket.on('newmsg', function(msg) {
-			console.log(msg);
+			// console.log(msg);
 		if (msg.room) {
 			$('.renderChatMessages').append('<li key={index}><b>'+ msg.pseudo +' : </b>'+ msg.message +'</li>')
 			}
@@ -46,12 +46,12 @@ export default class Newchat extends React.Component {
 			event.target.value = ''
 
 			this.socket.emit('login', {
-				pseudo	  : 'userPseudo',//this.state.myInfo._id,
+				pseudo	  : this.state.myInfo.pseudo,
 				room	  : 'idRoom',// idRoom a generer en fonction des likes et likesby
 			})
 
 			this.socket.emit('newmsg', {
-				pseudo	  : 'userPseudo',
+				pseudo	  : this.state.myInfo.pseudo,
 				message	  : body,
 				room	  : 'idRoom',
 				login     : 'userPseudo',//this.state.myInfo._id,
@@ -69,6 +69,7 @@ export default class Newchat extends React.Component {
 	handleClose = () => this.setState({open: false});
 
 	render() {
+		// console.log(this.state.myInfo);
 		const messages = this.state.messages.map((message, index) => {
 			// return <li key={index}><b>{message.from} : </b>{message.body}</li>
 		})

@@ -260,7 +260,7 @@ render() {
 </Col> */}
 </Navbar>
 
-<Newchat />
+<Newchat myInfo={this.state.myInfo} />
 </header>
 );
 }
