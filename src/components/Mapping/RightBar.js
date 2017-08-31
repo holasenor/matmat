@@ -68,9 +68,10 @@ export default class RightBar extends React.Component {
                 if (res.data.action == 'added') {
                     tempMyInfo.block.push(id);
                     this.setState({myInfo: tempMyInfo});
+                    this.props.setMyPeople(this.props.myPeople);
                 }
                 this.close();
-                // alert('YOU WILL NEVER SEE HIM AGAIN !!!!');
+                alert('YOU WILL NEVER SEE HIM AGAIN !!!!');
             }
         })
         .catch((res) => {
@@ -165,7 +166,7 @@ export default class RightBar extends React.Component {
                     </Avatar>
                     {myLikesInfo[key].pseudo}
                 </Chip>
-            )
+            );
         }
         renderLikesBar(myLikesInfo) {
             var grid = [];
@@ -178,7 +179,11 @@ export default class RightBar extends React.Component {
         renderPhotos(myPeople) {
             var grid = [];
             for (var i = 0; i < myPeople.length; i++) {
-                grid.push(this.renderPhoto(myPeople[i], i));
+                // console.log(myPeople[i]._id);
+                // console.log(this.state.myInfo.block);
+                // if (this.state.myInfo.block.indexOf(myPeople[i]._id) == -1) {
+                    grid.push(this.renderPhoto(myPeople[i], i));
+                // }
             }
             return grid;
         }
@@ -217,7 +222,6 @@ export default class RightBar extends React.Component {
         }
 
         render() {
-            console.log('render was called');
             var myPeople = this.props.myPeople;
             if (this.state.myLikesInfo) {
                 return (
