@@ -126,32 +126,12 @@ export function reportThisId(id) {
     });
 }
 
-export function sortPeopleByLocation(myPeople, isAscending) {
+export function sortPeopleBy(parameter, myPeople, isAscending) {
     myPeople.sort(function (person1, person2) {
         if (isAscending) {
-            return person2.distance - person1.distance;
+            return person2[parameter] - person1[parameter];
         }
-        return person1.distance - person2.distance;
-    });
-    return myPeople;
-}
-
-export function sortPeopleByAge(myPeople, isAscending) {
-    myPeople.sort(function (person1, person2) {
-        if (isAscending) {
-            return person2.age - person1.age;
-        }
-        return person1.age - person2.age;
-    });
-    return myPeople;
-}
-
-export function sortPeopleByPopularity(myPeople, isAscending) {
-    myPeople.sort(function (person1, person2) {
-        if (isAscending) {
-            return person2.popularity - person1.popularity;
-        }
-        return person1.popularity - person2.popularity;
+        return person1[parameter] - person2[parameter];
     });
     return myPeople;
 }
