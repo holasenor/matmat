@@ -10,7 +10,9 @@ var database = require('./database');
 var initApp = require('./config/setup');
 var jwt = require('jsonwebtoken');
 var mychat =require('./mychat');
+var mynewchat =require('./mynewchat');
 var io = require('socket.io');
+// global.io = require('socket.io');
 
 var app = new express();
 // var secureRoutes = express.Router();
@@ -30,6 +32,16 @@ app.get('*', function (req, res) {
 	res.send(out);
 });
 
+app.post('*', function (req, res) {
+	const {Body, From} = req.body;
+	const message = {
+		body: Body,
+		from: From.slice(8),
+	}
+	io.emit('message', message)
+	res.send(out);
+});
+
 database.connect(url, function () {
     initApp();
 
@@ -42,7 +54,8 @@ database.connect(url, function () {
         } else {
             console.log('Server listening on port:', port);
 			io = io.listen(server);
-			mychat(io);
+			// mychat(io);
+			mynewchat(io);
         }
     });
 });

@@ -202,7 +202,7 @@ User.getMyPeople = function (myInfo) {
 }
 
 User.addOneVisit = function(userId, idVisitor) {
-	console.log(userId, idVisitor, Date.now());
+	// console.log(userId, idVisitor, Date.now());
 
 	return Database.get()
 	.then((db) => {

@@ -17,7 +17,7 @@ import MenuItemUI from 'material-ui/MenuItem';
 import {browserHistory} from "react-router";
 import * as tools from '../helpers/mainHelper.js';
 import { getMyVisitorsInfo } from "./../helpers/mainHelper.js";
-import Chat from "./Chat";
+import Newchat from "./Newchat";
 
 
 
@@ -33,10 +33,10 @@ export default class Header extends React.Component {
 		super(props);
 		this.state = {
 			login: "Admin",
-			 open: false,
-			 myVisitorsInfo: [],
+			open: false,
+			myVisitorsInfo: [],
 
-		 };
+		};
 		this.state.myInfo = this.props.myInfo;
 		this.toEdit = this.toEdit.bind(this);
 		this.toHome = this.toHome.bind(this);
@@ -50,10 +50,10 @@ export default class Header extends React.Component {
 	// - dns routHelpers => creer et utiliser la fonction getMyVisitorsInfo
 
 	componentDidMount() {
-        if (this.state.myInfo) {
+		if (this.state.myInfo) {
 			this.getVisitors(this.state.myInfo.visits);
-        }
-    }
+		}
+	}
 
 	getVisitors(visits) {
 		var tab = [];
@@ -109,6 +109,19 @@ export default class Header extends React.Component {
 		)
 	}
 
+	renderListChat(object, key) {
+		var srcList = "https://cdn.intra.42.fr/users/medium_default.png";
+		return (
+			<MenuItem key={key} eventKey={key} className="showVisitors">
+				<img className="avatarVisitor" src={srcList}>
+				</img>
+				<span>
+					{object} | {key}
+				</span>
+			</MenuItem>
+		)
+	}
+
 
 	listVisitor(myPeople) {
 		var grid = [];
@@ -116,6 +129,16 @@ export default class Header extends React.Component {
 		grid.push(<MenuItem key={myPeople.length + 1} divider />)
 		for (var i = 0; i < myPeople.length; i++) {
 			grid.push(this.renderListVisitor(myPeople[i], i));
+		}
+		return grid;
+	}
+
+	listChat(myPeople) {
+		var grid = [];
+		grid.push(<MenuItem header key={myPeople.length}>Recent visits</MenuItem>);
+		grid.push(<MenuItem key={myPeople.length + 1} divider />)
+		for (var i = 0; i < myPeople.length; i++) {
+			grid.push(this.renderListChat(myPeople[i], i));
 		}
 		return grid;
 	}
@@ -145,88 +168,100 @@ export default class Header extends React.Component {
 
 	renderVisitsMenu(numberOfVisits) {
 		if (this.state.myInfo) {
-		var title = <i className="glyphicon glyphicon-bell">{numberOfVisits}</i>;
+			var title = <i className="glyphicon glyphicon-bell">{numberOfVisits}</i>;
 			return (
 				<NavDropdown title={<i className="glyphicon glyphicon-bell"> {numberOfVisits} </i>} id="basic-nav-dropdown">
 				{this.listVisitor(this.state.myVisitorsInfo)}
 			</NavDropdown>
 		);
-		}
 	}
+}
 
-	render() {
-		var numberOfVisits = 0;
-		if (this.state.myInfo) {
-			if (this.state.myInfo.visits) {
-				// console.log('you have ' + this.state.myInfo.visits.length + ' visits');
-				var numberOfVisits = this.state.myInfo.visits.length;
-			}
-			else {
-				console.log('you do not have visits');
-			}
+renderChatsMenu() {
+	if (this.state.myInfo) {
+		var title = <i className="glyphicon glyphicon-bell">{42}</i>;
+		return (
+			<NavDropdown title={<i className="glyphicon glyphicon-comment"> {42} </i>} id="basic-nav-dropdown">
+			{this.listChat(this.state.myInfo.likes)}
+		</NavDropdown>
+	);
+}
+}
+
+render() {
+	var numberOfVisits = 0;
+	if (this.state.myInfo) {
+		if (this.state.myInfo.visits) {
+			// console.log('you have ' + this.state.myInfo.visits.length + ' visits');
+			var numberOfVisits = this.state.myInfo.visits.length;
 		}
 		else {
-			console.log('You do not have YourInfo');
+			console.log('you do not have visits');
 		}
-		return (
-			<header id="myHeader">
-				<Title>
-				</Title>
-				<Navbar>
-					<Col xs={12} md={7}>
-						<Navbar.Header>
-							<Navbar.Brand>
-								{this.renderLogo()}
-							</Navbar.Brand>
-						</Navbar.Header>
-					</Col>
-					<Col xs={12} md={4}>
-						<Nav>
-							<NavItem onClick={this.toHome}>
-								People
-							</NavItem>
-							<NavItem onClick={this.toChat}>
-								Chat
-							</NavItem>
-							{/* <NavItem onClick={this.toLikes}>
-							Likes
-						</NavItem> */}
-						<NavDropdown title="Account" id="basic-nav-dropdown">
-							<MenuItem onClick={this.toEdit}>
-								Edit
-							</MenuItem>
-							<MenuItem divider />
-							<MenuItem onClick={this.handleLogout}>
-								Logout
-							</MenuItem>
-						</NavDropdown>
-						{this.renderVisitsMenu(numberOfVisits)}
-					</Nav>
-					{/* <ul id="messages"></ul>
-					<form action="">
-					<input id="m" autocomplete="off" /><button>Send</button>
-				</form> */}
-			</Col>
-			<Col xs={12} md={1}>
-				<Nav>
-					<NavItem id="iconsNotifHeader" className="iconNotif" onClick={this.toLikes}>
-						<Badge className="iconNotif"
-							badgeContent={0}
-							secondary={true}
-							badgeStyle={{top: 0, right: 0}}
-							>
-							{/* <CommunicationChatBubble /> */}
-								<IconButton tooltip="Notifications">
-									<NotificationsIcon />
-								</IconButton>
-						</Badge>
-					</NavItem>
-				</Nav>
-			</Col>
-		</Navbar>
-
-		<Chat />
-		</header>
-		);
 	}
+	else {
+		console.log('You do not have YourInfo');
+	}
+	return (
+		<header id="myHeader">
+			<Title>
+			</Title>
+			<Navbar>
+				<Col xs={12} md={7}>
+					<Navbar.Header>
+						<Navbar.Brand>
+							{this.renderLogo()}
+						</Navbar.Brand>
+					</Navbar.Header>
+				</Col>
+				<Col xs={12} md={5}>
+					<Nav>
+						<NavItem onClick={this.toHome}>
+							People
+						</NavItem>
+						{/* <NavItem onClick={this.toChat}>
+							Chat
+						</NavItem> */}
+						{/* <NavItem onClick={this.toLikes}>
+						Likes
+					</NavItem> */}
+					<NavDropdown title="Account" id="basic-nav-dropdown">
+						<MenuItem onClick={this.toEdit}>
+							Edit
+						</MenuItem>
+						<MenuItem divider />
+						<MenuItem onClick={this.handleLogout}>
+							Logout
+						</MenuItem>
+					</NavDropdown>
+					{this.renderVisitsMenu(numberOfVisits)}
+					{this.renderChatsMenu()}
+				</Nav>
+				{/* <ul id="messages"></ul>
+				<form action="">
+				<input id="m" autocomplete="off" /><button>Send</button>
+			</form> */}
+		</Col>
+		{/* <Col xs={12} md={1}>
+		<Nav>
+		<NavItem id="iconsNotifHeader" className="iconNotif" onClick={this.toLikes}>
+		<Badge className="iconNotif"
+		badgeContent={0}
+		secondary={true}
+		badgeStyle={{top: 0, right: 0}}
+		>
+		<CommunicationChatBubble />
+		<IconButton tooltip="Notifications">
+		<NotificationsIcon />
+	</IconButton>
+</Badge>
+</NavItem>
+</Nav>
+</Col> */}
+</Navbar>
+
+<Newchat />
+</header>
+);
+}
 }

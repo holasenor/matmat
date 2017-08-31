@@ -1,11 +1,12 @@
 (function($){
 	var socket = io.connect('http://localhost:3000');
+	// var socket = io.connect('http://localhost:3000', {path: '*'});
 	var lastmsg = false;
 	// var ent = require("ent");
 
 
 	$('#loginform').submit(function(event){
-		// console.log(event);
+		console.log(event);
 		event.preventDefault();
 		//on emet un evenemtn cote cient pour le servuer
 		socket.emit('login', {
@@ -26,7 +27,7 @@
 
 //================ envoie de messages =============
 	$('#form').submit(function(event) {
-		event.preventDefault();// couper l;evenement
+		event.preventDefault();// couper l'evenement
 
 	socket.emit('newmsg', {
 			pseudo	  : $('#login').val(),

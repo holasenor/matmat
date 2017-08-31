@@ -7,6 +7,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 
 
+
 export default class Chat extends React.Component {
 	constructor() {
 		super();
@@ -41,14 +42,14 @@ export default class Chat extends React.Component {
 					</div>
 				</div>
 				<Col id="loginform">
-					<form action="" id="formulaireChat">
+					{/* <form action="" id="formulaireChat" onsub> */}
 						{/*} <input type="text" id="login" name="login" placeholder="login"  className="form-control1"></input>
 						 <input type="text" id="room" name="room" placeholder="room"  className="form-control1"></input>
 						 <input type="submit" value="Send" className="btn btn-primary"></input> */}
 						<TextField hintText="pseudo" id="login" name="login"/>
 						<TextField hintText="room" id="room" name="room"/>
-						<RaisedButton type="submit" label="Send" primary={true} />
-					</form>
+						{/* <RaisedButton type="submit" label="Send" primary={true} onClick={sendMessage}/> */}
+					{/* </form> */}
 				</Col>
 				<Col id="form">
 					<form action="" id="formulaireChat">

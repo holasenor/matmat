@@ -3,11 +3,10 @@ module.exports = function (io) {
 	var me = false;//variable des messages pour stocker l'user du chat
 	var users = {};
 	var allmessages = [];
-	var history = 9;//on limite a 9 messages pour ne pas tout peter
+	var history = 99;//on limite a 9 messages pour ne pas tout peter
 	var msg;
 	var d;
 	var ent = require("ent"); //sontre les failles xss : https://edutechwiki.unige.ch/fr/Socket.io
-
 
 	io.sockets.on('connection', function(socket){
 		// console.log('new user');//test
@@ -17,7 +16,7 @@ module.exports = function (io) {
 		}
 		for(var k in allmessages) {
 			socket.to(allmessages[k].room).emit('newmsg', allmessages[k]);
-			console.log(allmessages[k]);
+			// console.log(allmessages[k]);
 		}
 
 		// =========== je me connecte ============
@@ -50,6 +49,7 @@ module.exports = function (io) {
 			msg.message = ent.encode(message.message);//pour enpecher les failles XSS
 			// msg.message = message.message;// dans portection de la faille xss
 			msg.login = message.login;
+			console.log(msg);
 			io.sockets.to(msg.room).emit('newmsg', msg);
 			// io.sockets.to('toto').emit('newmsg', msg);
 		})
@@ -61,6 +61,14 @@ module.exports = function (io) {
 			}
 			delete users[me.id];
 			io.sockets.emit('discusr', me);
+		})
+
+//=======================newchat==========================
+		socket.on('message', body => {
+			socket.broadcast.emit('message', {
+				body,
+				from: socket.id.slice(8)
+			})
 		})
 
 	})
