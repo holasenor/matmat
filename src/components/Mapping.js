@@ -18,7 +18,6 @@ export default class Mapping extends React.Component {
 	}
 
 	setMyPeople(myPeople) {
-		console.log('calling setMyPeople\n');
 		this.setState({
 			people: myPeople
 		});
@@ -39,8 +38,6 @@ export default class Mapping extends React.Component {
 
 	render() {
 		var peopleToDisplay = this.removePeopleThatTheUserBlocked();
-		console.log('peopleToDisplay');
-		console.log(peopleToDisplay);
 		return (
 			<div className="mapping">
 				{this.state.login}
