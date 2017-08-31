@@ -127,6 +127,7 @@ exports.getUsersFromSearch = function (options, myInfo) {
                 {latitude: person.lat, longitude: person.lng},
                 {latitude: myInfo.lat, longitude: myInfo.lng}
             )
+            person.distance = distance;
             return (distance < options.distance * 1000)
         });
     })

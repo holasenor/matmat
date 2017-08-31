@@ -195,6 +195,7 @@ User.getMyPeople = function (myInfo) {
 				{latitude: lat, longitude: lng},
 				{latitude: mylat, longitude: mylng}
 			);
+			someone.distance = distance;
 			return (distance < 50000)
 		})
 		return myPeople;

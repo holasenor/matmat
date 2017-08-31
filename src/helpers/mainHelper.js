@@ -125,3 +125,49 @@ export function reportThisId(id) {
         console.log(err);
     });
 }
+
+export function sortPeopleByLocation(myPeople, isAscending) {
+    myPeople.sort(function (person1, person2) {
+        if (isAscending) {
+            return person2.distance - person1.distance;
+        }
+        return person1.distance - person2.distance;
+    });
+    return myPeople;
+}
+
+export function sortPeopleByAge(myPeople, isAscending) {
+    myPeople.sort(function (person1, person2) {
+        if (isAscending) {
+            return person2.age - person1.age;
+        }
+        return person1.age - person2.age;
+    });
+    return myPeople;
+}
+
+export function sortPeopleByPopularity(myPeople, isAscending) {
+    myPeople.sort(function (person1, person2) {
+        if (isAscending) {
+            return person2.popularity - person1.popularity;
+        }
+        return person1.popularity - person2.popularity;
+    });
+    return myPeople;
+}
+
+export function sortPeopleByTags(myTags, myPeople, isAscending) {
+    var myTagsArray = myTags.replace(/\s+/g, ' ').trim().split(' ');
+
+    myPeople.sort(function (person1, person2) {
+        var person1TagsArray = person1.tag.replace(/\s+/g, ' ').trim().split(' ');
+        var person2TagsArray = person2.tag.replace(/\s+/g, ' ').trim().split(' ');
+        var person1TagsInCommon = _.intersection(person1TagsArray, myTagsArray);
+        var person2TagsInCommon = _.intersection(person2TagsArray, myTagsArray);
+        if (isAscending) {
+            return person2TagsInCommon.length - person1TagsInCommon.length;
+        }
+        return person1TagsInCommon.length - person2TagsInCommon.length;
+    });
+    return myPeople;
+}
