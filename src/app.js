@@ -9,8 +9,6 @@ import socketIOClient from "socket.io-client";
 
 var socket = socketIOClient('http://localhost:3000/');
 
-// require('./socketClient')(socket);
-
 ReactDOM.render(
     <MuiThemeProvider>
         <Router history={browserHistory}>
