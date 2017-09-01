@@ -7,6 +7,7 @@ import Avatar from 'material-ui/Avatar';
 var $ = require("jquery");
 import * as tools from '../../helpers/mainHelper.js';
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import Chat from "./../Chat";
 
 injectTapEventPlugin();
 const styles = {
@@ -27,7 +28,8 @@ export default class RightBar extends React.Component {
             idModal: 1,
             buttonBsStyle: 'primary',
             myInfo: this.props.myInfo,
-            userModal: {}
+            userModal: {},
+            isChatOpen: false
         };
         this.open = this.open.bind(this);
         this.close = this.close.bind(this);
@@ -36,21 +38,44 @@ export default class RightBar extends React.Component {
 
     handleTouchTap(e, someUser) {
         //need to modify a bit of code so i can call open...... this feature is not really important so i will do it later....
+        /// i can do it now, since i removed 3th argument from a function (myPeople[i],i, myPeople)
+    }
+
+    doWeLikeEachOther(myInfo) {
+        var intersection = _.intersection(myInfo.likes, myInfo.likedby);
+        if (intersection.length) {
+            console.log('we like each other');
+            return true;
+        }
     }
 
     handleClickLikeButton(id) {
         likeThisId(id)
         .then((res) => {
             var tempMyInfo = this.state.myInfo;
+            var matchToModify = {
+                id1: tempMyInfo._id,
+                id2: id
+            };
             if (res.data.message == 'User remove like') {
                 var index = tempMyInfo.likes.indexOf(id);
                 if (index > -1) {
                     tempMyInfo.likes.splice(index, 1);
                 }
+                this.props.socket.emit('matchDestruction', matchToModify);
                 this.setState({buttonBsStyle: 'primary'});
             }
             else {
+                var likeUsers = matchToModify;
+                this.props.socket.emit('userLikeUser', likeUsers);
                 tempMyInfo.likes.push(id);
+                if (this.doWeLikeEachOther(tempMyInfo)) {
+                    console.log('they like each other, we are gonna create a room');
+                    this.props.socket.emit('matchCreation', matchToModify);
+                }
+                else {
+                    console.log('they don\'t like each other YET');
+                }
                 this.setState({buttonBsStyle: 'info'});
             }
             this.setState({myInfo: tempMyInfo});
@@ -112,6 +137,16 @@ export default class RightBar extends React.Component {
         }
     }
 
+    handleChatButton(id) {
+        this.close();
+        this.setState({
+            isChatOpen: true
+        });
+        this.setState({
+            chatUserId: id
+        });
+    }
+
     renderPhoto(object, key) {
         if (!object.img_src) {
             object.img_src = 'http://www.thesourcepartnership.com/wp-content/uploads/2017/05/facebook-default-no-profile-pic-300x300.jpg';
@@ -153,7 +188,7 @@ export default class RightBar extends React.Component {
                                 Like
                             </Button>
 
-                            <Button bsStyle="success">
+                            <Button bsStyle="success" onClick={() => {this.handleChatButton(this.state.userIdInModal)}}>
                                 Chat
                             </Button>
 
@@ -265,6 +300,10 @@ export default class RightBar extends React.Component {
                 this.setState({usersOnline: usersOnline});
             });
 
+            socket.on('joinThisRoomWithMe', (info) => {
+                // info = {userid, roomid}
+            });
+
             this.getLikes();
         }
 
@@ -275,11 +314,20 @@ export default class RightBar extends React.Component {
             });
         }
 
+        closeChat = () => {this.setState({isChatOpen: false})}
+
+        renderChat() {
+            if (this.state.myInfo && this.state.isChatOpen) {
+                    return (<Chat myInfo={this.state.myInfo} isChatOpen={this.state.isChatOpen} closeChat={this.closeChat} socket={this.props.socket} chatUserId={this.state.chatUserId}/>);
+            }
+        }
+
         render() {
             var myPeople = this.props.myPeople;
             if (this.state.myLikesInfo) {
                 return (
                     <div className="rightBarMap">
+                    {this.renderChat()}
                         <div>
                             <Research setMyPeople={this.props.setMyPeople} myInfo={this.state.myInfo}>
                             </Research>
