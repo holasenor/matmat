@@ -7,7 +7,6 @@ import Avatar from 'material-ui/Avatar';
 var $ = require("jquery");
 import * as tools from '../../helpers/mainHelper.js';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import socketIOClient from "socket.io-client";
 
 injectTapEventPlugin();
 const styles = {
@@ -105,7 +104,12 @@ export default class RightBar extends React.Component {
     }
 
     setClassStatus(user) {
-        return "glyphicon glyphicon-globe connected";
+        if (user.online) {
+            return "glyphicon glyphicon-globe connected";
+        }
+        else {
+            return "glyphicon glyphicon-globe notConnected";
+        }
     }
 
     renderPhoto(object, key) {
@@ -197,11 +201,20 @@ export default class RightBar extends React.Component {
         }
 
         renderPhotos(myPeople) {
-            var grid = [];
-            for (var i = 0; i < myPeople.length; i++) {
+            var usersOnline = this.state.usersOnline;
+            if (usersOnline) {
+                var grid = [];
+                for (var i = 0; i < myPeople.length; i++) {
+                    if (usersOnline.indexOf(myPeople[i]._id) == -1) {
+                        myPeople[i].online = false;
+                    }
+                    else {
+                        myPeople[i].online = true;
+                    }
                     grid.push(this.renderPhoto(myPeople[i], i));
+                }
+                return grid;
             }
-            return grid;
         }
 
         close() {
@@ -227,6 +240,31 @@ export default class RightBar extends React.Component {
         }
 
         componentDidMount() {
+            var socket = this.props.socket;
+
+            socket.on('usersOnline', (usersOnline) => {
+                console.log('server sends me usersOnline');
+                console.log(usersOnline);
+                this.setState({usersOnline: usersOnline});
+            });
+
+            socket.on('userconnection', (userId) => {
+                var usersOnline = this.state.usersOnline;
+                if (usersOnline.indexOf(userId) == -1) {
+                    usersOnline.push(userId);
+                }
+                this.setState({usersOnline: usersOnline});
+            });
+
+            socket.on('userdisconnection', (userId)  => {
+                var usersOnline = this.state.usersOnline;
+                var index = usersOnline.indexOf(userId);
+                if (index != -1) {
+                    usersOnline.splice(index, 1);
+                }
+                this.setState({usersOnline: usersOnline});
+            });
+
             this.getLikes();
         }
 

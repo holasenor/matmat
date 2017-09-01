@@ -338,19 +338,3 @@ export function getLocation (infos) {
 
     });
 }
-
-export function tellTheWorldimConnected (user, socket) {
-    //
-    // socket.on('connect', function () {
-    //     socket.emit('userConnecting', user._id);
-    //     socket.emit('areTheyOnline', 'asd');
-    // });
-
-    socket.on('disconnect', function () {
-        socket.emit('disconnect', user._id);
-    });
-
-    socket.on('usersOnline', function (usersOnline) {
-        console.log('onlie = ', usersOnline);
-    })
-}
