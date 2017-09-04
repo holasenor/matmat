@@ -44,19 +44,50 @@ io.sockets.on('connection', function (socket) {
         var users = [userIdThatLiked, userIdThatWasLiked];
         var newRoomId = hash(users);
         rooms[newRoomId] = users;
-        var socketIdLikedUser = _.findKey(activeUsers, userIdThatWasLiked);
+        var socketIdLikedUser = _.findKey(activeUsers, function(o) { return o == userIdThatWasLiked;})
         var info = {
             userId: userIdThatLiked,
             roomId: newRoomId
         };
         socket.broadcast.to(socketIdLikedUser).emit('joinThisRoomWithMe', info);
+        console.log('user ' + userIdThatLiked + 'joinging this room' + newRoomId);
         socket.join(newRoomId);
         console.log('creationg a match');
         console.log('rooms so far = ', rooms);
   });
 
+  socket.on('joinRoom', function (roomId) {
+      if (rooms.hasOwnProperty(roomId)) {
+          var userThatWillJoin = activeUsers[socket.id];
+          console.log('User ' + userThatWillJoin + 'will join room ' + roomId);
+          socket.join(roomId);
+      }
+      else {
+          console.log('Someone tried to join a room that does not exists');
+      }
+  });
+
+  socket.on('userLikeUser', function (likeUsers) {
+      var userIdThatLiked = likeUsers.id1;
+      var userIdThatWasLiked = likeUsers.id2;
+      var socketIdLikedUser = _.findKey(activeUsers, function(o) { return o == userIdThatWasLiked;})
+      if (Object.values(activeUsers).indexOf(userIdThatLiked) > -1 && Object.values(activeUsers).indexOf(userIdThatWasLiked) > -1 ) {
+          if (socketIdLikedUser) {
+              socket.broadcast.to(socketIdLikedUser).emit('youWereLikedBy', userIdThatLiked);
+              console.log('notifing this user' + userIdThatWasLiked);
+          }
+          else {
+              console.log('there is not socketIdLikedUser');
+          }
+      }
+      else {
+          console.log('user was not communicated that he was liked because one of them is not online');
+      }
+  });
+
   socket.on('matchDestruction', function (matchDestruction) {
       // id1 it's the one that liked, so he has to be connected to like. maybe it's not necessary to do this, DONT KNOW
+      console.log('a match is going to be destroyed');
       var idsActiveUsers = _.values(activeUsers);
       if (idsActiveUsers.indexOf(matchDestruction.id1) != -1) {
           var users = [matchDestruction.id1, matchDestruction.id2];

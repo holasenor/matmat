@@ -42,7 +42,9 @@ export default class RightBar extends React.Component {
     }
 
     doWeLikeEachOther(myInfo) {
-        var intersection = _.intersection(myInfo.likes, myInfo.likedby);
+        console.log(myInfo.likes);
+        console.log(myInfo.likedBy);
+        var intersection = _.intersection(myInfo.likes, myInfo.likedBy);
         if (intersection.length) {
             console.log('we like each other');
             return true;
@@ -62,6 +64,7 @@ export default class RightBar extends React.Component {
                 if (index > -1) {
                     tempMyInfo.likes.splice(index, 1);
                 }
+                console.log('im gonna destroy our match');
                 this.props.socket.emit('matchDestruction', matchToModify);
                 this.setState({buttonBsStyle: 'primary'});
             }
@@ -260,13 +263,13 @@ export default class RightBar extends React.Component {
         open(e, object) {
             var userId = object._id;//id de la personne que l'on visite | clique
             var visitorId = this.state.myInfo._id;
-            addVisit(userId, visitorId)
-            .then((result) => {
-                console.log(result);
-            })
-            .catch((err) => {
-                alert(err);
-            });
+            // addVisit(userId, visitorId)
+            // .then((result) => {
+            //     console.log(result);
+            // })
+            // .catch((err) => {
+            //     alert(err);
+            // });
             this.setState({userModal: object});
             this.setStyleLikeButton(object._id);
             this.setState({ userIdInModal: object._id});
@@ -278,7 +281,7 @@ export default class RightBar extends React.Component {
             var socket = this.props.socket;
 
             socket.on('usersOnline', (usersOnline) => {
-                console.log('server sends me usersOnline');
+                console.log('usersOnline right now = ');
                 console.log(usersOnline);
                 this.setState({usersOnline: usersOnline});
             });
@@ -301,7 +304,21 @@ export default class RightBar extends React.Component {
             });
 
             socket.on('joinThisRoomWithMe', (info) => {
-                // info = {userid, roomid}
+                console.log('i was invited to this room ' + info.roomId);
+                socket.emit('joinRoom', info.roomId);
+            });
+
+            socket.on('youWereLikedBy', (id) => {
+                console.log('i was liked by ' + id);
+                var tempMyInfo = this.state.myInfo;
+                if (tempMyInfo.likedBy.indexOf(id) == -1) {
+                    tempMyInfo.likedBy.push(id);
+                    console.log('so i set new state');
+                    this.setState({myInfo: tempMyInfo});
+                }
+                else {
+                    console.log('WEIRD, you were already liked by him');
+                }
             });
 
             this.getLikes();
