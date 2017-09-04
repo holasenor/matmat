@@ -150,6 +150,14 @@ export default class RightBar extends React.Component {
         });
     }
 
+    renderChatButton() {
+        return (
+            <Button bsStyle="success" onClick={() => {this.handleChatButton(this.state.userIdInModal)}}>
+                Chat
+            </Button>
+        )
+    }
+
     renderPhoto(object, key) {
         if (!object.img_src) {
             object.img_src = 'http://www.thesourcepartnership.com/wp-content/uploads/2017/05/facebook-default-no-profile-pic-300x300.jpg';
@@ -191,9 +199,7 @@ export default class RightBar extends React.Component {
                                 Like
                             </Button>
 
-                            <Button bsStyle="success" onClick={() => {this.handleChatButton(this.state.userIdInModal)}}>
-                                Chat
-                            </Button>
+                            {this.renderChatButton()}
 
                             <Button bsStyle="danger" onClick={() => {this.handleBlockButton(this.state.userIdInModal)}}>
                                 Block
@@ -273,12 +279,14 @@ export default class RightBar extends React.Component {
             this.setState({userModal: object});
             this.setStyleLikeButton(object._id);
             this.setState({ userIdInModal: object._id});
+            this.setState({ userPseudoInModal: object.pseudo});
             this.setState({ showModal: true });
             this.setState({ idModal: e.target.id });
         }
 
         componentDidMount() {
             var socket = this.props.socket;
+            var usersOnline = this.state.usersOnline;
 
             socket.on('usersOnline', (usersOnline) => {
                 console.log('usersOnline right now = ');
@@ -321,7 +329,17 @@ export default class RightBar extends React.Component {
                 }
             });
 
-            this.getLikes();
+            this.getLikes(usersOnline);
+        }
+
+        componentWillUnmount() {
+            var socket = this.props.socket;
+            socket.off('usersOnline');
+            socket.off('userconnection');
+            socket.off('userdisconnection');
+            socket.off('joinThisRoomWithMe');
+            socket.off('userconnection');
+            socket.off('youWereLikedBy');
         }
 
         getLikes() {
@@ -335,7 +353,15 @@ export default class RightBar extends React.Component {
 
         renderChat() {
             if (this.state.myInfo && this.state.isChatOpen) {
-                    return (<Chat myInfo={this.state.myInfo} isChatOpen={this.state.isChatOpen} closeChat={this.closeChat} socket={this.props.socket} chatUserId={this.state.chatUserId}/>);
+                return (
+                <Chat myInfo={this.state.myInfo}
+                    isChatOpen={this.state.isChatOpen}
+                    closeChat={this.closeChat}
+                    socket={this.props.socket}
+                    chatUserId={this.state.chatUserId}
+                    chatPseudoId={this.state.userPseudoInModal}>
+                </Chat>
+            );
             }
         }
 
