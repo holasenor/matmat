@@ -125,3 +125,29 @@ export function reportThisId(id) {
         console.log(err);
     });
 }
+
+export function sortPeopleBy(parameter, myPeople, isAscending) {
+    myPeople.sort(function (person1, person2) {
+        if (isAscending) {
+            return person2[parameter] - person1[parameter];
+        }
+        return person1[parameter] - person2[parameter];
+    });
+    return myPeople;
+}
+
+export function sortPeopleByTags(myTags, myPeople, isAscending) {
+    var myTagsArray = myTags.replace(/\s+/g, ' ').trim().split(' ');
+
+    myPeople.sort(function (person1, person2) {
+        var person1TagsArray = person1.tag.replace(/\s+/g, ' ').trim().split(' ');
+        var person2TagsArray = person2.tag.replace(/\s+/g, ' ').trim().split(' ');
+        var person1TagsInCommon = _.intersection(person1TagsArray, myTagsArray);
+        var person2TagsInCommon = _.intersection(person2TagsArray, myTagsArray);
+        if (isAscending) {
+            return person2TagsInCommon.length - person1TagsInCommon.length;
+        }
+        return person1TagsInCommon.length - person2TagsInCommon.length;
+    });
+    return myPeople;
+}

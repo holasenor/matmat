@@ -1,9 +1,12 @@
 import React from "react"
 import { Button, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
 import Slider from 'rc-slider';
-import {getSearchResults} from '../../helpers/mainHelper.js';
+import {getSearchResults, sortPeopleByTags, sortPeopleBy} from '../../helpers/mainHelper.js';
 const Range = Slider.Range;
 var $ = require("jquery");
+
+const ASCENDING = true;
+const DESCENDING = false;
 
 export default class Research extends React.Component {
 	constructor(props) {
@@ -63,7 +66,7 @@ export default class Research extends React.Component {
 	handleSearch() {
 		// use this.props.setMyPeople to change mypeople everywhere
 		var options = this.getSearchOptions();
-		var myInfo = this.state.myInfo;
+		var myInfo = this.state.myInfo;  // MAYBE CHANGE IT TO this.state.myInfo      --------------------------------------
 		getSearchResults(myInfo, options)
 		.then((newPeople) => {
 			console.log('getting new People');
@@ -78,23 +81,31 @@ export default class Research extends React.Component {
 	sortLocation() {
 		if (this.state.glyphiconSortLocation == "glyphicon glyphicon-sort-by-attributes") {
 			this.setState({ glyphiconSortLocation: "glyphicon glyphicon-sort-by-attributes-alt"});
+			var sortedPeople = sortPeopleBy('distance', this.props.myPeople, ASCENDING);
+			this.props.setMyPeople(sortedPeople);
 		}
 		else {
 			this.setState({ glyphiconSortLocation: "glyphicon glyphicon-sort-by-attributes" });
+			var sortedPeople = sortPeopleBy('distance', this.props.myPeople, DESCENDING);
+			this.props.setMyPeople(sortedPeople);
 		}
 		this.setState({ glyphiconSelectLocation: "glyphicon glyphicon-triangle-left" });
 		this.setState({ glyphiconSelectAge: "" });
 		this.setState({ glyphiconSelectPopularity: "" });
 		this.setState({ glyphiconSelectTags: "" });
-
 	}
 
 	sortAge() {
 		if (this.state.glyphiconSortAge == "glyphicon glyphicon-sort-by-attributes") {
 			this.setState({ glyphiconSortAge: "glyphicon glyphicon-sort-by-attributes-alt"});
+			var sortedPeople = sortPeopleBy('age', this.props.myPeople, ASCENDING);
+			this.props.setMyPeople(sortedPeople);
 		}
 		else {
 			this.setState({ glyphiconSortAge: "glyphicon glyphicon-sort-by-attributes" });
+			var sortedPeople = sortPeopleBy('age', this.props.myPeople, DESCENDING);
+
+			this.props.setMyPeople(sortedPeople);
 		}
 		this.setState({ glyphiconSelectLocation: "" });
 		this.setState({ glyphiconSelectAge: "glyphicon glyphicon-triangle-left" });
@@ -106,9 +117,14 @@ export default class Research extends React.Component {
 	sortPopularity() {
 		if (this.state.glyphiconSortPopularity == "glyphicon glyphicon-sort-by-attributes") {
 			this.setState({ glyphiconSortPopularity: "glyphicon glyphicon-sort-by-attributes-alt"});
+			var sortedPeople = sortPeopleBy('popularity', this.props.myPeople, ASCENDING);
+			this.props.setMyPeople(sortedPeople);
 		}
 		else {
 			this.setState({ glyphiconSortPopularity: "glyphicon glyphicon-sort-by-attributes" });
+			var sortedPeople = sortPeopleBy('popularity', this.props.myPeople, DESCENDING);
+
+			this.props.setMyPeople(sortedPeople);
 		}
 		this.setState({ glyphiconSelectLocation: "" });
 		this.setState({ glyphiconSelectAge: "" });
@@ -117,11 +133,17 @@ export default class Research extends React.Component {
 	}
 
 	sortTags() {
+		var myTags = this.props.myInfo.tag;
+
 		if (this.state.glyphiconSortTags == "glyphicon glyphicon-sort-by-attributes") {
 			this.setState({ glyphiconSortTags: "glyphicon glyphicon-sort-by-attributes-alt"});
+			var sortedPeople = sortPeopleByTags(myTags, this.props.myPeople, ASCENDING);
+			this.props.setMyPeople(sortedPeople);
 		}
 		else {
 			this.setState({ glyphiconSortTags: "glyphicon glyphicon-sort-by-attributes" });
+			var sortedPeople = sortPeopleByTags(myTags, this.props.myPeople, DESCENDING);
+			this.props.setMyPeople(sortedPeople);
 		}
 		this.setState({ glyphiconSelectLocation: "" });
 		this.setState({ glyphiconSelectAge: "" });

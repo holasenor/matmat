@@ -238,7 +238,7 @@ export default class RightBar extends React.Component {
                 return (
                     <div className="rightBarMap">
                         <div>
-                            <Research setMyPeople={this.props.setMyPeople} myInfo={this.state.myInfo}>
+                            <Research setMyPeople={this.props.setMyPeople} myInfo={this.state.myInfo} myPeople={myPeople}>
                             </Research>
                             <Row>
                                 <Col md={12} className="resultPhotos">
