@@ -9,6 +9,8 @@ var url = "mongodb://localhost:27017/mydb";
 var database = require('./database');
 var initApp = require('./config/setup');
 var jwt = require('jsonwebtoken');
+const socket = require('socket.io');
+var socketSetup = require('./socket.js');
 
 var app = new express();
 // var secureRoutes = express.Router();
@@ -33,6 +35,8 @@ database.connect(url, function () {
 
     const port = 3000;
     const server = http.createServer(app);
+
+    socketSetup(server);
 
     server.listen(port, (err) => {
         if (err) {

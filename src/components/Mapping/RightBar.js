@@ -103,6 +103,15 @@ export default class RightBar extends React.Component {
         }
     }
 
+    setClassStatus(user) {
+        if (user.online) {
+            return "glyphicon glyphicon-globe connected";
+        }
+        else {
+            return "glyphicon glyphicon-globe notConnected";
+        }
+    }
+
     renderPhoto(object, key) {
         if (!object.img_src) {
             object.img_src = 'http://www.thesourcepartnership.com/wp-content/uploads/2017/05/facebook-default-no-profile-pic-300x300.jpg';
@@ -111,7 +120,7 @@ export default class RightBar extends React.Component {
         return (
             <Col md={4} xs={6} key={key} className="center">
                 <div className="center">
-                    {object.pseudo}, {object.age}
+                    {object.pseudo}, {object.age}, <span className={this.setClassStatus(object)}></span>
                 </div>
                 <img onClick={(e) => {this.open(e, object)}} id={key} className="photoThumbnail" src={object.img_src} key={Object.keys(object)} value={key}>
                 </img>
@@ -192,11 +201,20 @@ export default class RightBar extends React.Component {
         }
 
         renderPhotos(myPeople) {
-            var grid = [];
-            for (var i = 0; i < myPeople.length; i++) {
+            var usersOnline = this.state.usersOnline;
+            if (usersOnline) {
+                var grid = [];
+                for (var i = 0; i < myPeople.length; i++) {
+                    if (usersOnline.indexOf(myPeople[i]._id) == -1) {
+                        myPeople[i].online = false;
+                    }
+                    else {
+                        myPeople[i].online = true;
+                    }
                     grid.push(this.renderPhoto(myPeople[i], i));
+                }
+                return grid;
             }
-            return grid;
         }
 
         close() {
@@ -222,6 +240,31 @@ export default class RightBar extends React.Component {
         }
 
         componentDidMount() {
+            var socket = this.props.socket;
+
+            socket.on('usersOnline', (usersOnline) => {
+                console.log('server sends me usersOnline');
+                console.log(usersOnline);
+                this.setState({usersOnline: usersOnline});
+            });
+
+            socket.on('userconnection', (userId) => {
+                var usersOnline = this.state.usersOnline;
+                if (usersOnline.indexOf(userId) == -1) {
+                    usersOnline.push(userId);
+                }
+                this.setState({usersOnline: usersOnline});
+            });
+
+            socket.on('userdisconnection', (userId)  => {
+                var usersOnline = this.state.usersOnline;
+                var index = usersOnline.indexOf(userId);
+                if (index != -1) {
+                    usersOnline.splice(index, 1);
+                }
+                this.setState({usersOnline: usersOnline});
+            });
+
             this.getLikes();
         }
 

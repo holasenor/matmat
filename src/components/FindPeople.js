@@ -7,6 +7,8 @@ import Header from "./Header";
 import Footer from "./Footer";
 import Video from "./Video";
 import Mapping from "./Mapping";
+import socketIOClient from "socket.io-client";
+
 
 class FindPeople extends React.Component {
     constructor(props) {
@@ -15,6 +17,7 @@ class FindPeople extends React.Component {
     }
 
     componentDidMount() {
+        var socket = this.props.route.socket;
         checkTokenIsSet('map')
         .then((res) => {
             this.state.myInfo = res.data.user;
@@ -25,6 +28,10 @@ class FindPeople extends React.Component {
         .then((res) => {
             var myPeople = res.data;
             this.setState({people: myPeople});
+            return this.state.myInfo;
+        })
+        .then((user) => {
+            socket.emit('userConnecting', user._id);
         })
         .catch((err) => {
             console.log(err);
@@ -33,12 +40,13 @@ class FindPeople extends React.Component {
 
     render() {
         const title="test props mapping";
+        var socket = this.props.route.socket;
         if (this.state.myInfo && this.state.people) {
             return (
                 <div className='mybody'>
                     <Header title={title} myInfo={this.state.myInfo}>
                     </Header>
-                    <Mapping myInfo={this.state.myInfo} people={this.state.people}>
+                    <Mapping myInfo={this.state.myInfo} people={this.state.people} socket={socket}>
                     </Mapping>
                 </div>
             );
