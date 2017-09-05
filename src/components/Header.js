@@ -16,7 +16,7 @@ import Menu from 'material-ui/Menu';
 import MenuItemUI from 'material-ui/MenuItem';
 import {browserHistory} from "react-router";
 import * as tools from '../helpers/mainHelper.js';
-import { getMyVisitorsInfo } from "./../helpers/mainHelper.js";
+import { getMyVisitorsInfo, getUsersInfo} from "./../helpers/mainHelper.js";
 
 
 
@@ -27,11 +27,12 @@ export default class Header extends React.Component {
 			login: "Admin",
 			 open: false,
 			 myVisitorsInfo: [],
-
+			 notifications: []
 		 };
 		this.state.myInfo = this.props.myInfo;
 		this.toEdit = this.toEdit.bind(this);
 		this.toHome = this.toHome.bind(this);
+		this.handleClickNotifications = this.handleClickNotifications.bind(this);
 	}
 	//je vais chercher les infos dans la bdd apres le constructeur
 	// - componentDidMount
@@ -42,9 +43,32 @@ export default class Header extends React.Component {
 	// - dns routHelpers => creer et utiliser la fonction getMyVisitorsInfo
 
 	componentDidMount() {
+		var socket = this.props.socket;
+
         if (this.state.myInfo) {
 			this.getVisitors(this.state.myInfo.visits);
         }
+		socket.emit('getNotifications', this.state.myInfo._id);
+		// notification - {action = like visit message match dislike
+		//					userId }
+
+		socket.on('newNotifications', (notifications) => {
+			if (notifications) {
+				var ids = notifications.map(function (notification) {
+					return notification.userId;
+				})
+				var uniqueIds = _.uniq(ids);
+				getUsersInfo(uniqueIds)
+				.then((users) => {
+					var userMap = _.keyBy(users, '_id');
+					notifications.map(function (notification) {
+						notification.user = userMap[notification.userId];
+					});
+					this.setState({notifications: notifications});
+					console.log(notifications);
+				})
+			}
+		})
     }
 
 	getVisitors(visits) {
@@ -141,6 +165,74 @@ export default class Header extends React.Component {
 		}
 	}
 
+	renderNotificationInNav() {
+		var numberOfNotifications = 0;
+		if (this.state.notifications) {
+			numberOfNotifications = this.state.notifications.length;
+		}
+		return (
+			<NavDropdown title={<i className="glyphicon glyphicon-bell"> {numberOfNotifications} </i>} id="basic-nav-dropdown" onClick={this.handleClickNotifications}>
+				{this.renderNotifications(this.state.notifications)}
+			</NavDropdown>
+		);
+	}
+
+	handleClickNotifications() {
+		var socket = this.props.socket;
+		// setTimeout(() => {
+		// 	this.setState({notifications: []});
+		// 	socket.emit('deletemyNotifications', this.state.myInfo._id);
+		// }, 10000);
+	}
+
+	renderNotifications(notifications) {
+		var grid = [];
+		if (notifications && notifications.length) {
+			grid.push(<MenuItem header key={notifications.length}>Notifications</MenuItem>);
+			grid.push(<MenuItem key={notifications.length + 1} divider />)
+			for (var i = 0; i < notifications.length; i++) {
+				grid.push(this.renderNotification(notifications[i], i));
+			}
+			return grid;
+		}
+	}
+
+	renderNotification(object, key) {
+		var text;
+		var srcImg = 'http://www.thesourcepartnership.com/wp-content/uploads/2017/05/facebook-default-no-profile-pic-300x300.jpg';
+		if (object.user.pictures && object.user.pictures[0]) {
+			srcImg = object.user.pictures[0];
+		}
+		if (object.action == 'like') {
+			text = ' You were liked by ' + object.user.pseudo;
+		}
+		else if (object.action == 'message') {
+			text = ' You have a new message from ' + object.user.pseudo;
+		}
+		else if (object.action == 'dislike') {
+			text = ' You were disiked by ' + object.user.pseudo;
+		}
+		else if (object.action == 'match') {
+			text = ' You have a new match with ' + object.user.pseudo;
+		}
+		else if (object.action == 'visit') {
+			text = ' You were visited by ' + object.user.pseudo;
+		}
+		else {
+			text = ' You have a new notification';
+		}
+		return (
+			<MenuItem key={key} eventKey={key} className="showVisitors">
+				<img className="avatarVisitor" src={srcImg}>
+				</img>
+				<span>
+					{text}
+				</span>
+			</MenuItem>
+		)
+	}
+
+
 	render() {
 		var numberOfVisits = 0;
 		if (this.state.myInfo) {
@@ -185,6 +277,7 @@ export default class Header extends React.Component {
 							</MenuItem>
 						</NavDropdown>
 						{this.renderVisitsMenu(numberOfVisits)}
+						{this.renderNotificationInNav()}
 					</Nav>
 				</Col>
 
