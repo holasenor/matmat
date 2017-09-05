@@ -27,7 +27,9 @@ export default class Header extends React.Component {
 			login: "Admin",
 			 open: false,
 			 myVisitorsInfo: [],
-			 notifications: []
+			 notifications: [],
+			 isNotificationsOpen: false,
+			 timeOut: ""
 		 };
 		this.state.myInfo = this.props.myInfo;
 		this.toEdit = this.toEdit.bind(this);
@@ -165,13 +167,41 @@ export default class Header extends React.Component {
 		}
 	}
 
+	deleteNotifications =  () => {
+		var socket = this.props.socket;
+		socket.emit('deletemyNotifications', this.state.myInfo._id);
+		this.setState({notifications: []});
+	}
+
+	handleToggle = () => {
+		var isOpen = this.state.isNotificationsOpen;
+		if (isOpen) {
+			console.log('just got closed');
+			if (this.state.timeOut != "") {
+				clearTimeout(this.state.timeOut);
+				console.log('timeout got closed');
+				this.setState({timeOut: ""});
+			}
+			if (this.state.notifications && this.state.notifications.length > 0) {
+				this.deleteNotifications();
+			}
+		}
+		else {
+			console.log('just got opened');
+			var timeOut = setTimeout(this.deleteNotifications, 10000);
+			this.setState({timeOut: timeOut});
+			console.log('setting timeout = ', timeOut);
+		}
+		this.setState({isNotificationsOpen: !isOpen});
+	}
+
 	renderNotificationInNav() {
 		var numberOfNotifications = 0;
 		if (this.state.notifications) {
 			numberOfNotifications = this.state.notifications.length;
 		}
 		return (
-			<NavDropdown title={<i className="glyphicon glyphicon-bell"> {numberOfNotifications} </i>} id="basic-nav-dropdown" onClick={this.handleClickNotifications}>
+			<NavDropdown title={<i className="glyphicon glyphicon-bell"> {numberOfNotifications} </i>} id="basic-nav-dropdown" onClick={this.handleClickNotifications} onToggle={this.handleToggle}>
 				{this.renderNotifications(this.state.notifications)}
 			</NavDropdown>
 		);
