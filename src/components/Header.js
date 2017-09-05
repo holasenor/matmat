@@ -34,7 +34,6 @@ export default class Header extends React.Component {
 		this.state.myInfo = this.props.myInfo;
 		this.toEdit = this.toEdit.bind(this);
 		this.toHome = this.toHome.bind(this);
-		this.handleClickNotifications = this.handleClickNotifications.bind(this);
 	}
 	//je vais chercher les infos dans la bdd apres le constructeur
 	// - componentDidMount
@@ -45,6 +44,8 @@ export default class Header extends React.Component {
 	// - dns routHelpers => creer et utiliser la fonction getMyVisitorsInfo
 
 	componentDidMount() {
+		if (this.props.socket) {
+
 		var socket = this.props.socket;
 
         if (this.state.myInfo) {
@@ -71,6 +72,7 @@ export default class Header extends React.Component {
 				})
 			}
 		})
+	}
     }
 
 	getVisitors(visits) {
@@ -205,14 +207,6 @@ export default class Header extends React.Component {
 				{this.renderNotifications(this.state.notifications)}
 			</NavDropdown>
 		);
-	}
-
-	handleClickNotifications() {
-		var socket = this.props.socket;
-		// setTimeout(() => {
-		// 	this.setState({notifications: []});
-		// 	socket.emit('deletemyNotifications', this.state.myInfo._id);
-		// }, 10000);
 	}
 
 	renderNotifications(notifications) {
