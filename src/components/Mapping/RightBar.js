@@ -343,6 +343,9 @@ export default class RightBar extends React.Component {
                     tempMyInfo.likedBy.splice(index, 1);
                     console.log('new likedBy = ', tempMyInfo.likedBy);
                     console.log('so i set new state');
+                    if (this.state.chatUserId == id) {
+                        this.setState({isChatOpen: false});
+                    }
                     this.setState({myInfo: tempMyInfo});
                 }
                 else {
