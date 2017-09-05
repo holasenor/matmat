@@ -106,7 +106,7 @@ export default class Chat extends React.Component {
 
     }
 
-    TEMPrenderMessage(message, i) {
+    renderMessage(message, i) {
         var bubbleClass = "bubble bubble--alt";
         if (message.sender == "me") {
             var bubbleClass = "bubble";
@@ -131,7 +131,7 @@ export default class Chat extends React.Component {
                     message.sender = this.state.chatPseudoId;
                 }
                 message.text = messages[i].message;
-                messagesToRender.push(this.TEMPrenderMessage(message, i));
+                messagesToRender.push(this.renderMessage(message, i));
             }
         }
         return messagesToRender;
