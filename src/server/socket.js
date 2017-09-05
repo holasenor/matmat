@@ -13,6 +13,7 @@ const io = socket(server);
 console.log('\nSETTING UP SOCKET\n');
 
 function getRoomIdFromUsers(users) {
+    console.log(users);
     if (users && users[0] && users[1]) {
         console.log('gettig room for ');
         console.log(users);
@@ -127,7 +128,25 @@ io.sockets.on('connection', function (socket) {
               console.log('notifing this user' + userIdThatWasLiked + '\n');
           }
           else {
-              console.log('there is not socketIdLikedUser\n');
+              console.log('there is not socketIdLikedUser, so he is not connected\n');
+          }
+      }
+      else {
+          console.log('user was not communicated that he was liked because one of them is not online\n');
+      }
+  });
+
+  socket.on('userDislikeUser', function (dislikeUsers) {
+      var userIdThatDisliked = dislikeUsers.id1;
+      var userIdThatWasDisliked = dislikeUsers.id2;
+      var socketIdDislikedUser = _.findKey(activeUsers, function(o) { return o == userIdThatWasDisliked;})
+      if (Object.values(activeUsers).indexOf(userIdThatDisliked) > -1 && Object.values(activeUsers).indexOf(userIdThatWasDisliked) > -1 ) {
+          if (socketIdDislikedUser) {
+              socket.broadcast.to(socketIdDislikedUser).emit('youWereDislikedBy', userIdThatDisliked);
+              console.log('notifing this user' + userIdThatWasDisliked + '\n');
+          }
+          else {
+              console.log('there is not socketIdDislikedUser, so he is not connected\n');
           }
       }
       else {
