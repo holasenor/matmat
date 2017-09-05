@@ -65,6 +65,7 @@ export default class RightBar extends React.Component {
                     tempMyInfo.likes.splice(index, 1);
                 }
                 console.log('im gonna destroy our match');
+                this.props.socket.emit('userDislikeUser', matchToModify)
                 this.props.socket.emit('matchDestruction', matchToModify);
                 this.setState({buttonBsStyle: 'primary'});
             }
@@ -150,12 +151,17 @@ export default class RightBar extends React.Component {
         });
     }
 
-    renderChatButton() {
-        return (
-            <Button bsStyle="success" onClick={() => {this.handleChatButton(this.state.userIdInModal)}}>
-                Chat
-            </Button>
-        )
+    renderChatButton(id) {
+        var myLikes = this.props.myInfo.likes;
+        var likedBy = this.props.myInfo.likedBy;
+        var matches = _.intersection(likedBy, myLikes);
+        if (matches.includes(id)) {
+            return (
+                <Button bsStyle="success" onClick={() => {this.handleChatButton(this.state.userIdInModal)}}>
+                    Chat
+                </Button>
+            )
+        }
     }
 
     renderPhoto(object, key) {
@@ -199,7 +205,7 @@ export default class RightBar extends React.Component {
                                 Like
                             </Button>
 
-                            {this.renderChatButton()}
+                            {this.renderChatButton(this.state.userIdInModal)}
 
                             <Button bsStyle="danger" onClick={() => {this.handleBlockButton(this.state.userIdInModal)}}>
                                 Block
@@ -289,8 +295,6 @@ export default class RightBar extends React.Component {
             var usersOnline = this.state.usersOnline;
 
             socket.on('usersOnline', (usersOnline) => {
-                console.log('usersOnline right now = ');
-                console.log(usersOnline);
                 this.setState({usersOnline: usersOnline});
             });
 
@@ -317,6 +321,7 @@ export default class RightBar extends React.Component {
             });
 
             socket.on('youWereLikedBy', (id) => {
+                console.log('likedBy = ' , this.state.myInfo.likedBy);
                 console.log('i was liked by ' + id);
                 var tempMyInfo = this.state.myInfo;
                 if (tempMyInfo.likedBy.indexOf(id) == -1) {
@@ -326,6 +331,22 @@ export default class RightBar extends React.Component {
                 }
                 else {
                     console.log('WEIRD, you were already liked by him');
+                }
+            });
+
+            socket.on('youWereDislikedBy', (id) => {
+                console.log('likedBy = ' , this.state.myInfo.likedBy);
+                console.log('i was disliked by' + id);
+                var tempMyInfo = this.state.myInfo;
+                var index = tempMyInfo.likedBy.indexOf(id);
+                if (index != -1) {
+                    tempMyInfo.likedBy.splice(index, 1);
+                    console.log('new likedBy = ', tempMyInfo.likedBy);
+                    console.log('so i set new state');
+                    this.setState({myInfo: tempMyInfo});
+                }
+                else {
+                    console.log('WEIRD, you were NOT already liked by him');
                 }
             });
 
