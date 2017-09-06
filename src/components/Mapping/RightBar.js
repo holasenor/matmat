@@ -277,16 +277,23 @@ export default class RightBar extends React.Component {
         }
 
         open(e, object) {
+            var myInfo = this.state.myInfo;
             var userId = object._id;//id de la personne que l'on visite | clique
-            var visitorId = this.state.myInfo._id;
+            var visitorId = myInfo._id;
             var socket = this.props.socket;
-            // addVisit(userId, visitorId)
-            // .then((result) => {
-            //     console.log(result);
-            // })
-            // .catch((err) => {
-            //     alert(err);
-            // });
+            addVisit(userId, visitorId)
+            .catch((err) => {
+                alert(err);
+            });
+            var visitObj = {
+                userId: userId,
+                pseudo: myInfo.pseudo,
+                time: Date.now()
+            };
+            if (myInfo.pictures && myInfo.pictures[0]) {
+                visitObj.picture = myInfo.pictures[0];
+            }
+            socket.emit('iVisitedThisId', visitObj);
             socket.emit('amIBlockedBy', userId);
             this.setState({userModalIsOnline: object.online});
             this.setState({userModal: object});
