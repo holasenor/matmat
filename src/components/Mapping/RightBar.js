@@ -30,7 +30,8 @@ export default class RightBar extends React.Component {
             myInfo: this.props.myInfo,
             userModal: {},
             isChatOpen: false,
-            userModalIsOnline: false
+            userModalIsOnline: false,
+            userIsBlocked: true
         };
         this.open = this.open.bind(this);
         this.close = this.close.bind(this);
@@ -91,9 +92,11 @@ export default class RightBar extends React.Component {
     }
 
     handleBlockButton(id) {
+        var socket = this.props.socket;
         blockThisId(id)
         .then((res) => {
             if (res.data.success) {
+                socket.emit('iJustBlockedThisId', id);
                 var tempMyInfo = this.state.myInfo;
                 if (res.data.action == 'added') {
                     tempMyInfo.block.push(id);
@@ -156,7 +159,7 @@ export default class RightBar extends React.Component {
         var myLikes = this.props.myInfo.likes;
         var likedBy = this.props.myInfo.likedBy;
         var matches = _.intersection(likedBy, myLikes);
-        if (matches.includes(id) && this.state.usersOnline.includes(this.state.userIdInModal)) {
+        if (matches.includes(id) && this.state.usersOnline.includes(this.state.userIdInModal) && !this.state.userIsBlocked) {
             return (
                 <Button bsStyle="success" onClick={() => {this.handleChatButton(this.state.userIdInModal)}}>
                     Chat
@@ -284,6 +287,7 @@ export default class RightBar extends React.Component {
             // .catch((err) => {
             //     alert(err);
             // });
+            socket.emit('amIBlockedBy', userId);
             this.setState({userModalIsOnline: object.online});
             this.setState({userModal: object});
             this.setStyleLikeButton(object._id);
@@ -296,6 +300,10 @@ export default class RightBar extends React.Component {
         componentDidMount() {
             var socket = this.props.socket;
             var usersOnline = this.state.usersOnline;
+
+            socket.on('returnAmIBlockedBy', (iAmBlocked) => {
+                this.setState({userIsBlocked: iAmBlocked});
+            });
 
             socket.on('usersOnline', (usersOnline) => {
                 this.setState({usersOnline: usersOnline});

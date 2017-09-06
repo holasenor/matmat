@@ -251,6 +251,21 @@ io.sockets.on('connection', function (socket) {
       else {
           console.log('this user is not log in so he shouldn\'t be here');
       }
+  });
+
+  socket.on('amIBlockedBy', function (userId) {
+      Database.getUsers([userId])
+      .then((users) => {
+          return isBlocked(users, activeUsers[socket.id]);
+      })
+      .then((isHeBlocked) => {
+          socket.emit('returnAmIBlockedBy', isHeBlocked);
+      })
+  });
+
+  socket.on('iJustBlockedThisId', function (userId) {
+      var socketId = _.findKey(activeUsers, function(o) { return o == userId})
+      socket.broadcast.to(socketId).emit('returnAmIBlockedBy', true);
   })
 
 });
