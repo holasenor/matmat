@@ -82,6 +82,13 @@ io.sockets.on('connection', function (socket) {
       socket.broadcast.emit('userconnection', userId);
   });
 
+  socket.on('logout', function () {
+      var userId = activeUsers[socket.id];
+      console.log('User ' + userId + ' is not Active\n');
+      socket.broadcast.emit('userdisconnection', userId);
+      delete activeUsers[socket.id];
+  })
+
   socket.on('disconnect', function () {
       var userId = activeUsers[socket.id];
       console.log('User ' + userId + ' is not Active\n');
@@ -90,7 +97,7 @@ io.sockets.on('connection', function (socket) {
   })
 
   socket.on('message', function (data) {
-      console.log('message');
+      console.log(data);
   });
 
   socket.on('chatMessage', function (chatMessage) {
@@ -259,13 +266,21 @@ io.sockets.on('connection', function (socket) {
           return isBlocked(users, activeUsers[socket.id]);
       })
       .then((isHeBlocked) => {
-          socket.emit('returnAmIBlockedBy', isHeBlocked);
+          var result = {
+              isHeBlocked: isHeBlocked,
+              userIdThatBlocked: userId
+          }
+          socket.emit('returnAmIBlockedBy', result);
       })
   });
 
   socket.on('iJustBlockedThisId', function (userId) {
       var socketId = _.findKey(activeUsers, function(o) { return o == userId})
-      socket.broadcast.to(socketId).emit('returnAmIBlockedBy', true);
+      var result = {
+          isHeBlocked : true,
+          userIdThatBlocked: activeUsers[socket.id]
+      }
+      socket.broadcast.to(socketId).emit('returnAmIBlockedBy', result);
   })
 
 });

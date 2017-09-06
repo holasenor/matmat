@@ -301,8 +301,11 @@ export default class RightBar extends React.Component {
             var socket = this.props.socket;
             var usersOnline = this.state.usersOnline;
 
-            socket.on('returnAmIBlockedBy', (iAmBlocked) => {
-                this.setState({userIsBlocked: iAmBlocked});
+            socket.on('returnAmIBlockedBy', (res) => {
+                if (res.userIdThatBlocked == this.state.chatUserId) {
+                    this.closeChat();
+                }
+                this.setState({userIsBlocked: res.isHeBlocked});
             });
 
             socket.on('usersOnline', (usersOnline) => {
@@ -379,6 +382,7 @@ export default class RightBar extends React.Component {
             socket.off('userconnection');
             socket.off('youWereLikedBy');
             socket.off('youWereDislikedBy');
+            socket.off('returnAmIBlockedBy');
         }
 
         getLikes() {
