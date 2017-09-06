@@ -1,5 +1,4 @@
 import React from "react"
-import Title from "./Header/Title";
 import { Col, Button, Nav, Navbar, NavItem, MenuItem, NavDropdown } from 'react-bootstrap';
 import {browserHistory} from "react-router";
 import TextField from 'material-ui/TextField';
