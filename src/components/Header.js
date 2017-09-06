@@ -33,6 +33,7 @@ export default class Header extends React.Component {
 		this.state.myInfo = this.props.myInfo;
 		this.toEdit = this.toEdit.bind(this);
 		this.toHome = this.toHome.bind(this);
+		this.handleLogout = this.handleLogout.bind(this);
 	}
 	//je vais chercher les infos dans la bdd apres le constructeur
 	// - componentDidMount
@@ -73,6 +74,13 @@ export default class Header extends React.Component {
 		})
 	}
     }
+
+	componentWillUnmount() {
+		var socket = this.props.socket;
+		if (socket) {
+			socket.off('newNotifications');
+		}
+	}
 
 	getVisitors(visits) {
 		var tab = [];
@@ -148,6 +156,10 @@ export default class Header extends React.Component {
 	}
 
 	handleLogout() {
+		if (this.props.socket) {
+			var socket = this.props.socket;
+			socket.emit('logout');
+		}
 		localStorage.removeItem('token');
 		localStorage.removeItem('username');
 		browserHistory.push("/");
