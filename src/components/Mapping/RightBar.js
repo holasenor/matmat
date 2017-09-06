@@ -229,9 +229,9 @@ export default class RightBar extends React.Component {
     }
 
     renderLike(myLikesInfo, key) {
-        var pictures = ['/images/uploads/default.jpg'];
+        var imageToDisplay = 'images/uploads/default.jpg';
         if (myLikesInfo[key].pictures && myLikesInfo[key].pictures[0]) {
-            pictures = myLikesInfo[key].pictures;
+            imageToDisplay = 'images/uploads/' + myLikesInfo[key].pictures[0];
         }
         var object = myLikesInfo[key];
         return (
@@ -242,12 +242,13 @@ export default class RightBar extends React.Component {
                 style={styles.chip}
                 key={key}
                 >
-                    <Avatar src={pictures[0]}>
+                    <Avatar src={imageToDisplay}>
                     </Avatar>
                     {myLikesInfo[key].pseudo}
                 </Chip>
             );
         }
+
         renderLikesBar(myLikesInfo) {
             var grid = [];
             for (var i = 0; i < myLikesInfo.length; i++) {

@@ -129,7 +129,13 @@ export default class Header extends React.Component {
 	}
 
 	renderListVisitor(visit, key) {
-		var srcList = visit.picture;
+		var srcList;
+		if (visit.picture) {
+			srcList = 'images/uploads/' + visit.picture;
+		}
+		else {
+			srcList = 'images/uploads/default.jpg';
+		}
 		var time = moment.unix(visit.time / 1000).format('LLL');
 		return (
 			<MenuItem key={key} eventKey={key} className="showVisitors">
@@ -240,7 +246,7 @@ export default class Header extends React.Component {
 		var text;
 		var srcImg = '/images/uploads/default.jpg';
 		if (object.user.pictures && object.user.pictures[0]) {
-			srcImg = object.user.pictures[0];
+			srcImg = 'images/uploads/' + object.user.pictures[0];
 		}
 		if (object.action == 'like') {
 			text = ' You were liked by ' + object.user.pseudo;
