@@ -29,7 +29,8 @@ export default class RightBar extends React.Component {
             buttonBsStyle: 'primary',
             myInfo: this.props.myInfo,
             userModal: {},
-            isChatOpen: false
+            isChatOpen: false,
+            userModalIsOnline: false
         };
         this.open = this.open.bind(this);
         this.close = this.close.bind(this);
@@ -155,7 +156,7 @@ export default class RightBar extends React.Component {
         var myLikes = this.props.myInfo.likes;
         var likedBy = this.props.myInfo.likedBy;
         var matches = _.intersection(likedBy, myLikes);
-        if (matches.includes(id)) {
+        if (matches.includes(id) && this.state.usersOnline.includes(this.state.userIdInModal)) {
             return (
                 <Button bsStyle="success" onClick={() => {this.handleChatButton(this.state.userIdInModal)}}>
                     Chat
@@ -275,6 +276,7 @@ export default class RightBar extends React.Component {
         open(e, object) {
             var userId = object._id;//id de la personne que l'on visite | clique
             var visitorId = this.state.myInfo._id;
+            var socket = this.props.socket;
             // addVisit(userId, visitorId)
             // .then((result) => {
             //     console.log(result);
@@ -282,6 +284,7 @@ export default class RightBar extends React.Component {
             // .catch((err) => {
             //     alert(err);
             // });
+            this.setState({userModalIsOnline: object.online});
             this.setState({userModal: object});
             this.setStyleLikeButton(object._id);
             this.setState({ userIdInModal: object._id});
@@ -311,6 +314,9 @@ export default class RightBar extends React.Component {
                 var index = usersOnline.indexOf(userId);
                 if (index != -1) {
                     usersOnline.splice(index, 1);
+                }
+                if (userId == this.state.chatUserId) {
+                    this.closeChat();
                 }
                 this.setState({usersOnline: usersOnline});
             });
@@ -364,6 +370,7 @@ export default class RightBar extends React.Component {
             socket.off('joinThisRoomWithMe');
             socket.off('userconnection');
             socket.off('youWereLikedBy');
+            socket.off('youWereDislikedBy');
         }
 
         getLikes() {
@@ -376,14 +383,16 @@ export default class RightBar extends React.Component {
         closeChat = () => {this.setState({isChatOpen: false})}
 
         renderChat() {
-            if (this.state.myInfo && this.state.isChatOpen) {
+            if (this.state.myInfo && this.state.isChatOpen && this.state.usersOnline) {
+                var heIsOnline = this.state.usersOnline.includes(this.state.chatUserId);
                 return (
                 <Chat myInfo={this.state.myInfo}
                     isChatOpen={this.state.isChatOpen}
                     closeChat={this.closeChat}
                     socket={this.props.socket}
                     chatUserId={this.state.chatUserId}
-                    chatPseudoId={this.state.userPseudoInModal}>
+                    chatPseudoId={this.state.userPseudoInModal}
+                    userModalIsOnline={heIsOnline}>
                 </Chat>
             );
             }

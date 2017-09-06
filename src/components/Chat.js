@@ -150,7 +150,7 @@ export default class Chat extends React.Component {
 
     render() {
         this.chatSocketSetup();
-        if (this.state.oldMessages) {
+        if (this.state.oldMessages && this.props.userModalIsOnline) {
             return (
                 <div>
                     <Drawer

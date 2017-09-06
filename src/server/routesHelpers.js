@@ -371,6 +371,27 @@ export function getMyVisitorsInfo(req, res, next) {
     })
 }
 
+export function getUsersInfo(req, res, next) {
+    var ids = req.query.ids;
+    Database.getUsers(ids)
+    .then((users) => {
+        if (users) {
+            res.send({
+                success: true,
+                users: users
+            });
+        }
+        else {
+            res.send({
+                success: false
+            });
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+}
+
 export function blockUser(req, res, next) {
     var idToBlock = req.body.id;
     var myId = req.decode.id;

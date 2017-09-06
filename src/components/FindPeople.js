@@ -44,7 +44,7 @@ class FindPeople extends React.Component {
         if (this.state.myInfo && this.state.people) {
             return (
                 <div className='mybody'>
-                    <Header title={title} myInfo={this.state.myInfo}>
+                    <Header title={title} myInfo={this.state.myInfo} socket={socket}>
                     </Header>
                     <Mapping myInfo={this.state.myInfo} people={this.state.people} socket={socket}>
                     </Mapping>

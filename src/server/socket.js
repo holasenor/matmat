@@ -5,6 +5,7 @@ import hash from 'object-hash';
 var activeUsers = {};
 var rooms = {};
 var conversations = {};
+var notifications = {};
 
 module.exports = function (server) {
 
@@ -49,12 +50,24 @@ function addMessageToConversation(roomId, chatMessage) {
     }
 }
 
+function saveNotification(userId1, userId2, action) {
+    var notification = {
+        action: action,
+        userId: userId1
+    };
+    if (notifications.hasOwnProperty(userId2)) {
+        notifications[userId2].push(notification)
+    }
+    else {
+        notifications[userId2] = [notification];
+    }
+    return notifications[userId2];
+}
+
 io.sockets.on('connection', function (socket) {
   socket.on('userConnecting', function (userId) {
       console.log('User ' + userId +  ' has just connected\n');
       activeUsers[socket.id] = userId;
-    //   console.log('active users so far = ');
-    //   console.log(activeUsers);
       socket.emit('usersOnline', _.values(activeUsers));
       socket.broadcast.emit('userconnection', userId);
   });
@@ -73,6 +86,9 @@ io.sockets.on('connection', function (socket) {
   socket.on('chatMessage', function (chatMessage) {
       var roomId = getRoomIdFromUsers([activeUsers[socket.id], chatMessage.chatUserId]);
       if (roomId) {
+          var socketId = _.findKey(activeUsers, function(o) { return o == chatMessage.chatUserId;})
+          var notif = saveNotification(activeUsers[socket.id], chatMessage.chatUserId, 'message');
+          socket.broadcast.to(socketId).emit('newNotifications', notif);
           chatMessage.chatUserId = activeUsers[socket.id];
           addMessageToConversation(roomId, chatMessage);
           socket.broadcast.to(roomId).emit('chatMessage', chatMessage);
@@ -100,6 +116,8 @@ io.sockets.on('connection', function (socket) {
             userId: userIdThatLiked,
             roomId: newRoomId
         };
+        var notif = saveNotification(userIdThatLiked, userIdThatWasLiked, 'match');
+        socket.broadcast.to(socketIdLikedUser).emit('newNotifications', notif);
         socket.broadcast.to(socketIdLikedUser).emit('joinThisRoomWithMe', info);
         console.log('user ' + userIdThatLiked + 'joinging this room' + newRoomId + '\n');
         socket.join(newRoomId);
@@ -122,14 +140,11 @@ io.sockets.on('connection', function (socket) {
       var userIdThatLiked = likeUsers.id1;
       var userIdThatWasLiked = likeUsers.id2;
       var socketIdLikedUser = _.findKey(activeUsers, function(o) { return o == userIdThatWasLiked;})
-      if (Object.values(activeUsers).indexOf(userIdThatLiked) > -1 && Object.values(activeUsers).indexOf(userIdThatWasLiked) > -1 ) {
-          if (socketIdLikedUser) {
+      if (Object.values(activeUsers).indexOf(userIdThatLiked) > -1) {
+              var notif = saveNotification(userIdThatLiked, userIdThatWasLiked, 'like');
+              socket.broadcast.to(socketIdLikedUser).emit('newNotifications', notif);
               socket.broadcast.to(socketIdLikedUser).emit('youWereLikedBy', userIdThatLiked);
               console.log('notifing this user' + userIdThatWasLiked + '\n');
-          }
-          else {
-              console.log('there is not socketIdLikedUser, so he is not connected\n');
-          }
       }
       else {
           console.log('user was not communicated that he was liked because one of them is not online\n');
@@ -140,14 +155,11 @@ io.sockets.on('connection', function (socket) {
       var userIdThatDisliked = dislikeUsers.id1;
       var userIdThatWasDisliked = dislikeUsers.id2;
       var socketIdDislikedUser = _.findKey(activeUsers, function(o) { return o == userIdThatWasDisliked;})
-      if (Object.values(activeUsers).indexOf(userIdThatDisliked) > -1 && Object.values(activeUsers).indexOf(userIdThatWasDisliked) > -1 ) {
-          if (socketIdDislikedUser) {
-              socket.broadcast.to(socketIdDislikedUser).emit('youWereDislikedBy', userIdThatDisliked);
-              console.log('notifing this user' + userIdThatWasDisliked + '\n');
-          }
-          else {
-              console.log('there is not socketIdDislikedUser, so he is not connected\n');
-          }
+      if (Object.values(activeUsers).indexOf(userIdThatDisliked) > -1) {
+          var notif = saveNotification(userIdThatDisliked, userIdThatWasDisliked, 'dislike');
+          socket.broadcast.to(socketIdDislikedUser).emit('newNotifications', notif);
+          socket.broadcast.to(socketIdDislikedUser).emit('youWereDislikedBy', userIdThatDisliked);
+          console.log('notifing this user' + userIdThatWasDisliked + '\n');
       }
       else {
           console.log('user was not communicated that he was liked because one of them is not online\n');
@@ -179,6 +191,21 @@ io.sockets.on('connection', function (socket) {
 
       var conversationToSend = conversations[roomId] || [];
       socket.emit('historyDemanded', conversationToSend);
+  })
+
+  socket.on('getNotifications', function (id) {
+      socket.emit('newNotifications', notifications[id]);
+  })
+
+  socket.on('deletemyNotifications', function (id) {
+      var connectedIds = _.values(activeUsers);
+      if (connectedIds.includes(id)) {
+          console.log('deleting his notifications');
+          notifications[id] = [];
+      }
+      else {
+          console.log('this user is not log in so he shouldn\'t be here');
+      }
   })
 
 });

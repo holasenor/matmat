@@ -44,6 +44,25 @@ export function getMyLikesInfo(myLikes) {
     })
 }
 
+export function getUsersInfo(ids) {
+    var token = localStorage.getItem('token');
+    return axios.get('/getusers', {
+        params: {
+            token: token,
+            ids: ids
+        }
+    })
+    .then((result) => {
+        if (result.data.success) {
+            return result.data.users;
+        }
+        else {
+            console.log('No users were found');
+            return [];
+        }
+    })
+}
+
 export function getMyVisitorsInfo(myVisitors) {
     var token = localStorage.getItem('token');
     return axios.get('/myvisitorsinfo', {
@@ -62,6 +81,8 @@ export function getMyVisitorsInfo(myVisitors) {
         }
     })
 }
+
+
 
 
 export function toggleLike(mail) {
