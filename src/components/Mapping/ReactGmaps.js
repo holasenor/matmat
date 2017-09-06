@@ -15,10 +15,19 @@ export default class MyMap extends Component {
 
     renderPeople() {
         var myPeople = this.props.myPeople;
-        return myPeople.map((marker, i) =>{
-            marker.img_src = 'images/uploads/default.jpg';
-            if (marker.pictures && marker.pictures[0]) {
-                marker.img_src = 'images/uploads/' + marker.pictures[0];
+        return myPeople.map((person, i) =>{
+            var imageToDisplay = 'images/uploads/default.jpg';
+            if (person.pictures && person.pictures[0]) {
+                imageToDisplay = 'images/uploads/' + person.pictures[0];
+                person.img_src = person.pictures[0];
+            }
+            var marker = {
+                key: person.key,
+                img_src: imageToDisplay,
+                pseudo: person.pseudo,
+                age: person.age,
+                lat: person.lat,
+                lng: person.lng
             }
             return(
                 <Person
