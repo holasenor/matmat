@@ -159,10 +159,6 @@ export default class Header extends React.Component {
 		browserHistory.push("/map");
 	}
 
-	toChat() {
-		browserHistory.push("/chat");
-	}
-
 	handleLogout() {
 		if (this.props.socket) {
 			var socket = this.props.socket;
@@ -242,7 +238,7 @@ export default class Header extends React.Component {
 
 	renderNotification(object, key) {
 		var text;
-		var srcImg = 'http://www.thesourcepartnership.com/wp-content/uploads/2017/05/facebook-default-no-profile-pic-300x300.jpg';
+		var srcImg = '/images/uploads/default.jpg';
 		if (object.user.pictures && object.user.pictures[0]) {
 			srcImg = object.user.pictures[0];
 		}
@@ -297,9 +293,6 @@ export default class Header extends React.Component {
 						<Nav>
 							<NavItem onClick={this.toHome}>
 								People
-							</NavItem>
-							<NavItem onClick={this.toChat}>
-								Chat
 							</NavItem>
 							<NavDropdown title="Account" id="basic-nav-dropdown">
 								<MenuItem onClick={this.toEdit}>

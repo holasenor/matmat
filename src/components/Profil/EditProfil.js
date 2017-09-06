@@ -28,7 +28,7 @@ class EditProfil extends React.Component {
             slidesToShow: 1,
             slidesToScroll: 1
         };
-        var pictures = ["https://www.shareicon.net/download/2016/02/13/293861_msn_256x256.png"];
+        var pictures = ["default.jpg"];
         if (this.state.myInfo && this.state.myInfo.pictures && this.state.myInfo.pictures[0]) {
             var pictures = this.state.myInfo.pictures;
         }
@@ -257,7 +257,7 @@ class EditProfil extends React.Component {
         .then(updateUser)
         .then((res) => {
             console.log('pushiiing');
-            // browserHistory.push({pathname: "/map", state: res.data});
+            browserHistory.push("/map");
         })
         .catch((err) => {
             alert(err);
