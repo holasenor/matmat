@@ -7,18 +7,18 @@ const Person = ({  marker }) => <div className="mapPhotoLover"><img id={marker.k
 export default class MyMap extends Component {
     constructor(props){
         super(props);
-    }
-
-    static defaultProps = {
-        center: {lat: 48.8965531, lng: 2.3163470},
-        zoom: 11
+        this.state = {
+            center: this.props.center,
+            zoom: this.props.zoom
+        };
     }
 
     renderPeople() {
         var myPeople = this.props.myPeople;
         return myPeople.map((marker, i) =>{
-            if (marker.pictures) {
-                marker.img_src = marker.pictures[0]
+            marker.img_src = 'images/uploads/default.jpg';
+            if (marker.pictures && marker.pictures[0]) {
+                marker.img_src = 'images/uploads/' + marker.pictures[0];
             }
             return(
                 <Person
@@ -33,8 +33,8 @@ export default class MyMap extends Component {
     render() {
         return (
             <GoogleMapReact
-                defaultCenter={this.props.center}
-                defaultZoom={this.props.zoom}
+                defaultCenter={this.state.center}
+                defaultZoom={this.state.zoom}
                 style={{height: '100em'}}
                 >
                 {this.renderPeople()}
