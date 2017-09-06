@@ -27,6 +27,7 @@ class FindPeople extends React.Component {
         .then(getMyPeople)
         .then((res) => {
             var myPeople = res.data;
+            console.log(myPeople);
             this.setState({people: myPeople});
             return this.state.myInfo;
         })

@@ -195,6 +195,7 @@ User.getMyPeople = function (myInfo) {
 				{latitude: lat, longitude: lng},
 				{latitude: mylat, longitude: mylng}
 			);
+			delete someone.password;
 			someone.distance = distance;
 			return (distance < 50000 && someone._id != myInfo._id)
 		})
