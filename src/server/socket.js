@@ -1,6 +1,7 @@
 var _ = require('lodash');
 import socket from 'socket.io';
 import hash from 'object-hash';
+import Database from './database';
 
 var activeUsers = {};
 var rooms = {};
@@ -64,6 +65,15 @@ function saveNotification(userId1, userId2, action) {
     return notifications[userId2];
 }
 
+function isBlocked(users, userIdThatLiked) {
+
+    var user = users[0];
+    if ( user && user.block && user.block.includes(userIdThatLiked)) {
+        return true;
+    }
+    return false;
+}
+
 io.sockets.on('connection', function (socket) {
   socket.on('userConnecting', function (userId) {
       console.log('User ' + userId +  ' has just connected\n');
@@ -85,22 +95,33 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('chatMessage', function (chatMessage) {
       var roomId = getRoomIdFromUsers([activeUsers[socket.id], chatMessage.chatUserId]);
-      if (roomId) {
-          var socketId = _.findKey(activeUsers, function(o) { return o == chatMessage.chatUserId;})
-          var notif = saveNotification(activeUsers[socket.id], chatMessage.chatUserId, 'message');
-          socket.broadcast.to(socketId).emit('newNotifications', notif);
-          chatMessage.chatUserId = activeUsers[socket.id];
-          addMessageToConversation(roomId, chatMessage);
-          socket.broadcast.to(roomId).emit('chatMessage', chatMessage);
-          var conversationToSend = conversations[roomId] || [];
-          socket.emit('historyDemanded', conversationToSend);
-          console.log('transfering message\n');
-      }
-      else {
-          console.log('The users don\'t have a room, so they can no talk\n');
-          // MAYBE EMIT A ERROR TO TELL THE USER THAT SOMETHING WENT WRONG
-          // MAYBE NOT NECESSARY BECAUSE HE SHOULD NOT BE HERE
-      }
+      Database.getUsers([chatMessage.chatUserId])
+      .then((users) => {
+          return isBlocked(users, activeUsers[socket.id]);
+      })
+      .then((isBlocked) => {
+          if (!isBlocked) {
+              if (roomId) {
+                  var socketId = _.findKey(activeUsers, function(o) { return o == chatMessage.chatUserId;})
+                  var notif = saveNotification(activeUsers[socket.id], chatMessage.chatUserId, 'message');
+                  socket.broadcast.to(socketId).emit('newNotifications', notif);
+                  chatMessage.chatUserId = activeUsers[socket.id];
+                  addMessageToConversation(roomId, chatMessage);
+                  socket.broadcast.to(roomId).emit('chatMessage', chatMessage);
+                  var conversationToSend = conversations[roomId] || [];
+                  socket.emit('historyDemanded', conversationToSend);
+                  console.log('transfering message\n');
+              }
+              else {
+                  console.log('The users don\'t have a room, so they can no talk\n');
+                  // MAYBE EMIT A ERROR TO TELL THE USER THAT SOMETHING WENT WRONG
+                  // MAYBE NOT NECESSARY BECAUSE HE SHOULD NOT BE HERE
+              }
+          }
+          else {
+              console.log('message was blocked\n');
+          }
+      });
   });
 
   socket.on('matchCreation', function (matchCreation) {
@@ -108,21 +129,29 @@ io.sockets.on('connection', function (socket) {
       //and also so can join the room that i will send him
         var userIdThatLiked = matchCreation.id1;
         var userIdThatWasLiked = matchCreation.id2;
-        var users = [userIdThatLiked, userIdThatWasLiked];
-        var newRoomId = hash(users);
-        rooms[newRoomId] = users;
-        var socketIdLikedUser = _.findKey(activeUsers, function(o) { return o == userIdThatWasLiked;})
-        var info = {
-            userId: userIdThatLiked,
-            roomId: newRoomId
-        };
-        var notif = saveNotification(userIdThatLiked, userIdThatWasLiked, 'match');
-        socket.broadcast.to(socketIdLikedUser).emit('newNotifications', notif);
-        socket.broadcast.to(socketIdLikedUser).emit('joinThisRoomWithMe', info);
-        console.log('user ' + userIdThatLiked + 'joinging this room' + newRoomId + '\n');
-        socket.join(newRoomId);
-        console.log('creationg a match');
-        console.log('rooms so far = ', rooms);
+        Database.getUsers([userIdThatWasLiked])
+        .then((users) => {
+            return isBlocked(users, userIdThatLiked);
+        })
+        .then((isBlocked) => {
+            if (!isBlocked) {
+                var users = [userIdThatLiked, userIdThatWasLiked];
+                var newRoomId = hash(users);
+                rooms[newRoomId] = users;
+                var socketIdLikedUser = _.findKey(activeUsers, function(o) { return o == userIdThatWasLiked;})
+                var info = {
+                    userId: userIdThatLiked,
+                    roomId: newRoomId
+                };
+                var notif = saveNotification(userIdThatLiked, userIdThatWasLiked, 'match');
+                socket.broadcast.to(socketIdLikedUser).emit('newNotifications', notif);
+                socket.broadcast.to(socketIdLikedUser).emit('joinThisRoomWithMe', info);
+                console.log('user ' + userIdThatLiked + 'joinging this room' + newRoomId + '\n');
+                socket.join(newRoomId);
+                console.log('creationg a match');
+                console.log('rooms so far = ', rooms);
+            }
+        });
   });
 
   socket.on('joinRoom', function (roomId) {
@@ -139,31 +168,47 @@ io.sockets.on('connection', function (socket) {
   socket.on('userLikeUser', function (likeUsers) {
       var userIdThatLiked = likeUsers.id1;
       var userIdThatWasLiked = likeUsers.id2;
-      var socketIdLikedUser = _.findKey(activeUsers, function(o) { return o == userIdThatWasLiked;})
-      if (Object.values(activeUsers).indexOf(userIdThatLiked) > -1) {
-              var notif = saveNotification(userIdThatLiked, userIdThatWasLiked, 'like');
-              socket.broadcast.to(socketIdLikedUser).emit('newNotifications', notif);
-              socket.broadcast.to(socketIdLikedUser).emit('youWereLikedBy', userIdThatLiked);
-              console.log('notifing this user' + userIdThatWasLiked + '\n');
-      }
-      else {
-          console.log('user was not communicated that he was liked because one of them is not online\n');
-      }
+      Database.getUsers([userIdThatWasLiked])
+      .then((users) => {
+          return isBlocked(users, userIdThatLiked);
+      })
+      .then((isBlocked) => {
+          if (!isBlocked) {
+              var socketIdLikedUser = _.findKey(activeUsers, function(o) { return o == userIdThatWasLiked;})
+              if (Object.values(activeUsers).indexOf(userIdThatLiked) > -1) {
+                  var notif = saveNotification(userIdThatLiked, userIdThatWasLiked, 'like');
+                  socket.broadcast.to(socketIdLikedUser).emit('newNotifications', notif);
+                  socket.broadcast.to(socketIdLikedUser).emit('youWereLikedBy', userIdThatLiked);
+                  console.log('notifing this user' + userIdThatWasLiked + '\n');
+              }
+              else {
+                  console.log('user was not communicated that he was liked because one of them is not online\n');
+              }
+          }
+      })
   });
 
   socket.on('userDislikeUser', function (dislikeUsers) {
       var userIdThatDisliked = dislikeUsers.id1;
       var userIdThatWasDisliked = dislikeUsers.id2;
-      var socketIdDislikedUser = _.findKey(activeUsers, function(o) { return o == userIdThatWasDisliked;})
-      if (Object.values(activeUsers).indexOf(userIdThatDisliked) > -1) {
-          var notif = saveNotification(userIdThatDisliked, userIdThatWasDisliked, 'dislike');
-          socket.broadcast.to(socketIdDislikedUser).emit('newNotifications', notif);
-          socket.broadcast.to(socketIdDislikedUser).emit('youWereDislikedBy', userIdThatDisliked);
-          console.log('notifing this user' + userIdThatWasDisliked + '\n');
-      }
-      else {
-          console.log('user was not communicated that he was liked because one of them is not online\n');
-      }
+      Database.getUsers([userIdThatWasDisliked])
+      .then((users) => {
+          return isBlocked(users, userIdThatDisliked);
+      })
+      .then((isBlocked) => {
+          if (!isBlocked) {
+              var socketIdDislikedUser = _.findKey(activeUsers, function(o) { return o == userIdThatWasDisliked;})
+              if (Object.values(activeUsers).indexOf(userIdThatDisliked) > -1) {
+                  var notif = saveNotification(userIdThatDisliked, userIdThatWasDisliked, 'dislike');
+                  socket.broadcast.to(socketIdDislikedUser).emit('newNotifications', notif);
+                  socket.broadcast.to(socketIdDislikedUser).emit('youWereDislikedBy', userIdThatDisliked);
+                  console.log('notifing this user' + userIdThatWasDisliked + '\n');
+              }
+              else {
+                  console.log('user was not communicated that he was liked because one of them is not online\n');
+              }
+          }
+      });
   });
 
   socket.on('matchDestruction', function (matchDestruction) {
