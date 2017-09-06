@@ -290,16 +290,18 @@ export function addVisit(req, res, next) {
     // var userId = req.decode.id;
     User.addOneVisit(req.body.userId, req.body.visitorId)
     .then((ret) => {
-        if (ret) {
-            res.send({
-                success: true
-            })
-        }
-        else {
-            res.send({
-                success: false
-            });
-        }
+        console.log(ret);
+        console.log('then after addOneVisit');
+        // if (ret) {
+        //     res.send({
+        //         success: true
+        //     })
+        // }
+        // else {
+        //     res.send({
+        //         success: false
+        //     });
+        // }
     })
 }
 
@@ -352,12 +354,28 @@ export function prepareOptions(req, res, next) {
 
 export function getMyVisitorsInfo(req, res, next) {
     var ids = req.query.visits;
+    var visitsJSON = JSON.parse(req.query.visits);
+    var ids = [];
+    visitsJSON.map((visit) => {
+        ids.push(visit.id);
+    });
     Database.getUsers(ids)
     .then((users) => {
         if (users) {
+            var usr = _.keyBy(users, '_id');
+            var ret = visitsJSON.map((visit) => {
+                visit.pseudo = usr[visit.id].pseudo
+                if (usr[visit.id].pictures && usr[visit.id].pictures[0]) {
+                    visit.picture = usr[visit.id].pictures[0];
+                }
+                else {
+                    visit.picture = 'http://www.thesourcepartnership.com/wp-content/uploads/2017/05/facebook-default-no-profile-pic-300x300.jpg';
+                }
+                return visit
+            });
             res.send({
                 success: true,
-                users: users
+                visits: ret
             });
         }
         else {

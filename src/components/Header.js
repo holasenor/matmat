@@ -16,7 +16,7 @@ import MenuItemUI from 'material-ui/MenuItem';
 import {browserHistory} from "react-router";
 import * as tools from '../helpers/mainHelper.js';
 import { getMyVisitorsInfo, getUsersInfo} from "./../helpers/mainHelper.js";
-
+import moment from 'moment';
 
 
 export default class Header extends React.Component {
@@ -25,7 +25,7 @@ export default class Header extends React.Component {
 		this.state = {
 			login: "Admin",
 			 open: false,
-			 myVisitorsInfo: [],
+			 visits: [],
 			 notifications: [],
 			 isNotificationsOpen: false,
 			 timeOut: ""
@@ -49,7 +49,13 @@ export default class Header extends React.Component {
 		var socket = this.props.socket;
 
         if (this.state.myInfo) {
-			this.getVisitors(this.state.myInfo.visits);
+			getMyVisitorsInfo(this.state.myInfo.visits)
+			.then((visits) => {
+				console.log(visits);
+				this.setState({
+					visits: visits
+				});
+			});
         }
 		socket.emit('getNotifications', this.state.myInfo._id);
 		// notification - {action = like visit message match dislike
@@ -72,6 +78,21 @@ export default class Header extends React.Component {
 				})
 			}
 		})
+
+		socket.on('youWereVisited', (visit) => {
+			console.log('YOU WERE VISITED');
+			var visitsSoFar = this.state.visits;
+			if (visitsSoFar.length == 5) {
+				visitsSoFar.shift();
+				visitsSoFar.push(visit);
+			}
+			else {
+				visitsSoFar.push(visit);
+			}
+			this.setState({
+				visits: visitsSoFar
+			});
+		})
 	}
     }
 
@@ -80,17 +101,6 @@ export default class Header extends React.Component {
 		if (socket) {
 			socket.off('newNotifications');
 		}
-	}
-
-	getVisitors(visits) {
-		var tab = [];
-		for (var i = 0; i < visits.length; i++) {
-			tab.push(visits[i].who);
-		}
-		getMyVisitorsInfo(tab)
-		.then((result) => {
-			this.setState({myVisitorsInfo: result});
-		});
 	}
 
 	handleTouchTap = (event) => {
@@ -118,17 +128,15 @@ export default class Header extends React.Component {
 		);
 	}
 
-	renderListVisitor(object, key) {
-		var srcList = "https://cdn.intra.42.fr/users/medium_default.png";
-		if (object.pictures) {
-			srcList = object.pictures
-		}
+	renderListVisitor(visit, key) {
+		var srcList = visit.picture;
+		var time = moment.unix(visit.time / 1000).format('LLL');
 		return (
 			<MenuItem key={key} eventKey={key} className="showVisitors">
 				<img className="avatarVisitor" src={srcList}>
 				</img>
 				<span>
-					{object.pseudo} |
+					{visit.pseudo} | {time}
 				</span>
 
 			</MenuItem>
@@ -136,12 +144,12 @@ export default class Header extends React.Component {
 	}
 
 
-	listVisitor(myPeople) {
+	listVisitor(visits) {
 		var grid = [];
-		grid.push(<MenuItem header key={myPeople.length}>Recent visits</MenuItem>);
-		grid.push(<MenuItem key={myPeople.length + 1} divider />)
-		for (var i = 0; i < myPeople.length; i++) {
-			grid.push(this.renderListVisitor(myPeople[i], i));
+		grid.push(<MenuItem header key={visits.length}>Recent visits</MenuItem>);
+		grid.push(<MenuItem key={visits.length + 1} divider />)
+		for (var i = 0; i < visits.length; i++) {
+			grid.push(this.renderListVisitor(visits[i], i));
 		}
 		return grid;
 	}
@@ -169,14 +177,14 @@ export default class Header extends React.Component {
 		browserHistory.push({pathname: "/profil", state: this.state.myInfo});
 	}
 
-	renderVisitsMenu(numberOfVisits) {
+	renderVisitsinNav(numberOfVisits) {
 		if (this.state.myInfo) {
-		var title = <i className="glyphicon glyphicon-bell">{numberOfVisits}</i>;
-			return (
-				<NavDropdown title={<i className="glyphicon glyphicon-bell"> {numberOfVisits} </i>} id="basic-nav-dropdown">
-				{this.listVisitor(this.state.myVisitorsInfo)}
-			</NavDropdown>
-		);
+			var title = <i className="glyphicon glyphicon-bell">{numberOfVisits}</i>;
+				return (
+					<NavDropdown title={<i className="glyphicon glyphicon-bell"> {numberOfVisits} </i>} id="basic-nav-dropdown">
+					{this.listVisitor(this.state.visits)}
+				</NavDropdown>
+			);
 		}
 	}
 
@@ -270,17 +278,8 @@ export default class Header extends React.Component {
 
 	render() {
 		var numberOfVisits = 0;
-		if (this.state.myInfo) {
-			if (this.state.myInfo.visits) {
-				console.log('you have ' + this.state.myInfo.visits.length + ' visits');
-				var numberOfVisits = this.state.myInfo.visits.length;
-			}
-			else {
-				console.log('you do not have visits');
-			}
-		}
-		else {
-			console.log('You do not have YourInfo');
+		if (this.state.myInfo && this.state.myInfo.visits) {
+			numberOfVisits = this.state.myInfo.visits.length;
 		}
 		return (
 			<header id="myHeader">
@@ -311,7 +310,7 @@ export default class Header extends React.Component {
 								Logout
 							</MenuItem>
 						</NavDropdown>
-						{this.renderVisitsMenu(numberOfVisits)}
+						{this.renderVisitsinNav(numberOfVisits)}
 						{this.renderNotificationInNav()}
 					</Nav>
 				</Col>

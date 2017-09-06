@@ -281,6 +281,23 @@ io.sockets.on('connection', function (socket) {
           userIdThatBlocked: activeUsers[socket.id]
       }
       socket.broadcast.to(socketId).emit('returnAmIBlockedBy', result);
+  });
+
+  socket.on('iVisitedThisId', function (visitObj) {
+       var socketId = _.findKey(activeUsers, function(o) { return o == visitObj.userId});
+       var userIdThatVisited = activeUsers[socket.id];
+       var visit = {
+           id: userIdThatVisited,
+           pseudo: visitObj.pseudo,
+           time: visitObj.time
+       };
+       if (visitObj.picture) {
+           visit.picture = visitObj.picture;
+       }
+       else {
+           visit.picture = 'http://www.thesourcepartnership.com/wp-content/uploads/2017/05/facebook-default-no-profile-pic-300x300.jpg';
+       }
+       socket.broadcast.to(socketId).emit('youWereVisited', visit);
   })
 
 });

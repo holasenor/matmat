@@ -204,27 +204,43 @@ User.getMyPeople = function (myInfo) {
 
 User.addOneVisit = function(userId, idVisitor) {
 	console.log(userId, idVisitor, Date.now());
-
+	var newVisits = [];
+	var newVisit = {
+		id: idVisitor,
+		time: Date.now()
+	};
 	return Database.get()
 	.then((db) => {
 		return db.collection('users')
 		.findOne({_id: ObjectId(userId)})
-		.then((res) => {
-			if(res.visits) {//mettre une limite des 5 dernieres visites seulement
-				console.log("result du findOne AddOneVisit", res);
+		.then((user) => {
+			if (user.visits && user.visits.length && user.visits.length == 5) {
+				user.visits.shift();
+				user.visits.push(newVisit);
+				newVisits = user.visits;
 			}
 			else {
-				console.log("visite fail ", idVisitor);
+				user.visits.push(newVisit);
+				newVisits = user.visits;
 			}
 			return db;
 		})
 	})
 	.then((db) => {
 		return db.collection('users')
-		.update({ _id: ObjectId(userIdVisitor)}, { $push :{ visits: {  who:[id], when:[Date.now()]} }})
-		.then((res) => {
-			return {message: 'visit success'};
+		.updateOne({
+			_id: ObjectId(userId)
+		}, {
+			$set: {
+				visits: newVisits
+			}
 		})
+		.then((res) => {
+			return res.result;
+		})
+	})
+	.catch((err) => {
+		console.log(err);
 	})
 }
 

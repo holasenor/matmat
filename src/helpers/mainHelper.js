@@ -65,6 +65,7 @@ export function getUsersInfo(ids) {
 
 export function getMyVisitorsInfo(myVisitors) {
     var token = localStorage.getItem('token');
+    myVisitors = JSON.stringify(myVisitors);
     return axios.get('/myvisitorsinfo', {
         params: {
             token: token,
@@ -73,7 +74,7 @@ export function getMyVisitorsInfo(myVisitors) {
     })
     .then((result) => {
         if (result.data.success) {
-            return result.data.users;
+            return result.data.visits;
         }
         else {
             console.log('No visitors were found');
