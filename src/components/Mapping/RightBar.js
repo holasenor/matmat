@@ -169,16 +169,18 @@ export default class RightBar extends React.Component {
     }
 
     renderPhoto(object, key) {
-        if (!object.img_src) {
-            object.img_src = 'http://www.thesourcepartnership.com/wp-content/uploads/2017/05/facebook-default-no-profile-pic-300x300.jpg';
+        var imgToDisplay = 'images/uploads/default.jpg';
+        if (object.img_src) {
+            imgToDisplay = 'images/uploads/' + object.img_src;
         }
+        console.log(object.img_src);
 
         return (
             <Col md={4} xs={6} key={key} className="center">
                 <div className="center">
                     {object.pseudo}, {object.age}, <span className={this.setClassStatus(object)}></span>
                 </div>
-                <img onClick={(e) => {this.open(e, object)}} id={key} className="photoThumbnail" src={object.img_src} key={Object.keys(object)} value={key}>
+                <img onClick={(e) => {this.open(e, object)}} id={key} className="photoThumbnail" src={imgToDisplay} key={Object.keys(object)} value={key}>
                 </img>
                 <div>
                     <Modal show={this.state.showModal} onHide={this.close}>
@@ -188,7 +190,7 @@ export default class RightBar extends React.Component {
                             </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <img className="photoThumbnail center" src={this.state.userModal.img_src}>
+                            <img className="photoThumbnail center" src={this.state.modalImage}>
                             </img>
                             <div>
                                 Popularity : {this.state.userModal.popularity}
@@ -227,9 +229,9 @@ export default class RightBar extends React.Component {
     }
 
     renderLike(myLikesInfo, key) {
-        var pictures = ['http://www.thesourcepartnership.com/wp-content/uploads/2017/05/facebook-default-no-profile-pic-300x300.jpg'];
+        var imageToDisplay = 'images/uploads/default.jpg';
         if (myLikesInfo[key].pictures && myLikesInfo[key].pictures[0]) {
-            pictures = myLikesInfo[key].pictures;
+            imageToDisplay = 'images/uploads/' + myLikesInfo[key].pictures[0];
         }
         var object = myLikesInfo[key];
         return (
@@ -240,12 +242,13 @@ export default class RightBar extends React.Component {
                 style={styles.chip}
                 key={key}
                 >
-                    <Avatar src={pictures[0]}>
+                    <Avatar src={imageToDisplay}>
                     </Avatar>
                     {myLikesInfo[key].pseudo}
                 </Chip>
             );
         }
+
         renderLikesBar(myLikesInfo) {
             var grid = [];
             for (var i = 0; i < myLikesInfo.length; i++) {
@@ -295,6 +298,11 @@ export default class RightBar extends React.Component {
             }
             socket.emit('iVisitedThisId', visitObj);
             socket.emit('amIBlockedBy', userId);
+            var imageToDisplay = 'images/uploads/default.jpg';
+            if (object.pictures && object.pictures[0]) {
+                imageToDisplay = 'images/uploads/' + object.pictures[0];
+            }
+            this.setState({modalImage: imageToDisplay})
             this.setState({userModalIsOnline: object.online});
             this.setState({userModal: object});
             this.setStyleLikeButton(object._id);

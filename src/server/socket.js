@@ -294,9 +294,6 @@ io.sockets.on('connection', function (socket) {
        if (visitObj.picture) {
            visit.picture = visitObj.picture;
        }
-       else {
-           visit.picture = 'http://www.thesourcepartnership.com/wp-content/uploads/2017/05/facebook-default-no-profile-pic-300x300.jpg';
-       }
        socket.broadcast.to(socketId).emit('youWereVisited', visit);
        Database.getUsers([visitObj.userId])
        .then((users) => {

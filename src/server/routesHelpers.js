@@ -368,9 +368,6 @@ export function getMyVisitorsInfo(req, res, next) {
                 if (usr[visit.id].pictures && usr[visit.id].pictures[0]) {
                     visit.picture = usr[visit.id].pictures[0];
                 }
-                else {
-                    visit.picture = 'http://www.thesourcepartnership.com/wp-content/uploads/2017/05/facebook-default-no-profile-pic-300x300.jpg';
-                }
                 return visit
             });
             res.send({
