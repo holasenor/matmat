@@ -68,8 +68,6 @@ io.sockets.on('connection', function (socket) {
   socket.on('userConnecting', function (userId) {
       console.log('User ' + userId +  ' has just connected\n');
       activeUsers[socket.id] = userId;
-    //   console.log('active users so far = ');
-    //   console.log(activeUsers);
       socket.emit('usersOnline', _.values(activeUsers));
       socket.broadcast.emit('userconnection', userId);
   });
@@ -142,16 +140,11 @@ io.sockets.on('connection', function (socket) {
       var userIdThatLiked = likeUsers.id1;
       var userIdThatWasLiked = likeUsers.id2;
       var socketIdLikedUser = _.findKey(activeUsers, function(o) { return o == userIdThatWasLiked;})
-      if (Object.values(activeUsers).indexOf(userIdThatLiked) > -1 && Object.values(activeUsers).indexOf(userIdThatWasLiked) > -1 ) {
-          if (socketIdLikedUser) {
+      if (Object.values(activeUsers).indexOf(userIdThatLiked) > -1) {
               var notif = saveNotification(userIdThatLiked, userIdThatWasLiked, 'like');
               socket.broadcast.to(socketIdLikedUser).emit('newNotifications', notif);
               socket.broadcast.to(socketIdLikedUser).emit('youWereLikedBy', userIdThatLiked);
               console.log('notifing this user' + userIdThatWasLiked + '\n');
-          }
-          else {
-              console.log('there is not socketIdLikedUser, so he is not connected\n');
-          }
       }
       else {
           console.log('user was not communicated that he was liked because one of them is not online\n');
@@ -162,16 +155,11 @@ io.sockets.on('connection', function (socket) {
       var userIdThatDisliked = dislikeUsers.id1;
       var userIdThatWasDisliked = dislikeUsers.id2;
       var socketIdDislikedUser = _.findKey(activeUsers, function(o) { return o == userIdThatWasDisliked;})
-      if (Object.values(activeUsers).indexOf(userIdThatDisliked) > -1 && Object.values(activeUsers).indexOf(userIdThatWasDisliked) > -1 ) {
-          if (socketIdDislikedUser) {
-              var notif = saveNotification(userIdThatDisliked, userIdThatWasDisliked, 'dislike');
-              socket.broadcast.to(socketIdDislikedUser).emit('newNotifications', notif);
-              socket.broadcast.to(socketIdDislikedUser).emit('youWereDislikedBy', userIdThatDisliked);
-              console.log('notifing this user' + userIdThatWasDisliked + '\n');
-          }
-          else {
-              console.log('there is not socketIdDislikedUser, so he is not connected\n');
-          }
+      if (Object.values(activeUsers).indexOf(userIdThatDisliked) > -1) {
+          var notif = saveNotification(userIdThatDisliked, userIdThatWasDisliked, 'dislike');
+          socket.broadcast.to(socketIdDislikedUser).emit('newNotifications', notif);
+          socket.broadcast.to(socketIdDislikedUser).emit('youWereDislikedBy', userIdThatDisliked);
+          console.log('notifing this user' + userIdThatWasDisliked + '\n');
       }
       else {
           console.log('user was not communicated that he was liked because one of them is not online\n');
