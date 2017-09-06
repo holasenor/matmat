@@ -298,6 +298,19 @@ io.sockets.on('connection', function (socket) {
            visit.picture = 'http://www.thesourcepartnership.com/wp-content/uploads/2017/05/facebook-default-no-profile-pic-300x300.jpg';
        }
        socket.broadcast.to(socketId).emit('youWereVisited', visit);
+       Database.getUsers([visitObj.userId])
+       .then((users) => {
+           return isBlocked(users, activeUsers[socket.id]);
+       })
+       .then((isBlocked) => {
+           if (!isBlocked) {
+               var notif = saveNotification(activeUsers[socket.id], visitObj.userId, 'visit');
+               socket.broadcast.to(socketId).emit('newNotifications', notif);
+           }
+       })
+       .catch((err) => {
+           console.log(err);
+       })
   })
 
 });
