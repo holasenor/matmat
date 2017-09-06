@@ -38,7 +38,6 @@ export function getMyLikesInfo(myLikes) {
             return result.data.users;
         }
         else {
-            console.log('No users were found');
             return [];
         }
     })
@@ -57,7 +56,6 @@ export function getUsersInfo(ids) {
             return result.data.users;
         }
         else {
-            console.log('No users were found');
             return [];
         }
     })
@@ -77,7 +75,6 @@ export function getMyVisitorsInfo(myVisitors) {
             return result.data.visits;
         }
         else {
-            console.log('No visitors were found');
             return [];
         }
     })
@@ -91,9 +88,6 @@ export function toggleLike(mail) {
         mailLikedOne : mail
     }
     return axios.post('/togglelike', infos)
-    .then((res) => {
-        console.log('this is res = ', res);
-    });
 }
 
 export function logmeOut() {

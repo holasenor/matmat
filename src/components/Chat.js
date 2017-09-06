@@ -26,14 +26,12 @@ export default class Chat extends React.Component {
         socket.emit('getHistory', users);
 
         socket.on('chatMessage', (chatMessage) => {
-            console.log('message received', chatMessage);
             var tempOldMessages = this.state.oldMessages || [];
             tempOldMessages.push(chatMessage);
             this.setState({oldMessages: tempOldMessages});
         });
 
         socket.on('historyDemanded', (conversation) => {
-            console.log('this is the history i demanded ' + conversation);
             this.setState({oldMessages: conversation});
         });
     }
@@ -54,7 +52,6 @@ export default class Chat extends React.Component {
         getMyVisitorsInfo(listchatter)
         .then((result) => {
             this.setState({listchatter: result});
-            // console.log(this.state.myVisitorsInfo);
         });
     }
 
@@ -139,7 +136,6 @@ export default class Chat extends React.Component {
     handleSendMessage(e) {
         e.preventDefault();
         var messageToSend = $('#messageToSend').val().trim();
-        console.log('sending message', messageToSend);
         var message = {
             chatUserId: this.state.chatUserId,
             message: messageToSend

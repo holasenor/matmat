@@ -51,7 +51,6 @@ export default class Header extends React.Component {
         if (this.state.myInfo) {
 			getMyVisitorsInfo(this.state.myInfo.visits)
 			.then((visits) => {
-				console.log(visits);
 				this.setState({
 					visits: visits
 				});
@@ -74,13 +73,11 @@ export default class Header extends React.Component {
 						notification.user = userMap[notification.userId];
 					});
 					this.setState({notifications: notifications});
-					console.log(notifications);
 				})
 			}
 		})
 
 		socket.on('youWereVisited', (visit) => {
-			console.log('YOU WERE VISITED');
 			var visitsSoFar = this.state.visits;
 			if (visitsSoFar.length == 5) {
 				visitsSoFar.shift();
@@ -199,10 +196,8 @@ export default class Header extends React.Component {
 	handleToggle = () => {
 		var isOpen = this.state.isNotificationsOpen;
 		if (isOpen) {
-			console.log('just got closed');
 			if (this.state.timeOut != "") {
 				clearTimeout(this.state.timeOut);
-				console.log('timeout got closed');
 				this.setState({timeOut: ""});
 			}
 			if (this.state.notifications && this.state.notifications.length > 0) {
@@ -210,10 +205,8 @@ export default class Header extends React.Component {
 			}
 		}
 		else {
-			console.log('just got opened');
 			var timeOut = setTimeout(this.deleteNotifications, 10000);
 			this.setState({timeOut: timeOut});
-			console.log('setting timeout = ', timeOut);
 		}
 		this.setState({isNotificationsOpen: !isOpen});
 	}

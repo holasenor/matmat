@@ -256,7 +256,6 @@ class EditProfil extends React.Component {
         .then(uploadFile)
         .then(updateUser)
         .then((res) => {
-            console.log('pushiiing');
             browserHistory.push("/map");
         })
         .catch((err) => {
@@ -277,7 +276,7 @@ class EditProfil extends React.Component {
             this.setState({myInfo: res.data.user});
         })
         .catch((err) => {
-            console.log('asd', err);
+            console.log(err);
         });
     }
 

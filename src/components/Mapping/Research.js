@@ -69,8 +69,6 @@ export default class Research extends React.Component {
 		var myInfo = this.state.myInfo;  // MAYBE CHANGE IT TO this.state.myInfo      --------------------------------------
 		getSearchResults(myInfo, options)
 		.then((newPeople) => {
-			console.log('getting new People');
-			console.log(newPeople);
 			this.props.setMyPeople(newPeople);
 		})
 		.catch((err) => {

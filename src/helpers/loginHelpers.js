@@ -215,9 +215,6 @@ export function signUp(infos) {
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('username', infos.email);
         }
-        else {
-            console.log('Something went wrong, you did not sign up');
-        }
     })
 }
 
