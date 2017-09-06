@@ -8,7 +8,6 @@ import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
-import Title from "./Header/Title";
 import { Col, Button, Nav, Navbar, NavItem, MenuItem, NavDropdown, ButtonToolbar, DropdownButton,  Glyphicon} from 'react-bootstrap';
 import RaisedButton from 'material-ui/RaisedButton';
 import Popover, {PopoverAnimationVertical} from 'material-ui/Popover';
@@ -273,8 +272,8 @@ export default class Header extends React.Component {
 		}
 		return (
 			<header id="myHeader">
-				<Title>
-				</Title>
+				<span>
+				</span>
 				<Navbar>
 					<Col xs={12} md={8}>
 						<Navbar.Header>
