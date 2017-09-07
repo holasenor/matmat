@@ -139,6 +139,7 @@ export default class Chat extends React.Component {
     handleSendMessage(e) {
         e.preventDefault();
         var messageToSend = $('#messageToSend').val().trim();
+        $('#messageToSend').val("");
         console.log('sending message', messageToSend);
         var message = {
             chatUserId: this.state.chatUserId,
