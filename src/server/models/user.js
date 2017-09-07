@@ -101,6 +101,8 @@ User.toggleLike = function () {
 
 User.addLike = function (userId, likedId) {
 	var likeAction = 0;
+	var messageToSend = "default message";
+	var wasItALike = 0;
 	return Database.get()
 	.then((db) => {
 		return db.collection('users')
@@ -119,17 +121,38 @@ User.addLike = function (userId, likedId) {
 				.updateOne({_id: ObjectId(likedId)}, { $pull: {likedBy: userId}})
 				.then((res) => {
 					console.log("\n",userId, ' does not like ', likedId, " anymore\n");
-					return {message: 'User remove like'};
+					messageToSend = 'User remove like';
+					return db;
 				})
 			})
 		}
 		else if (likeAction == LIKE_ADDED) {
+			wasItALike = 1;
 			return db.collection('users')
 			.updateOne({_id: ObjectId(likedId)}, { $addToSet: {likedBy: userId}})
 			.then((res) => {
 				console.log("\n",userId, ' likes ', likedId, "\n");
-				return {message: 'like was successful'};
+				messageToSend = 'like was successful';
+				return db;
 			})
+		}
+	})
+	.then((db) => {
+		var variation;
+		if (wasItALike) variation = 1;
+		else variation = -1;
+		return db.collection('users')
+		.updateOne({
+			_id: ObjectId(likedId)
+		}, {
+			$inc: {
+				popularity: variation
+			}
+		})
+	})
+	.then(() => {
+		return {
+			message: messageToSend
 		}
 	})
 	.catch((err) => {

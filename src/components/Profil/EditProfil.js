@@ -32,24 +32,23 @@ class EditProfil extends React.Component {
         if (this.state.myInfo && this.state.myInfo.pictures && this.state.myInfo.pictures[0]) {
             var pictures = this.state.myInfo.pictures;
         }
+        var popularityToDisplay = 0;
+        if (this.state.myInfo && this.state.myInfo.likes) {
+            popularityToDisplay = this.state.myInfo.likes.length;
+        }
         return (
             <Col md={5}>
                 <div className="gtco-contact-info">
                     <ul>
-                        <li className="tags">
-                            <a>
-                                tous les #tags
-                            </a>
-                        </li>
                         <li className="popularity">
                             <a>
                                 populatity
                             </a>
-                            78%
+                            {"   " + popularityToDisplay}
                         </li>
                     </ul>
                     <div>
-                        <ProgressBar bsStyle='success' now={78} active>
+                        <ProgressBar bsStyle='success' now={popularityToDisplay} active>
                         </ProgressBar>
                     </div>
                     <h3>

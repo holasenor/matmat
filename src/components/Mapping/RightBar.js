@@ -173,6 +173,10 @@ export default class RightBar extends React.Component {
         if (object.img_src) {
             imgToDisplay = 'images/uploads/' + object.img_src;
         }
+        var popularityToDisplay = 0;
+        if (object.likes) {
+            popularityToDisplay = object.likes.length;
+        }
         console.log(object.img_src);
 
         return (
@@ -193,7 +197,7 @@ export default class RightBar extends React.Component {
                             <img className="photoThumbnail center" src={this.state.modalImage}>
                             </img>
                             <div>
-                                Popularity : {this.state.userModal.popularity}
+                                Popularity : {popularityToDisplay}
                             </div>
                             <div>
                                 <ProgressBar bsStyle='warning' now={parseInt(this.state.userModal.age)} active>
