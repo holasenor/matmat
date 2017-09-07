@@ -100,6 +100,7 @@ export default class Header extends React.Component {
 		var socket = this.props.socket;
 		if (socket) {
 			socket.off('newNotifications');
+			socket.off('youWereVisited');
 		}
 	}
 
