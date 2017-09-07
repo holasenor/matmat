@@ -4,8 +4,8 @@ import {browserHistory} from "react-router";
 var $ = require("jquery");
 
 const fields = ['pseudo','email', 'password', 'gender', 'like', 'bio', 'age', 'tag', 'geo'];
-const genders = ['male', 'female', '...'];
-const likes = ['male', 'female', '...'];
+const genders = ['male', 'female', 'none'];
+const likes = ['male', 'female', 'both'];
 
 export function sanitizeMongo(v) {
     if (v instanceof Object) {
