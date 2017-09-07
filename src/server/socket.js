@@ -7,6 +7,7 @@ var activeUsers = {};
 var rooms = {};
 var conversations = {};
 var notifications = {};
+var lastConnections = {};
 
 module.exports = function (server) {
 
@@ -77,6 +78,7 @@ io.sockets.on('connection', function (socket) {
   socket.on('userConnecting', function (userId) {
       console.log('User ' + userId +  ' has just connected\n');
       activeUsers[socket.id] = userId;
+      lastConnections[userId] = Date.now();
       socket.emit('usersOnline', _.values(activeUsers));
       socket.broadcast.emit('userconnection', userId);
   });
@@ -94,6 +96,18 @@ io.sockets.on('connection', function (socket) {
       socket.broadcast.emit('userdisconnection', userId);
       delete activeUsers[socket.id];
   })
+
+  socket.on('getLastConnection', function (userId) {
+      if (lastConnections.hasOwnProperty(userId)) {
+          console.log("GONNA EMIT LAST CONNECTION 1" + lastConnections[userId]);
+          socket.emit('lastConnection', lastConnections[userId]);
+      }
+      else {
+          console.log("GONNA EMIT LAST CONNECTION 2");
+
+          socket.emit('lastConnection', false);
+      }
+  });
 
   socket.on('message', function (data) {
       console.log(data);
