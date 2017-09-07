@@ -203,10 +203,24 @@ User.addPicture = function (id, path) {
 	})
 }
 
+function getGenderToDisplay(myInfo) {
+    console.log(myInfo);
+    if (myInfo.like == 'male') {
+        return 'male'
+    }
+    else if (myInfo.like == 'female') {
+        return 'female'
+    }
+    else {
+        return { $in: ['male', 'female', 'both'] }
+    }
+}
+
 User.getMyPeople = function (myInfo) {
+	var genderToDisplay = getGenderToDisplay(myInfo);
 	return Database.get()
 	.then((db) => {
-		return db.collection('users').find({}).toArray();
+		return db.collection('users').find({gender: genderToDisplay}).toArray();
 	})
 	.then((everyone) => {
 		var myPeople = everyone.filter((someone) => {

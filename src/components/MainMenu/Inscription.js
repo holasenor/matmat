@@ -96,9 +96,6 @@ export default class Inscription extends React.Component {
                                     <option value="female">
                                         Female
                                     </option>
-                                    <option value="none">
-                                        ...
-                                    </option>
                                     <option value="both">
                                         Both
                                     </option>

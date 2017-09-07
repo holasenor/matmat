@@ -103,7 +103,20 @@ exports.getUsers = function (ids) {
     });
 }
 
+function getGenderToDisplay(myInfo) {
+    if (myInfo.like == 'male') {
+        return 'male'
+    }
+    else if (myInfo.like == 'female') {
+        return 'female'
+    }
+    else {
+        return { $in: ['male', 'female', 'both'] }
+    }
+}
+
 exports.getUsersFromSearch = function (options, myInfo) {
+    var genderToDisplay = getGenderToDisplay(myInfo);
     return this.get()
     .then((db) => {
         return db.collection('users')
@@ -116,7 +129,8 @@ exports.getUsersFromSearch = function (options, myInfo) {
                 popularity: {
                     $gt: options.popularityInterval[0],
                     $lt: options.popularityInterval[1]
-                }
+                },
+                gender : genderToDisplay
             }
         )
         .toArray();
@@ -128,7 +142,7 @@ exports.getUsersFromSearch = function (options, myInfo) {
                 {latitude: myInfo.lat, longitude: myInfo.lng}
             )
             person.distance = distance;
-            return (distance < options.distance * 1000)
+            return (distance < options.distance * 1000 && person._id != myInfo._id)
         });
     })
     .then((users) => {
