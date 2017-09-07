@@ -35,13 +35,6 @@ export default class Header extends React.Component {
 		this.toHome = this.toHome.bind(this);
 		this.handleLogout = this.handleLogout.bind(this);
 	}
-	//je vais chercher les infos dans la bdd apres le constructeur
-	// - componentDidMount
-	// - la fonction getVisitors ici
-	// - le mainHelper : fonction getMyVisitorsInfo
-	// - creer la route /myvisitorsinfo
-	// - dans route :  creer getMyVisitorsInfo
-	// - dns routHelpers => creer et utiliser la fonction getMyVisitorsInfo
 
 	componentDidMount() {
 		if (this.props.socket) {
