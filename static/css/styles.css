@@ -144,6 +144,11 @@ height: 100%;
 	height: auto;
 }
 
+.photoProfile {
+    width: 100%;
+    height: auto;
+}
+
 /* =============== images grid main ===============*/
 .img-responsive {
   margin: auto;

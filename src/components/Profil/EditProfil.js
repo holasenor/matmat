@@ -115,7 +115,7 @@ class EditProfil extends React.Component {
                         Gender
                     </label>
                     <select id="sexe" className="form-control" defaultValue={this.state.myInfo.gender}>
-                        {this.renderOptions(['male', 'female','...'])}
+                        {this.renderOptions(['male', 'female','none'])}
                     </select>
                 </Col>
                 <Col md={6} xs={6}>
@@ -123,7 +123,7 @@ class EditProfil extends React.Component {
                         Like
                     </label>
                     <select id="like" className="form-control" defaultValue={this.state.myInfo.like}>
-                        {this.renderOptions(['male', 'female','...','both'])}
+                        {this.renderOptions(['male', 'female','both'])}
                     </select>
                 </Col>
             </Row>
@@ -264,7 +264,7 @@ class EditProfil extends React.Component {
             this.setState({myInfo: res.data.user});
         })
         .catch((err) => {
-            console.log('asd', err);
+            console.log(err);
         });
     }
 

@@ -208,7 +208,7 @@ export default class RightBar extends React.Component {
                             </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <img className="photoThumbnail center" src={this.state.modalImage}>
+                            <img className="photoProfile center" src={this.state.modalImage}>
                             </img>
                             <div>
                                 Popularity : {popularityToDisplay}

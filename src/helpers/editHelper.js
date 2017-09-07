@@ -70,7 +70,7 @@ export function validateFileExtension(infos) {
 export function checkMimeType(infos) {
 	if (infos.file)	{
 		var fileName = infos.file.name;
-		var mimetype = mime.contentType(path.extname(fileName));
+		var mimetype = mime.contentType(fileName);
 		if (mimetype != 'image/jpeg' && mimetype != 'image/jpg' && mimetype != 'image/png')
 		{
 			throw 'error mime type : not a jpg, png or jpeg, sorry.';

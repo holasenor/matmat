@@ -5,8 +5,8 @@ import Database from '../../database';
 
 
 const fields = ['pseudo','email', 'password', 'gender', 'like', 'bio', 'town', 'age', 'tag', 'lat', 'lng'];
-const genders = ['male', 'female', '...'];
-const likes = ['male', 'female', '...'];
+const genders = ['male', 'female', 'none'];
+const likes = ['male', 'female', 'both'];
 
 export function validateTarget(target) {
     return new Promise(function (res, rej) {
