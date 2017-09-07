@@ -7,17 +7,6 @@ const fields = ['pseudo','email', 'password', 'gender', 'like', 'bio', 'age', 't
 const genders = ['male', 'female', 'none'];
 const likes = ['male', 'female', 'both'];
 
-export function sanitizeMongo(v) {
-    if (v instanceof Object) {
-        for (var key in v) {
-            if (/^\$/.test(key)) {
-                delete v[key];
-            }
-        }
-    }
-    return v;
-};
-
 export function validateTarget(target) {
     return new Promise(function (res, rej) {
         var infos = {};

@@ -13,7 +13,7 @@ ReactDOM.render(
     <MuiThemeProvider>
         <Router history={browserHistory}>
             <Route path="/" component={Welcome}/>
-        <Route path="/map" component={FindPeople} socket={socket}/>
+            <Route path="/map" component={FindPeople} socket={socket}/>
             <Route path="/profil" component={EditProfil}/>
             <Route path="*" component={Welcome}/>
         </Router>

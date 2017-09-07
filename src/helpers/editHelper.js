@@ -46,29 +46,6 @@ export function updateUser(data) {
     })
 }
 
-export function deleteUser() {
-    var data = {};
-    data.token = localStorage.getItem('token');
-    return axios.post('./deleteaccount', data)
-    .then((response) => {
-        if (response.data.success) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('username');
-            browserHistory.push("/");
-        }
-        else {
-            if (response.data.message) {
-                console.log(response.data.message);
-            }
-            else {
-                alert('Your account was NOT deleted');
-            }
-        }
-    })
-    .catch((err) => {
-        console.log(err);
-    });
-}
 
 export function validateFileSize(infos) {
     if (infos.file) {

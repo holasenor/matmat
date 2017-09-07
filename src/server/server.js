@@ -13,13 +13,11 @@ const socket = require('socket.io');
 var socketSetup = require('./socket.js');
 
 var app = new express();
-// var secureRoutes = express.Router();
 
 app.use(express.static('static'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-// app.use('/api', secureRoutes);
 process.env.SECRET_KEY = 'ThisIsMySecretKey';
 
 router(app);

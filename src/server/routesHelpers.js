@@ -15,17 +15,6 @@ const mailOptions = {
     subject: 'You asked us to change your password',
 };
 
-export function sanitizeMongo(v) {
-    if (v instanceof Object) {
-        for (var key in v) {
-            if (/^\$/.test(key)) {
-                delete v[key];
-            }
-        }
-    }
-    return v;
-};
-
 export function tokenForUser(user) {
     var token = jwt.sign(user, process.env.SECRET_KEY, {
         expiresIn: '11h'
@@ -203,35 +192,6 @@ export function getInfo (req, res, next) {
     });
 }
 
-export function deleteAccount (req, res, next) {
-    User.delete(req.decode.id).
-    then((ret) => {
-        if (ret.result.n == 1 && ret.result.ok == 1) {
-            res.send({
-                success: true
-            })
-        }
-        else {
-            res.send({
-                success: false
-            });
-        }
-    })
-}
-
-export function deleteLikes (req, res, next) {
-    next();
-}
-
-
-export function deleteMatches (req, res, next) {
-    next();
-}
-
-export function deletePictures (req, res, next) {
-    next();
-}
-
 export function checkFileSize (err, req, res, next) {
     if (err) {
         console.log(err);
@@ -292,16 +252,6 @@ export function addVisit(req, res, next) {
     .then((ret) => {
         console.log(ret);
         console.log('then after addOneVisit');
-        // if (ret) {
-        //     res.send({
-        //         success: true
-        //     })
-        // }
-        // else {
-        //     res.send({
-        //         success: false
-        //     });
-        // }
     })
 }
 

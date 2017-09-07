@@ -4,8 +4,6 @@ import { Button } from 'react-bootstrap';
 import { Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
 import {checkTokenIsSet, getMyPeople} from '../helpers/loginHelpers';
 import Header from "./Header";
-import Footer from "./Footer";
-import Video from "./Video";
 import Mapping from "./Mapping";
 import socketIOClient from "socket.io-client";
 

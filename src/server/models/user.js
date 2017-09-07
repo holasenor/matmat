@@ -95,10 +95,6 @@ User.getEmail = function () {
 	});
 }
 
-User.toggleLike = function () {
-	console.log('this user has mail ' + User.asdf);
-}
-
 User.addLike = function (userId, likedId) {
 	var likeAction = 0;
 	var messageToSend = "default message";
@@ -158,15 +154,6 @@ User.addLike = function (userId, likedId) {
 	.catch((err) => {
 		console.log('Error in addLike');
 		console.log(err);
-	})
-}
-
-User.wasLikedBy = function () {
-
-}
-User.delete = function (id) {
-	return Database.get().then((db) => {
-		return db.collection('users').deleteOne({_id: ObjectId(id)});
 	})
 }
 

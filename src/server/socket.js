@@ -15,7 +15,6 @@ const io = socket(server);
 console.log('\nSETTING UP SOCKET\n');
 
 function getRoomIdFromUsers(users) {
-    console.log(users);
     if (users && users[0] && users[1]) {
         console.log('gettig room for ');
         console.log(users);

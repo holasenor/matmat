@@ -2,7 +2,6 @@ import React from "react"
 import { Button, Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
 import Inscription from "./MainMenu/Inscription";
 import Login from "./MainMenu/Login";
-import Footer from "./Footer";
 import RightBar from "./Mapping/RightBar";
 import MyMap from './Mapping/ReactGmaps';
 import {checkTokenIsSet} from "../helpers/loginHelpers.js";
