@@ -8,6 +8,8 @@ var $ = require("jquery");
 import * as tools from '../../helpers/mainHelper.js';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import Chat from "./../Chat";
+import moment from 'moment';
+
 
 injectTapEventPlugin();
 const styles = {
@@ -168,6 +170,19 @@ export default class RightBar extends React.Component {
         }
     }
 
+    renderLastConnection() {
+        var lastConnection;
+
+        if (this.state.lastConnection) {
+            lastConnection = this.state.lastConnection;
+        }
+        if (lastConnection)
+            return '        Last seen : ' + lastConnection;
+        else {
+            return '        Not login yet';
+        }
+    }
+
     renderPhoto(object, key) {
         var imgToDisplay = 'images/uploads/default.jpg';
         if (object.img_src) {
@@ -206,7 +221,7 @@ export default class RightBar extends React.Component {
                                 {this.state.userModal.bio}
                             </div>
                             <div>
-                                #tags : {this.state.userModal.email}
+                                #tags : {this.state.userModal.tag}
                             </div>
                         </Modal.Body>
                         <Modal.Footer className="center">
@@ -225,6 +240,7 @@ export default class RightBar extends React.Component {
                             </Button>
 
                         </Modal.Footer>
+                        {this.renderLastConnection()}
                     </Modal>
                 </div>
             </Col>
@@ -301,6 +317,7 @@ export default class RightBar extends React.Component {
             }
             socket.emit('iVisitedThisId', visitObj);
             socket.emit('amIBlockedBy', userId);
+            socket.emit('getLastConnection', userId);
             var imageToDisplay = 'images/uploads/default.jpg';
             if (object.pictures && object.pictures[0]) {
                 imageToDisplay = 'images/uploads/' + object.pictures[0];
@@ -386,6 +403,13 @@ export default class RightBar extends React.Component {
                 else {
                     console.log('WEIRD, you were NOT already liked by him');
                 }
+            });
+
+            socket.on('lastConnection', (lastConnection) => {
+                var time = false;
+                if (lastConnection)
+                    time = moment.unix(lastConnection / 1000).format('LLL');
+                this.setState({lastConnection: time});
             });
 
             this.getLikes(usersOnline);
