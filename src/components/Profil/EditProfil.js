@@ -7,6 +7,8 @@ import {browserHistory} from "react-router";
 import * as tools from '../../helpers/loginHelpers.js';
 import {checkTokenIsSet, validateEmail} from "../../helpers/loginHelpers.js";
 import Header from "../Header";
+import Slider from 'react-slick';
+
 class EditProfil extends React.Component {
     constructor(props) {
         super(props);
