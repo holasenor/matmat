@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col , Nav, NavItem, NavDropdown, MenuItem, InputGroup, FormGroup, Addon, FormControl, ProgressBar, bsStyle} from 'react-bootstrap';
 import { Button } from 'react-bootstrap';
-import {getData, updateUser, deleteUser, validateFileSize, validateFileExtension, uploadFile, checkMimeType} from '../../helpers/editHelper.js';
+import {getData, updateUser, validateFileSize, validateFileExtension, uploadFile, checkMimeType} from '../../helpers/editHelper.js';
 import $ from "jquery";
 import {browserHistory} from "react-router";
 import * as tools from '../../helpers/loginHelpers.js';
 import {checkTokenIsSet, validateEmail} from "../../helpers/loginHelpers.js";
 import Header from "../Header";
-import Footer from "../Footer";
 import Slider from 'react-slick';
 
 class EditProfil extends React.Component {
@@ -188,10 +187,6 @@ class EditProfil extends React.Component {
                     <input type="submit" value="Modify" className="btn btn-primary">
                     </input>
                 </div>
-                <div className="form-group">
-                    <input type="button" value="Delete Account" className="btn btn-danger" onClick={() => this.handleDeleteAccount(this.state.myInfo.email)}>
-                    </input>
-                </div>
             </Col>
         )
     }
@@ -261,13 +256,6 @@ class EditProfil extends React.Component {
         .catch((err) => {
             alert(err);
         });
-    }
-
-    handleDeleteAccount(mail) {
-        deleteUser()
-        .catch((err) => {
-            alert(err);
-        });;
     }
 
     componentDidMount() {

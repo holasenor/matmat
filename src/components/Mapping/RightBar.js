@@ -177,7 +177,6 @@ export default class RightBar extends React.Component {
         if (object.likes) {
             popularityToDisplay = object.likes.length;
         }
-        console.log(object.img_src);
 
         return (
             <Col md={4} xs={6} key={key} className="center">

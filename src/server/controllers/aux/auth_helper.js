@@ -8,17 +8,6 @@ const fields = ['pseudo','email', 'password', 'gender', 'like', 'bio', 'town', '
 const genders = ['male', 'female', '...'];
 const likes = ['male', 'female', '...'];
 
-export function sanitizeMongo(v) {
-    if (v instanceof Object) {
-        for (var key in v) {
-            if (/^\$/.test(key)) {
-                delete v[key];
-            }
-        }
-    }
-    return v;
-};
-
 export function validateTarget(target) {
     return new Promise(function (res, rej) {
         var infos = {};

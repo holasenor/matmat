@@ -3,17 +3,6 @@ var _ = require('lodash');
 import {browserHistory} from "react-router";
 var $ = require("jquery");
 
-export function sanitizeMongo(v) {
-    if (v instanceof Object) {
-        for (var key in v) {
-            if (/^\$/.test(key)) {
-                delete v[key];
-            }
-        }
-    }
-    return v;
-};
-
 export function likeThisId(id) {
     var token = localStorage.getItem('token');
     return axios.post('/togglelike', {

@@ -1,4 +1,4 @@
-import {sendMail, createResetPasswordToken, isPasswordValid, mailExists, updateUser, hashIfPasswordChange, getInfo, deleteAccount, deleteMatches, deleteLikes, checkFileSize, checkFileExtension, deleteLastOneIfAny, uploadPicture, addPictureToUser, deletePictures, getMyPeople, addLike, addVisit, getMyLikesInfo, getMyVisitorsInfo, getPeopleFromSearch, prepareOptions, blockUser, reportUser, getUsersInfo} from './routesHelpers.js';
+import {sendMail, createResetPasswordToken, isPasswordValid, mailExists, updateUser, hashIfPasswordChange, getInfo, checkFileSize, checkFileExtension, deleteLastOneIfAny, uploadPicture, addPictureToUser, getMyPeople, addLike, addVisit, getMyLikesInfo, getMyVisitorsInfo, getPeopleFromSearch, prepareOptions, blockUser, reportUser, getUsersInfo} from './routesHelpers.js';
 var auth = require('./controllers/authentication');
 var jwt = require('jsonwebtoken');
 import Database from './database';
@@ -88,13 +88,6 @@ module.exports = function (app) {
             });
         }
     });
-
-    app.post('/deleteaccount',
-    auth.checktoken,
-    deleteMatches,
-    deleteLikes,
-    deletePictures,
-    deleteAccount);
 
     app.post('/updateuser',
     auth.checktoken,

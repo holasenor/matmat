@@ -58,8 +58,6 @@ export default class Header extends React.Component {
 			});
         }
 		socket.emit('getNotifications', this.state.myInfo._id);
-		// notification - {action = like visit message match dislike
-		//					userId }
 
 		socket.on('newNotifications', (notifications) => {
 			if (notifications) {
